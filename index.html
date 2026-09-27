@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Portal - TSA Webmaster Competition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Fixed Sticky Navbar -->
+    <nav class="navbar">
+        <div class="logo">AI Portal</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#modules">Modules</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#chatbot">Chatbot</a></li>
+            <li><a href="references.html">References</a></li>
+        </ul>
+    </nav>
+
+    <!-- Home Section -->
+    <header class="hero" id="home">
+        <div class="hero-content">
+            <h1>Demystify Artificial Intelligence</h1>
+            <p>Foundational concepts, practical tools, and ethical AI usage for high school students</p>
+            <a href="#modules" class="btn-explore">Explore Modules</a>
+        </div>
+    </header>
+
+    <!-- Modules Section -->
+    <main class="container" id="modules">
+        <section class="modules-grid">
+            <!-- Module 1 -->
+            <div class="module-card" data-module="1">
+                <div class="module-header">
+                    <h2>Module 1: Fundamental AI Concepts</h2>
+                </div>
+                <div class="module-content">
+                    <p>Explore the basics of Machine Learning, Neural Networks, Large Language Models (LLMs), and Computer Vision. Understand how these foundational AI concepts work and their real-world applications.</p>
+                    <button class="quiz-btn">Start Quiz</button>
+                </div>
+            </div>
+
+            <!-- Module 2 -->
+            <div class="module-card" data-module="2">
+                <div class="module-header">
+                    <h2>Module 2: Practical AI Tools & Techniques</h2>
+                </div>
+                <div class="module-content">
+                    <p>Learn prompt engineering guides, effective academic search tools, and study workflows to leverage AI for your education responsibly.</p>
+                    <button class="quiz-btn">Start Quiz</button>
+                </div>
+            </div>
+
+            <!-- Module 3 -->
+            <div class="module-card" data-module="3">
+                <div class="module-header">
+                    <h2>Module 3: Ethical AI Usage & Academic Integrity</h2>
+                </div>
+                <div class="module-content">
+                    <p>Guidelines on plagiarism vs. assistance, bias awareness, copyright, and proper AI citation methods for academic settings.</p>
+                    <button class="quiz-btn">Start Quiz</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Dashboard / Gamification Section -->
+    <section class="dashboard" id="dashboard">
+        <div class="progress-section">
+            <h2>Progress Tracking</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
+            </div>
+            <p>40% Complete</p>
+        </div>
+
+        <div class="xp-badges">
+            <h2>XP / Points System</h2>
+            <div class="xp-points">120 XP</div>
+
+            <div class="badge-grid">
+                <div class="badge" data-badge="1">Prompt Master</div>
+                <div class="badge" data-badge="2">Ethics Scholar</div>
+                <div class="badge" data-badge="3">AI Explorer</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive AI Chatbot Widget -->
+    <div class="chatbot-widget" id="chatbot">
+        <button class="chatbot-fab">💬</button>
+        <div class="chatpop-up" style="display: none;">
+            <div class="chat-header">
+                <span>AI Assistant</span>
+                <button class="close-chat">✕</button>
+            </div>
+            <div class="chat-messages"></div>
+            <div class="chat-input-area">
+                <input type="text" placeholder="Type a message...">
+                <button class="send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
