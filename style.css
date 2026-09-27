@@ -21,21 +21,17 @@
     --error: #ef4444;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* 
 
 html {
     scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
+  background-color: var(--bg-primary);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* Navbar */
@@ -102,39 +98,56 @@ body {
     align-items: center;
     justify-content: center;
     padding: 8rem 2rem 2rem;
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    background-image: url("images/Space-Background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
+
 
 .hero .hero-content {
-    max-width: 800px;
-    text-align: center;
+  max-width: 800px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;   /* stack children vertically */
+  align-items: center;      /* center horizontally */
 }
 
-.hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 1rem;
-    letter-spacing: -0.02em;
+.hero-logo {
+  max-width: 600px;  /* shrink or grow */
+  height: auto;
+  
 }
-
+.hero-logo {
+  filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.7)); /* blue glow */
+}
+.hero-text {
+ font-family: 'Orbitron', sans-serif; 
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
 .hero p {
-    font-size: 1.25rem;
-    color: var(--text-secondary);
+    font-size: 2rem;
+    color: white;
     margin-bottom: 2rem;
 }
 
+.hero-text {
+  text-shadow: 
+    0 0 6px rgba(59, 130, 246, 0.7),   /* blue */
+    0 0 12px rgba(168, 85, 247, 0.5);  /* purple */
+}
 .btn-explore {
     display: inline-block;
-    padding: 0.75rem 2rem;
+    padding: 2rem 3rem;
     background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
     color: white;
     text-decoration: none;
-    border-radius: 4px;
-    font-weight: 500;
+    border-radius: 10px;
+    font-weight: bold;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-size: 2rem;
 }
 
 .btn-explore:hover {
@@ -223,7 +236,20 @@ body {
     background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
     transition: width 0.5s ease;
 }
+/* Dashboard headings */
+.dashboard h2 {
+  color: #ffffff; /* pure white */
+}
 
+/* Progress percentage text */
+.progress-section p {
+  color: #ffffff; /* pure white */
+}
+
+/* XP / Points label */
+.xp-badges h2 {
+  color: #ffffff; /* pure white */
+}
 .progress-bar p {
     margin-top: 0.5rem;
     text-align: right;
