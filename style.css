@@ -200,6 +200,14 @@ body {
   background: url("images/BlueBackground.jpg") no-repeat center center;
     background-size: cover;
 }
+.module-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 1);
+  margin-bottom: 2rem;
+}
 
 .modules-overview {
   display: flex;
