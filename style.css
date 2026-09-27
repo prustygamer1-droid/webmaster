@@ -194,6 +194,55 @@ body {
     font-size: 0.875rem;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+.modules-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.module-card {
+  flex: 1;
+  background: #1e293b; /* dark slate */
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); /* constant white glow */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.module-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 1);
+}
+
+.module-card h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700; /* bold Orbitron */
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 1); /* white glow */
+  margin-bottom: 1rem;
+}
+
+.module-card p {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 400; /* sleek, lighter Orbitron */
+  color: #4fc3f7; /* celestial blue */
+  text-shadow: 0 0 8px rgba(79, 195, 247, 0.9); /* blue glow */
+  line-height: 1.6;
+}
+
 .quiz-btn {
     display: inline-block;
     padding: 0.5rem 1rem;
