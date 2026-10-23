@@ -13,143 +13,79 @@
     <nav class="navbar">
         <div class="logo">AI Portal</div>
         <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#modules">Modules</a></li>
-            <li><a href="#dashboard">Dashboard</a></li>
-            <li><a href="#chatbot">Chatbot</a></li>
+            <li><a href="#home" onclick="showPage('home')">Home</a></li>
+            <li><a href="#modules" onclick="showPage('modules-grid')">Modules</a></li>
+            <li><a href="#dashboard" onclick="showPage('dashboard')">Dashboard</a></li>
+            <li><a href="#chatbot" onclick="showPage('chatbot')">Chatbot</a></li>
             <li><a href="references.html">References</a></li>
         </ul>
     </nav>
 
-    <!-- Home Section -->
-<div class="hero">
-  <div class="hero-content">
-    <img src="images/ScrappyV2.png" alt="Site Logo" class="hero-logo">
-    <p class="hero-text">
-        Welcome to the AI Learning Portal! Learn with scrappy to explore various concepts, practical uses, and fundamentals in a engaging highschool program
-   
-    </p>
-    <a href="#modules" class="btn-explore">Explore Modules</a>
-  </div>
-</div>
-
-<section id="legacy-modules">
-<div id="legacy-modules" style="display:none;">
-    <!-- Modules Section -->
-    <main class="container" id="modules">
-        <section class="modules-grid">
-            <!-- Module 1 -->
-            <div class="module-card" data-module="1">
-                <div class="module-header">
-                    <h2>Module 1: Fundamental AI Concepts</h2>
-                </div>
-                <div class="module-content">
-                    <p>Explore the basics of Machine Learning, Neural Networks, Large Language Models (LLMs), and Computer Vision. Understand how these foundational AI concepts work and their real-world applications.</p>
-                    <button class="quiz-btn">Start Quiz</button>
-                </div>
-            </div>
-
-            <!-- Module 2 -->
-            <div class="module-card" data-module="2">
-                <div class="module-header">
-                    <h2>Module 2: Practical AI Tools & Techniques</h2>
-                </div>
-                <div class="module-content">
-                    <p>Learn prompt engineering guides, effective academic search tools, and study workflows to leverage AI for your education responsibly.</p>
-                    <button class="quiz-btn">Start Quiz</button>
-                </div>
-            </div>
-
-            <!-- Module 3 -->
-            <div class="module-card" data-module="3">
-                <div class="module-header">
-                    <h2>Module 3: Ethical AI Usage & Academic Integrity</h2>
-                </div>
-                <div class="module-content">
-                    <p>Guidelines on plagiarism vs. assistance, bias awareness, copyright, and proper AI citation methods for academic settings.</p>
-                    <button class="quiz-btn">Start Quiz</button>
-                </div>
-            </div>
-        </section>
-    </main>
-<div>
-</div>
-</section>
-<section id="new-overview">
-    <h2 class="module-title">MODULE OVERVIEW</h2>
-    <div class="modules-overview">
-    
-  <div class="row">
-    <div class="module-card">
-      <h3>MODULE 1:    INTRO TO AI</h3>
-      <p>This module introduces the foundations of artificial intelligence, exploring what AI is and how it has evolved over time. You’ll learn about the difference between narrow and general AI, and how machine learning fits into the bigger picture. By the end, you’ll understand the role AI plays in everyday life and why it matters for the future.</p>
-    </div>
-    <div class="module-card">
-      <h3>MODULE 2:        UNDERSTANDING ALGORITHMS</h3>
-      <p>Here we dive into the concept of algorithms, the step‑by‑step instructions that power AI systems. You’ll explore examples of algorithms in action, from search engines to recommendation systems. This module builds a strong foundation for recognizing how algorithms shape decisions and influence outcomes.</p>
-    </div>
-    <div class="module-card">
-      <h3>MODULE 3: NEURAL NETWORKS OVERVIEW</h3>
-      <p>This module explains the basics of neural networks, the structures inspired by the human brain. You’ll see how layers of nodes process information and learn patterns from data. By the end, you’ll grasp why neural networks are central to modern AI breakthroughs like image recognition and natural language processing.</p>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="module-card">
-      <h3>MODULE 4:     DATA & TRAINING</h3>
-      <p>Data is the fuel of AI, and this module shows how it’s collected, cleaned, and prepared. You’ll learn about training datasets, validation, and the importance of quality data. By the end, you’ll understand how data impacts accuracy and reliability in AI models.</p>
-    </div>
-    <div class="module-card">
-      <h3>MODULE 5:       ETHICS IN AI</h3>
-      <p>This module explores the ethical challenges of AI, including bias, fairness, and accountability. You’ll examine real‑world examples of ethical dilemmas and how they affect society. By the end, you’ll be able to think critically about responsible AI use and its long‑term impact.</p>
-    </div>
-    <div class="module-card">
-      <h3>MODULE 6: TESTING & EVALUATION</h3>
-      <p>AI systems must be tested and evaluated to ensure they work as intended. This module covers performance metrics, error analysis, and continuous improvement. By the end, you’ll understand how testing safeguards reliability and builds trust in AI applications.</p>
-    </div>
-  </div>
-</div>
-</section>
-
-
-
-    <!-- Dashboard / Gamification Section -->
-    <section class="dashboard" id="dashboard">
-        <div class="progress-section">
-            <h2>Progress Tracking</h2>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 40%"></div>
-            </div>
-            <p>40% Complete</p>
+    <!-- 1. HOME PAGE VIEW (Completely separate from modules overview) -->
+    <div id="home-page-view">
+        <div class="hero">
+          <div class="hero-content">
+            <img src="images/ScrappyV2.png" alt="Site Logo" class="hero-logo">
+            <p class="hero-text">
+                Welcome to the AI Learning Portal! Learn with Scrappy to explore various concepts, practical uses, and fundamentals in an engaging high school program.
+            </p>
+            <a href="javascript:void(0)" onclick="showPage('modules-grid')" class="btn-explore">Explore Modules</a>
+          </div>
         </div>
+    </div>
 
-        <div class="xp-badges">
-            <h2>XP / Points System</h2>
-            <div class="xp-points">120 XP</div>
+    <!-- 2. ALL MODULES GRID PAGE VIEW (Shows all 6 modules at once with lock status) -->
+    <section id="modules-grid-view" style="display: none; padding: 120px 20px 60px; max-width: 1200px; margin: 0 auto;">
+        <h2 class="module-title" style="text-align: center; color: #00f2fe; margin-bottom: 30px;">ALL LEARNING MODULES</h2>
+        <p style="text-align: center; color: #aaa; margin-bottom: 40px;">Complete each module and pass its quiz to unlock the next concept!</p>
+        
+        <div class="modules-overview">
+            <div class="row">
+                <div class="module-card" id="card-module-1" data-module="1">
+                    <h3>MODULE 1: INTRO TO AI</h3>
+                    <p>This module introduces the foundations of artificial intelligence.</p>
+                    <button class="quiz-btn" id="btn-module-1" onclick="navigateToModule(1)">Explore Module</button>
+                </div>
+                <div class="module-card" id="card-module-2" data-module="2">
+                    <h3>MODULE 2: UNDERSTANDING ALGORITHMS</h3>
+                    <p>Here we dive into the concept of algorithms, the step-by-step instructions.</p>
+                    <button class="quiz-btn" id="btn-module-2" onclick="navigateToModule(2)" disabled style="opacity: 0.5;">🔒 Locked</button>
+                </div>
+                <div class="module-card" id="card-module-3" data-module="3">
+                    <h3>MODULE 3: NEURAL NETWORKS OVERVIEW</h3>
+                    <p>This module explains the basics of neural networks and their structure.</p>
+                    <button class="quiz-btn" id="btn-module-3" onclick="navigateToModule(3)" disabled style="opacity: 0.5;">🔒 Locked</button>
+                </div>
+            </div>
 
-            <div class="badge-grid">
-                <div class="badge" data-badge="1">Prompt Master</div>
-                <div class="badge" data-badge="2">Ethics Scholar</div>
-                <div class="badge" data-badge="3">AI Explorer</div>
+            <div class="row" style="margin-top: 30px;">
+                <div class="module-card" id="card-module-4" data-module="4">
+                    <h3>MODULE 4: DATA & TRAINING</h3>
+                    <p>Data is the fuel of AI, and this module shows how it's collected, cleaned, and used.</p>
+                    <button class="quiz-btn" id="btn-module-4" onclick="navigateToModule(4)" disabled style="opacity: 0.5;">🔒 Locked</button>
+                </div>
+                <div class="module-card" id="card-module-5" data-module="5">
+                    <h3>MODULE 5: ETHICS IN AI</h3>
+                    <p>This module explores the ethical challenges of AI, including bias and fairness.</p>
+                    <button class="quiz-btn" id="btn-module-5" onclick="navigateToModule(5)" disabled style="opacity: 0.5;">🔒 Locked</button>
+                </div>
+                <div class="module-card" id="card-module-6" data-module="6">
+                    <h3>MODULE 6: TESTING & EVALUATION</h3>
+                    <p>AI systems must be tested and evaluated to ensure they work as intended.</p>
+                    <button class="quiz-btn" id="btn-module-6" onclick="navigateToModule(6)" disabled style="opacity: 0.5;">🔒 Locked</button>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Interactive AI Chatbot Widget -->
-    <div class="chatbot-widget" id="chatbot">
-        <button class="chatbot-fab">💬</button>
-        <div class="chatpop-up" style="display: none;">
-            <div class="chat-header">
-                <span>AI Assistant</span>
-                <button class="close-chat">✕</button>
-            </div>
-            <div class="chat-messages"></div>
-            <div class="chat-input-area">
-                <input type="text" placeholder="Type a message...">
-                <button class="send-btn">Send</button>
-            </div>
+    <!-- 3. DEDICATED INDIVIDUAL LESSON VIEW -->
+    <section id="modules-page-view" style="display: none; padding: 120px 20px 60px; max-width: 1000px; margin: 0 auto; color: #fff;">
+        <button onclick="showPage('modules-grid')" style="background: #1e1e2e; color: #60a5fa; border: 1px solid #3b82f6; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-bottom: 25px; font-weight: bold; font-family: inherit;">← Back to All Modules</button>
+        
+        <div id="active-module-content" style="background: #12121a; border: 1px solid #3b82f6; border-radius: 12px; padding: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <!-- Lesson content renders dynamically -->
         </div>
-    </div>
+    </section>
 
     <script src="app.js"></script>
 </body>

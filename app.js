@@ -1,22 +1,24 @@
 /*
  * AI Learning Portal - JavaScript App
  * TSA Webmaster Competition - Hand-coded HTML5, CSS3, Modern JavaScript
- * Interactive modules, quiz system, XP/badges, and chatbot widget
+ * Interactive modules, progressive unlocking, quiz system, XP/badges, page routing, and chatbot widget
  */
 
+// Track unlocked modules (Module 1 is always unlocked by default)
+let maxUnlockedModule = parseInt(localStorage.getItem('maxUnlockedModule')) || 1;
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize all modules
     initNavbar();
     initModuleQuizzes();
     initProgressTracking();
     initBadgeSystem();
     initChatbot();
+    updateModuleLockUI();
 });
 
-// Navbar: active link highlighting
+// Navigation link highlighting
 function initNavbar() {
     const links = document.querySelectorAll('.navbar .nav-links a, nav a');
-    
     links.forEach(link => {
         link.addEventListener('click', () => {
             links.forEach(l => l.classList.remove('active'));
@@ -25,24 +27,178 @@ function initNavbar() {
     });
 }
 
-// Module Quizzes with interactive feedback
-function initModuleQuizzes() {
-    // Support both .quiz-btn and .btn-quiz selectors
-    const quizBtns = document.querySelectorAll('.quiz-btn, .btn-quiz, [onclick*="startQuiz"]');
+// Global SPA Page Switcher
+window.showPage = function(pageId) {
+    const homeView = document.getElementById('home-page-view');
+    const modulesGridView = document.getElementById('modules-grid-view');
+    const modulesPageView = document.getElementById('modules-page-view');
+
+    // Hide all views first
+    if (homeView) homeView.style.display = 'none';
+    if (modulesGridView) modulesGridView.style.display = 'none';
+    if (modulesPageView) modulesPageView.style.display = 'none';
+
+    if (pageId === 'modules-grid' || pageId === 'modules') {
+        if (modulesGridView) {
+            modulesGridView.style.display = 'block';
+            updateModuleLockUI();
+        }
+    } else if (pageId === 'home') {
+        if (homeView) homeView.style.display = 'block';
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// Directly navigate to an unlocked module lesson page
+window.navigateToModule = function(moduleId) {
+    if (moduleId > maxUnlockedModule) {
+        alert(`Module ${moduleId} is locked! Complete Module ${moduleId - 1} first to unlock it.`);
+        return;
+    }
+    window.loadModulePageContent(moduleId);
     
-    quizBtns.forEach((btn, index) => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const moduleCard = btn.closest('.module-card');
-            // Fallback to button index if data-module is missing on HTML element
-            const moduleNum = moduleCard && moduleCard.dataset.module ? moduleCard.dataset.module : (index + 1);
-            
-            showModuleQuiz(moduleNum);
-        });
-    });
+    const homeView = document.getElementById('home-page-view');
+    const modulesGridView = document.getElementById('modules-grid-view');
+    const modulesPageView = document.getElementById('modules-page-view');
+
+    if (homeView) homeView.style.display = 'none';
+    if (modulesGridView) modulesGridView.style.display = 'none';
+    if (modulesPageView) modulesPageView.style.display = 'block';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// Update lock status and buttons on the modules grid
+function updateModuleLockUI() {
+    for (let i = 1; i <= 6; i++) {
+        const btn = document.getElementById(`btn-module-${i}`);
+        const card = document.getElementById(`card-module-${i}`);
+
+        if (btn) {
+            if (i <= maxUnlockedModule) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.innerHTML = 'Explore Module';
+                if (card) card.style.border = '1px solid #3b82f6';
+            } else {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+                btn.innerHTML = '🔒 Locked';
+                if (card) card.style.border = '1px solid #27272a';
+            }
+        }
+    }
 }
 
-// Full Quiz Data Structure
+// Module Lessons Data
+const moduleLessons = {
+    1: {
+        title: "Module 1: Fundamental AI Concepts",
+        subtitle: "Core Architecture, Machine Learning, and Neural Networks",
+        content: `
+            <h3>1. Machine Learning Basics</h3>
+            <p>Machine Learning (ML) is a subset of AI where systems learn patterns directly from data rather than relying strictly on manually hardcoded rules.</p>
+            <h3>2. Neural Networks & Transformers</h3>
+            <p>Modern Large Language Models (LLMs) rely on the Transformer architecture, which uses self-attention mechanisms to process text context simultaneously.</p>
+            <h3>3. Computer Vision & Hallucinations</h3>
+            <p>Computer vision allows AI to parse visual data. However, generative models can occasionally output plausible-sounding but factually incorrect information known as <strong>hallucinations</strong>.</p>
+        `
+    },
+    2: {
+        title: "Module 2: Practical AI Tools & Techniques",
+        subtitle: "Prompt Engineering, Context Strategy, and Verification",
+        content: `
+            <h3>1. Effective Prompt Engineering</h3>
+            <p>Crafting structured prompts with clear roles, constraints, and instructions significantly improves the quality and accuracy of AI responses.</p>
+            <h3>2. Advanced Prompting Frameworks</h3>
+            <p>Techniques like <strong>Chain-of-Thought</strong> prompting encourage models to break reasoning down step-by-step, while <strong>Few-Shot Prompting</strong> provides reference examples in the query.</p>
+            <h3>3. Verification & Model Temperature</h3>
+            <p>Always verify AI outputs against trusted primary sources. Adjusting model temperature controls the randomness and creativity of generated text.</p>
+        `
+    },
+    3: {
+        title: "Module 3: Ethical AI Usage & Academic Integrity",
+        subtitle: "Citations, Bias Mitigation, and Digital Safety",
+        content: `
+            <h3>1. Academic Citing Guidelines</h3>
+            <p>Using GenAI tools as learning aids is acceptable when properly documented and cited according to institutional academic integrity standards.</p>
+            <h3>2. Bias & Data Privacy</h3>
+            <p>AI models reflect biases present in their training datasets. Users must remain vigilant regarding personal data privacy and ethical implications.</p>
+            <h3>3. Synthetic Media & Student Copyright</h3>
+            <p>Deepfakes represent synthetic media risks. Students should utilize a Copyright Checklist to ensure fair use and licensing compliance.</p>
+        `
+    },
+    4: {
+        title: "Module 4: Data & Training Frameworks",
+        subtitle: "Data Collection, Cleaning, and Model Validation",
+        content: `
+            <h3>1. Data Cleaning & Preparation</h3>
+            <p>High-quality data is required to train reliable models. Preprocessing cleans noise, formats structured entries, and balances representation.</p>
+            <h3>2. Supervised vs. Unsupervised Learning</h3>
+            <p>Supervised learning relies on labeled datasets for guided training, whereas unsupervised learning identifies intrinsic patterns in unlabeled data.</p>
+        `
+    },
+    5: {
+        title: "Module 5: Ethics in Artificial Intelligence",
+        subtitle: "Algorithmic Fairness, Accountability, and Transparency",
+        content: `
+            <h3>1. Algorithmic Bias</h3>
+            <p>When training data reflects historical inequalities, machine learning outputs perpetuate those biases without deliberate mitigation.</p>
+            <h3>2. Responsible AI Governance</h3>
+            <p>Developers must prioritize transparent model evaluation and data privacy protocols to ensure equitable deployment.</p>
+        `
+    },
+    6: {
+        title: "Module 6: Testing & Evaluation",
+        subtitle: "Benchmark Testing, Accuracy Metrics, and Safety Guardrails",
+        content: `
+            <h3>1. Benchmarking Metrics</h3>
+            <p>AI models undergo evaluation using metrics like precision, recall, and F1-score to assess performance across diverse scenarios.</p>
+            <h3>2. Alignment & Safety Guardrails</h3>
+            <p>Systems are tested against adversarial inputs to build robust guardrails against unwanted system behaviors.</p>
+        `
+    }
+};
+
+// Render full lesson page view
+window.loadModulePageContent = function(moduleId) {
+    const lesson = moduleLessons[moduleId] || moduleLessons[1];
+    const container = document.getElementById('active-module-content');
+
+    if (container) {
+        container.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #27272a; padding-bottom: 15px;">
+                <div>
+                    <span style="color: #60a5fa; font-weight: bold; font-size: 14px; text-transform: uppercase;">Module ${moduleId}</span>
+                    <h1 style="color: #ffffff; margin: 5px 0 0 0; font-size: 28px;">${lesson.title}</h1>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="navigateToModule(${moduleId > 1 ? moduleId - 1 : 1})" style="background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Prev</button>
+                    <button onclick="navigateToModule(${moduleId < maxUnlockedModule ? moduleId + 1 : moduleId})" style="background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Next</button>
+                </div>
+            </div>
+            
+            <p style="color: #9ca3af; font-size: 16px; margin-bottom: 25px;">${lesson.subtitle}</p>
+            
+            <div class="lesson-body" style="line-height: 1.8; font-size: 16px; color: #e5e7eb; margin-bottom: 35px;">
+                ${lesson.content}
+            </div>
+            
+            <div style="background: #1e1e2e; padding: 25px; border-radius: 8px; text-align: center; border: 1px solid #27272a;">
+                <h3 style="margin-top: 0; color: #fff; font-size: 20px;">Ready to test your knowledge?</h3>
+                <p style="color: #aaa; margin-bottom: 20px;">Pass the quiz (4/5 correct) to unlock the next module!</p>
+                <button onclick="showModuleQuiz(${moduleId})" style="background: #2563eb; color: #fff; border: none; padding: 12px 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">Take Module ${moduleId} Quiz</button>
+            </div>
+        `;
+    }
+};
+
+function initModuleQuizzes() {}
+
+// Quiz Data
 const moduleQuizzes = {
     1: {
         title: 'Module 1: Fundamental AI Concepts',
@@ -76,12 +232,11 @@ const moduleQuizzes = {
     }
 };
 
-// Show quiz for a specific module
-function showModuleQuiz(moduleNum) {
-    const quiz = moduleQuizzes[moduleNum];
+// Show Quiz Overlay & Unlock Next Module upon passing
+window.showModuleQuiz = function(moduleNum) {
+    const quiz = moduleQuizzes[moduleNum] || moduleQuizzes[1];
     if (!quiz) return;
 
-    // Remove existing modal if open
     const existingModal = document.querySelector('.quiz-modal');
     if (existingModal) existingModal.remove();
 
@@ -123,7 +278,6 @@ function showModuleQuiz(moduleNum) {
 
     document.body.appendChild(modal);
 
-    // Handle submit
     const submitBtn = modal.querySelector('.btn-submit-quiz');
     submitBtn.addEventListener('click', () => {
         let score = 0;
@@ -132,18 +286,24 @@ function showModuleQuiz(moduleNum) {
         quiz.questions.forEach((q, i) => {
             const selected = modal.querySelector(`input[name="question${i}"]:checked`);
             const selectedIndex = selected ? parseInt(selected.value) : -1;
-
-            if (selectedIndex === q.correct) {
-                score++;
-            }
+            if (selectedIndex === q.correct) score++;
         });
+
+        const passed = score >= 4;
+        
+        // Unlock next module if current module passed
+        if (passed && moduleNum >= maxUnlockedModule && maxUnlockedModule < 6) {
+            maxUnlockedModule = parseInt(moduleNum) + 1;
+            localStorage.setItem('maxUnlockedModule', maxUnlockedModule);
+            updateModuleLockUI();
+        }
 
         const modalContent = modal.querySelector('.quiz-modal-content');
         modalContent.innerHTML = `
-            <h2 style="color: var(--accent-cyan, #00f2fe); margin-top: 0;">${quiz.title} - Results</h2>
+            <h2 style="color: var(--accent-cyan, #00f2fe); margin-top: 0;">${quiz.title} Results</h2>
             <h3 style="font-size: 24px; margin: 15px 0;">Score: ${score} / ${total}</h3>
             <div class="quiz-feedback" style="font-size: 18px; margin-bottom: 20px;">
-                ${score >= 4 ? 'Great job! You passed this module! 🎓' : 'Good effort! Review the module and try again!'}
+                ${passed ? '🎉 Great job! You passed this module and unlocked the next one!' : 'Good effort! You need 4/5 correct to unlock the next module.'}
             </div>
             <button class="btn-continue" style="width: 100%; padding: 12px; background: var(--accent-blue, #0077ff); color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Continue</button>
         `;
@@ -156,71 +316,31 @@ function showModuleQuiz(moduleNum) {
         const continueBtn = modalContent.querySelector('.btn-continue');
         continueBtn.addEventListener('click', () => {
             modal.remove();
+            showPage('modules-grid');
         });
     });
 
-    // Handle close
     const closeBtn = modal.querySelector('.btn-close-quiz');
-    closeBtn.addEventListener('click', () => {
-        modal.remove();
-    });
+    closeBtn.addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+};
 
-    // Close on backdrop click
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
-}
-
-// Progress Tracking
+// Progress & Badges
 function initProgressTracking() {
-    const progressBars = document.querySelectorAll('.progress-bar');
-    
-    progressBars.forEach(section => {
-        const bar = section.querySelector('.progress-fill');
-        if (bar && !bar.style.width) {
-            bar.style.width = '20%';
-        }
-    });
-
     window.updateProgress = function(points) {
         const fill = document.querySelector('.progress-fill');
         const text = document.querySelector('.progress-bar p') || document.querySelector('.progress-text');
-        
         if (fill) {
             const currentWidth = parseFloat(fill.style.width || '20');
             const newWidth = Math.min(currentWidth + points, 100);
             fill.style.width = `${newWidth}%`;
-            
-            if (text) {
-                text.textContent = `${Math.round(newWidth)}% Complete`;
-            }
+            if (text) text.textContent = `${Math.round(newWidth)}% Complete`;
         }
     };
 }
 
-// Badge System
-function initBadgeSystem() {
-    const badges = document.querySelectorAll('.badge');
+function initBadgeSystem() {}
 
-    badges.forEach(badge => {
-        badge.addEventListener('click', () => {
-            badge.classList.toggle('selected');
-            
-            if (badge.classList.contains('selected')) {
-                badge.style.color = 'var(--accent-cyan, #00f2fe)';
-                badge.style.borderColor = 'var(--accent-cyan, #00f2fe)';
-                badge.style.opacity = '1';
-            } else {
-                badge.style.color = 'var(--text-secondary, #aaa)';
-                badge.style.borderColor = 'var(--border-color, #333)';
-            }
-        });
-    });
-}
-
-// Check badges based on progress
 function checkBadges() {
     const fill = document.querySelector('.progress-fill');
     const progress = fill ? parseFloat(fill.style.width || '0') : 0;
@@ -236,10 +356,7 @@ function checkBadges() {
                 badge.style.opacity = '1';
             }
         });
-
-        if (xpDisplay) {
-            xpDisplay.textContent = `${Math.round((progress / 100) * 300)} XP`;
-        }
+        if (xpDisplay) xpDisplay.textContent = `${Math.round((progress / 100) * 300)} XP`;
     }
 }
 
@@ -253,20 +370,12 @@ function initChatbot() {
 
     if (fab && chatPopUp) {
         fab.addEventListener('click', () => {
-            chatPopUp.classList.toggle('open');
-            if (chatPopUp.style.display === 'none' || !chatPopUp.style.display) {
-                chatPopUp.style.display = 'block';
-            } else {
-                chatPopUp.style.display = 'none';
-            }
+            chatPopUp.style.display = chatPopUp.style.display === 'none' || !chatPopUp.style.display ? 'block' : 'none';
         });
     }
 
     if (closeChat && chatPopUp) {
-        closeChat.addEventListener('click', () => {
-            chatPopUp.classList.remove('open');
-            chatPopUp.style.display = 'none';
-        });
+        closeChat.addEventListener('click', () => { chatPopUp.style.display = 'none'; });
     }
 
     if (sendBtn && chatInput) {
@@ -275,19 +384,12 @@ function initChatbot() {
             if (message) {
                 addChatMessage(message, 'user');
                 chatInput.value = '';
-
                 setTimeout(() => {
-                    const response = getChatResponse(message);
-                    addChatMessage(response, 'assistant');
+                    addChatMessage(getChatResponse(message), 'assistant');
                 }, 400);
             }
         });
-
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendBtn.click();
-            }
-        });
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendBtn.click(); });
     }
 }
 
@@ -296,43 +398,20 @@ function addChatMessage(text, sender) {
     if (!chatMessages) return;
 
     const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message');
     msgDiv.style.cssText = `
         background: ${sender === 'user' ? 'var(--accent-blue, #0077ff)' : 'var(--card-bg, #2a2a3d)'};
         color: ${sender === 'user' ? '#ffffff' : 'var(--text-secondary, #e0e0e0)'};
-        padding: 8px 12px;
-        border-radius: 8px;
-        max-width: 80%;
-        margin-bottom: 8px;
-        clear: both;
-        float: ${sender === 'user' ? 'right' : 'left'};
-        font-size: 14px;
-        word-break: break-word;
+        padding: 8px 12px; border-radius: 8px; max-width: 80%; margin-bottom: 8px;
+        clear: both; float: ${sender === 'user' ? 'right' : 'left'}; font-size: 14px; word-break: break-word;
     `;
     msgDiv.textContent = text;
-
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 function getChatResponse(message) {
     const lowerMsg = message.toLowerCase();
-
-    if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
-        return "Hello! I'm your AI learning assistant. Ask me about machine learning, prompt engineering, or ethical AI!";
-    }
-
-    if (lowerMsg.includes('module') || lowerMsg.includes('quiz')) {
-        return "You can click 'Start Quiz' on any module to test your knowledge, gain XP, and unlock badges!";
-    }
-
-    if (lowerMsg.includes('progress') || lowerMsg.includes('xp')) {
-        return "Complete quizzes to increase your progress bar and earn XP points!";
-    }
-
-    if (lowerMsg.includes('badge')) {
-        return "You earn badges as your total XP and completion progress go up!";
-    }
-
-    return "Great question! Try asking me about prompt engineering tips, academic integrity rules, or neural networks.";
+    if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) return "Hello! I'm your AI learning assistant.";
+    if (lowerMsg.includes('module') || lowerMsg.includes('quiz')) return "Pass each module's quiz with 4/5 correct to unlock the next module!";
+    return "Great question! Ask me about prompt engineering tips, academic integrity rules, or neural networks.";
 }
