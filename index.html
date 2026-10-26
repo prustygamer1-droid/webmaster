@@ -5,85 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Learning Portal - TSA Webmaster Competition</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body>
-
+<body style="background: #0a0a14; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0;">
     <!-- Fixed Sticky Navbar -->
-    <nav class="navbar">
-        <div class="logo">AI Portal</div>
-        <ul class="nav-links">
-            <li><a href="#home" onclick="showPage('home')">Home</a></li>
-            <li><a href="#modules" onclick="showPage('modules-grid')">Modules</a></li>
-            <li><a href="#dashboard" onclick="showPage('dashboard')">Dashboard</a></li>
-            <li><a href="#chatbot" onclick="showPage('chatbot')">Chatbot</a></li>
-            <li><a href="references.html">References</a></li>
+    <nav class="navbar" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18, 18, 30, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #2d2d42; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; box-sizing: border-box;">
+        <div class="logo" style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 22px; color: #00f2fe; text-shadow: 0 0 10px rgba(0,242,254,0.5);">AI Portal</div>
+        <ul class="nav-links" style="display: flex; list-style: none; gap: 25px; margin: 0; padding: 0;">
+            <li><a href="#home" onclick="showPage('home')" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Home</a></li>
+            <li><a href="#modules" onclick="showPage('modules-grid')" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Modules</a></li>
+            <li><a href="#dashboard" onclick="showPage('dashboard')" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Dashboard</a></li>
+            <li><a href="#chatbot" onclick="showPage('chatbot')" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Chatbot</a></li>
+            <li><a href="references.html" style="color: #00f2fe; text-decoration: none; font-weight: 600; transition: color 0.3s;">References</a></li>
         </ul>
     </nav>
 
-    <!-- 1. HOME PAGE VIEW (Completely separate from modules overview) -->
-    <div id="home-page-view">
-        <div class="hero">
-          <div class="hero-content">
-            <img src="images/ScrappyV2.png" alt="Site Logo" class="hero-logo">
-            <p class="hero-text">
-                Welcome to the AI Learning Portal! Learn with Scrappy to explore various concepts, practical uses, and fundamentals in an engaging high school program.
+    <!-- 1. HOME PAGE VIEW -->
+    <div id="home-page-view" style="padding-top: 100px;">
+        <div class="hero" style="min-height: 85vh; display: flex; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at center, #161625 0%, #0a0a14 100%); padding: 40px;">
+          <div class="hero-content" style="max-width: 800px;">
+            <img src="images/ScrappyV2.png" alt="Site Logo" class="hero-logo" style="width: 120px; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(0,242,254,0.6));">
+            <h1 style="font-family: 'Orbitron', sans-serif; font-size: 42px; color: #00f2fe; margin-bottom: 20px;">Master Artificial Intelligence</h1>
+            <p class="hero-text" style="color: #cbd5e1; font-size: 18px; line-height: 1.7; margin-bottom: 35px;">
+                Welcome to the ultimate AI Learning Portal! Join Scrappy to explore machine learning fundamentals, prompt engineering, ethics, and neural networks through thrilling high school arcade minigames.
             </p>
-            <a href="javascript:void(0)" onclick="showPage('modules-grid')" class="btn-explore">Explore Modules</a>
+            <a href="javascript:void(0)" onclick="showPage('modules-grid')" class="btn-explore" style="background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%); color: #000; padding: 16px 36px; border-radius: 8px; font-weight: bold; text-decoration: none; font-family: 'Orbitron', sans-serif; box-shadow: 0 4px 20px rgba(0,242,254,0.4); display: inline-block; transition: transform 0.2s;">Explore Modules →</a>
           </div>
         </div>
     </div>
 
-    <!-- 2. ALL MODULES GRID PAGE VIEW (Shows all 6 modules at once with lock status) -->
+    <!-- 2. ALL MODULES GRID PAGE VIEW -->
     <section id="modules-grid-view" style="display: none; padding: 120px 20px 60px; max-width: 1200px; margin: 0 auto;">
-        <h2 class="module-title" style="text-align: center; color: #00f2fe; margin-bottom: 30px;">ALL LEARNING MODULES</h2>
-        <p style="text-align: center; color: #aaa; margin-bottom: 40px;">Complete each module and pass its quiz to unlock the next concept!</p>
-        
+        <h2 class="module-title" style="text-align: center; color: #00f2fe; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; font-size: 32px;">ALL LEARNING MODULES</h2>
+        <p style="text-align: center; color: #aaa; margin-bottom: 40px; font-size: 16px;">Complete all sub-lessons and pass their arcade quizzes to unlock the next module in your tech journey!</p>
+       
         <div class="modules-overview">
-            <div class="row">
-                <div class="module-card" id="card-module-1" data-module="1">
-                    <h3>MODULE 1: INTRO TO AI</h3>
-                    <p>This module introduces the foundations of artificial intelligence.</p>
-                    <button class="quiz-btn" id="btn-module-1" onclick="navigateToModule(1)">Explore Module</button>
+            <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;">
+                <div class="module-card" id="card-module-1" data-module="1" style="background: #161625; border: 1px solid #3b82f6; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 1: INTRO TO AI</h3>
+                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Foundations of artificial intelligence, machine learning, and basic neural networks.</p>
+                    <button class="quiz-btn" id="btn-module-1" onclick="navigateToModule(1)" style="width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px;">Explore Module</button>
                 </div>
-                <div class="module-card" id="card-module-2" data-module="2">
-                    <h3>MODULE 2: UNDERSTANDING ALGORITHMS</h3>
-                    <p>Here we dive into the concept of algorithms, the step-by-step instructions.</p>
-                    <button class="quiz-btn" id="btn-module-2" onclick="navigateToModule(2)" disabled style="opacity: 0.5;">🔒 Locked</button>
+                <div class="module-card" id="card-module-2" data-module="2" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 2: PRACTICAL AI TOOLS</h3>
+                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Prompt engineering, context strategies, model temperature, and verification.</p>
+                    <button class="quiz-btn" id="btn-module-2" onclick="navigateToModule(2)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
                 </div>
-                <div class="module-card" id="card-module-3" data-module="3">
-                    <h3>MODULE 3: NEURAL NETWORKS OVERVIEW</h3>
-                    <p>This module explains the basics of neural networks and their structure.</p>
-                    <button class="quiz-btn" id="btn-module-3" onclick="navigateToModule(3)" disabled style="opacity: 0.5;">🔒 Locked</button>
+                <div class="module-card" id="card-module-3" data-module="3" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 3: ETHICS & INTEGRITY</h3>
+                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Academic citing guidelines, dataset bias, data privacy, and synthetic media risks.</p>
+                    <button class="quiz-btn" id="btn-module-3" onclick="navigateToModule(3)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
                 </div>
             </div>
-
-            <div class="row" style="margin-top: 30px;">
-                <div class="module-card" id="card-module-4" data-module="4">
-                    <h3>MODULE 4: DATA & TRAINING</h3>
-                    <p>Data is the fuel of AI, and this module shows how it's collected, cleaned, and used.</p>
-                    <button class="quiz-btn" id="btn-module-4" onclick="navigateToModule(4)" disabled style="opacity: 0.5;">🔒 Locked</button>
+            <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 25px;">
+                <div class="module-card" id="card-module-4" data-module="4" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 4: DATA & TRAINING</h3>
+                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Data cleaning, supervised/unsupervised learning, and training pipelines.</p>
+                    <button class="quiz-btn" id="btn-module-4" onclick="navigateToModule(4)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
                 </div>
-                <div class="module-card" id="card-module-5" data-module="5">
-                    <h3>MODULE 5: ETHICS IN AI</h3>
-                    <p>This module explores the ethical challenges of AI, including bias and fairness.</p>
-                    <button class="quiz-btn" id="btn-module-5" onclick="navigateToModule(5)" disabled style="opacity: 0.5;">🔒 Locked</button>
+                <div class="module-card" id="card-module-5" data-module="5" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 5: ADVANCED ETHICS</h3>
+                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Algorithmic fairness, transparency, policy governance, and safety protocols.</p>
+                    <button class="quiz-btn" id="btn-module-5" onclick="navigateToModule(5)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
                 </div>
-                <div class="module-card" id="card-module-6" data-module="6">
-                    <h3>MODULE 6: TESTING & EVALUATION</h3>
-                    <p>AI systems must be tested and evaluated to ensure they work as intended.</p>
-                    <button class="quiz-btn" id="btn-module-6" onclick="navigateToModule(6)" disabled style="opacity: 0.5;">🔒 Locked</button>
+                <div class="module-card" id="card-module-6" data-module="6" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 6: TESTING & EVALUATION</h3>
+                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Benchmark testing, precision/recall metrics, alignment, and AI guardrails.</p>
+                    <button class="quiz-btn" id="btn-module-6" onclick="navigateToModule(6)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 3. DEDICATED INDIVIDUAL LESSON VIEW -->
+    <!-- 3. DEDICATED INDIVIDUAL LESSON VIEW WITH SUBMODULE TABS -->
     <section id="modules-page-view" style="display: none; padding: 120px 20px 60px; max-width: 1000px; margin: 0 auto; color: #fff;">
         <button onclick="showPage('modules-grid')" style="background: #1e1e2e; color: #60a5fa; border: 1px solid #3b82f6; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-bottom: 25px; font-weight: bold; font-family: inherit;">← Back to All Modules</button>
-        
+       
         <div id="active-module-content" style="background: #12121a; border: 1px solid #3b82f6; border-radius: 12px; padding: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <!-- Lesson content renders dynamically -->
+            <!-- Lesson content and submodules render dynamically -->
+        </div>
+    </section>
+
+    <!-- 4. GAMIFIED DASHBOARD PAGE VIEW -->
+    <section id="dashboard-page-view" style="display: none; padding: 120px 20px 60px; max-width: 1000px; margin: 0 auto; color: #fff;">
+        <h2 style="text-align: center; color: #00f2fe; margin-bottom: 10px; font-size: 32px; font-family: 'Orbitron', sans-serif;">STUDENT PROGRESS DASHBOARD</h2>
+        <p style="text-align: center; color: #aaa; margin-bottom: 40px;">Track your AI learning journey, earned badges, and arcade experience points!</p>
+
+        <!-- Stats Overview Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
+            <div style="background: #161625; border: 1px solid #3b82f6; border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <span style="font-size: 36px;">🏆</span>
+                <h4 style="color: #aaa; margin: 10px 0 5px 0;">Total Experience</h4>
+                <p id="dashboard-xp-text" style="font-size: 28px; font-weight: bold; color: #00f2fe; margin: 0;">0 XP</p>
+            </div>
+            <div style="background: #161625; border: 1px solid #a855f7; border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <span style="font-size: 36px;">📚</span>
+                <h4 style="color: #aaa; margin: 10px 0 5px 0;">Modules Completed</h4>
+                <p id="dashboard-modules-count" style="font-size: 28px; font-weight: bold; color: #a855f7; margin: 0;">0 / 6</p>
+            </div>
+            <div style="background: #161625; border: 1px solid #2ed573; border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <span style="font-size: 36px;">⚡</span>
+                <h4 style="color: #aaa; margin: 10px 0 5px 0;">Overall Completion</h4>
+                <p id="dashboard-progress-percent" style="font-size: 28px; font-weight: bold; color: #2ed573; margin: 0;">0%</p>
+            </div>
+        </div>
+
+        <!-- Progress Bar Card -->
+        <div style="background: #161625; border: 1px solid #2d2d42; border-radius: 10px; padding: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+            <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px;">Curriculum Progress Bar</h3>
+            <div style="width: 100%; background: #090910; height: 20px; border-radius: 10px; overflow: hidden; border: 1px solid #3f3f46;">
+                <div id="dashboard-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #00f2fe 0%, #2563eb 100%); transition: width 0.5s ease;"></div>
+            </div>
+        </div>
+
+        <!-- Badges Showcase (Expanded 9 Badges for All 6 Modules & Milestones) -->
+        <div style="background: #161625; border: 1px solid #2d2d42; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+            <h3 style="color: #fff; margin-top: 0; margin-bottom: 20px; font-family: 'Orbitron', sans-serif;">Earned Achievement Badges</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+                <!-- Module 1 -->
+                <div id="badge-1" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                    <span style="font-size: 40px;">🚀</span>
+                    <h4 style="color: #fff; margin: 10px 0 5px 0;">AI Pioneer</h4>
+                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 1</p>
+                </div>
+                <!-- Module 2 -->
+                <div id="badge-2" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                    <span style="font-size: 40px;">🧱</span>
+                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Prompt Architect</h4>
+                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 2</p>
+                </div>
+                <!-- Module 3 -->
+                <div id="badge-3" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                    <span style="font-size: 40px;">⚖️</span>
+                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Ethical Scholar</h4>
+                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 3</p>
+                </div>
+                <!-- Module 4 -->
+                <div id="badge-4" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                    <span style="font-size: 40px;">📊</span>
+                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Data Expert</h4>
+                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 4</p>
+                </div>
+                <!-- Module 5 -->
+                <div id="badge-5" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                    <span style="font-size: 40px;">🛡️</span>
+                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Governance Guru</h4>
+                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 5</p>
+                </div>
+                <!-- Module 6 -->
+                <div id="badge-6" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                    <span style="font-size: 40px;">🎯</span>
+                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Alignment Master</h4>
+                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 6</p>
+                </div>
+                <!-- Milestone Badge: Quiz Ace -->
+                <div id="badge-7" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                    <span style="font-size: 40px;">🧠</span>
+                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Quiz Ace</h4>
+                    <p style="color: #aaa; font-size: 13px; margin: 0;">Unlock Half of Curriculum</p>
+                </div>
+                <!-- Milestone Badge: Arcade High Scorer -->
+                <div id="badge-8" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                    <span style="font-size: 40px;">🕹️</span>
+                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Arcade Pro</h4>
+                    <p style="color: #aaa; font-size: 13px; margin: 0;">Unlock Multiple Minigames</p>
+                </div>
+                <!-- Milestone Badge: Streak Master -->
+                <div id="badge-9" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                    <span style="font-size: 40px;">🔥</span>
+                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Streak Master</h4>
+                    <p style="color: #aaa; font-size: 13px; margin: 0;">Master All 6 Modules</p>
+                </div>
+            </div>
         </div>
     </section>
 
