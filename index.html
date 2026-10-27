@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Learning Portal - TSA Webmaster Competition</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
+    <link href=https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Boldonse&display=swap rel="stylesheet">
 <body style="background: #0a0a14; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0;">
     <!-- Fixed Sticky Navbar -->
     <nav class="navbar" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18, 18, 30, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #2d2d42; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; box-sizing: border-box;">
@@ -20,22 +19,72 @@
         </ul>
     </nav>
 
-    <!-- 1. HOME PAGE VIEW -->
-    <div id="home-page-view" style="padding-top: 100px;">
-        <div class="hero" style="min-height: 85vh; display: flex; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at center, #161625 0%, #0a0a14 100%); padding: 40px;">
-          <div class="hero-content" style="max-width: 800px;">
-            <img src="images/ScrappyV2.png" alt="Site Logo" class="hero-logo" style="width: 120px; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(0,242,254,0.6));">
-            <h1 style="font-family: 'Orbitron', sans-serif; font-size: 42px; color: #00f2fe; margin-bottom: 20px;">Master Artificial Intelligence</h1>
-            <p class="hero-text" style="color: #cbd5e1; font-size: 18px; line-height: 1.7; margin-bottom: 35px;">
-                Welcome to the ultimate AI Learning Portal! Join Scrappy to explore machine learning fundamentals, prompt engineering, ethics, and neural networks through thrilling high school arcade minigames.
-            </p>
-            <a href="javascript:void(0)" onclick="showPage('modules-grid')" class="btn-explore" style="background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%); color: #000; padding: 16px 36px; border-radius: 8px; font-weight: bold; text-decoration: none; font-family: 'Orbitron', sans-serif; box-shadow: 0 4px 20px rgba(0,242,254,0.4); display: inline-block; transition: transform 0.2s;">Explore Modules →</a>
-          </div>
-        </div>
+<!-- 1. HOME PAGE VIEW -->
+<div id="home-page-view" style="padding-top: 100px; display: flex; flex-direction: column; min-height: 100vh;">
+    <!-- HERO SECTION -->
+    <div class="hero" style="min-height: 75vh; flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px;">
+      <div class="hero-content" style="max-width: 800px;">
+        <img src="images/ScrappyV2.png" alt="Site Logo" class="hero-logo" style="width: 400px; max-width: 90%; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(0,242,254,0.6));">
+        <h1 style="font-family: 'Orbitron', sans-serif; font-size: 42px; color: #00f2fe; margin-bottom: 20px;">Master Artificial Intelligence</h1>
+        <p class="hero-text" style="color: #cbd5e1; font-size: 18px; line-height: 1.7; margin-bottom: 35px;">
+            Welcome to the ultimate AI Learning Portal! Join Scrappy to explore machine learning fundamentals, prompt engineering, ethics, and neural networks through thrilling high school arcade minigames.
+        </p>
+        <a href="javascript:void(0)" onclick="showPage('modules-grid')" class="btn-explore" style="background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%); color: #000; padding: 16px 36px; border-radius: 8px; font-weight: bold; text-decoration: none; font-family: 'Orbitron', sans-serif; box-shadow: 0 4px 20px rgba(0,242,254,0.4); display: inline-block; transition: transform 0.2s;">Explore Modules →</a>
+      </div>
     </div>
 
-    <!-- 2. ALL MODULES GRID PAGE VIEW -->
-    <section id="modules-grid-view" style="display: none; padding: 120px 20px 60px; max-width: 1200px; margin: 0 auto;">
+    <!-- HOME-ONLY FOOTER -->
+    <footer class="site-footer" style="background: rgba(15, 23, 42, 0.9); border-top: 1px solid rgba(0, 242, 254, 0.2); padding: 40px 20px 20px; font-family: sans-serif; color: #94a3b8; font-size: 14px;">
+
+        <!-- Grid Container for Side-by-Side Sections -->
+        <div class="footer-grid" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; text-align: left;">
+
+            <div class="footer-section">
+                <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">CONTACT US</h3>
+                <p style="margin: 6px 0;">AI Learning Portal Dev Team</p>
+                <p style="margin: 6px 0;">Technology Student Association</p>
+                <p style="margin: 6px 0;">Student Innovation Division</p>
+                <p style="margin: 6px 0;">Parker, Colorado</p>
+            </div>
+
+            <div class="footer-section">
+                <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">LOCATIONS</h3>
+                <!-- Horizontal/Side-by-side pills for location items -->
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+                    <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">New York City, NY</span>
+                    <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">Los Angeles, CA</span>
+                    <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">Chicago, IL</span>
+                    <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">Parker, CO</span>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">PROJECT INFO</h3>
+                <p style="margin: 6px 0;">AI Learning Portal</p>
+                <p style="margin: 6px 0;">Interactive AI Education Platform</p>
+                <p style="margin: 6px 0;">Built with HTML, CSS & JavaScript</p>
+                <p style="margin: 6px 0;">TSA Webmaster Competition Entry</p>
+            </div>
+
+            <div class="footer-section">
+                <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">LATEST UPDATE</h3>
+                <p style="margin: 6px 0;"><strong style="color: #00f2fe;">Version 1.0</strong></p>
+                <p style="margin: 6px 0;">Interactive Modules Added</p>
+                <p style="margin: 6px 0;">Enhanced UI / Arcade Engine</p>
+                <p style="margin: 6px 0;">Last Updated: October 2026</p>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom" style="max-width: 1200px; margin: 30px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; color: #64748b; font-size: 13px;">
+            © 2026 AI Learning Portal • Technology Student Association • All Rights Reserved
+        </div>
+
+    </footer>
+</div>
+
+<!-- 2. ALL MODULES GRID PAGE VIEW -->
+    <section id="modules-grid-view" style="display: none; padding: 120px 20px 60px; ">
         <h2 class="module-title" style="text-align: center; color: #00f2fe; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; font-size: 32px;">ALL LEARNING MODULES</h2>
         <p style="text-align: center; color: #aaa; margin-bottom: 40px; font-size: 16px;">Complete all sub-lessons and pass their arcade quizzes to unlock the next module in your tech journey!</p>
        
@@ -44,7 +93,7 @@
                 <div class="module-card" id="card-module-1" data-module="1" style="background: #161625; border: 1px solid #3b82f6; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
                     <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 1: INTRO TO AI</h3>
                     <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Foundations of artificial intelligence, machine learning, and basic neural networks.</p>
-                    <button class="quiz-btn" id="btn-module-1" onclick="navigateToModule(1)" style="width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px;">Explore Module</button>
+                    <button class="quiz-btn" id="btn-module-1" onclick="navigateToModule(1)" style="width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-family: 'Manrope', sans-serif; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; margin-top: 15px;">Explore Module</button>
                 </div>
                 <div class="module-card" id="card-module-2" data-module="2" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
                     <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 2: PRACTICAL AI TOOLS</h3>
