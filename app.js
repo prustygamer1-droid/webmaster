@@ -3,6 +3,50 @@
  * TSA Webmaster Competition - Hand-coded HTML5, CSS3, Modern JavaScript
  * Gamified Arcade Rocket, Drag-and-Drop Block Blast, and Pirate Ship Cannon Minigames Engine
  */
+function loadModule(moduleId) {
+    // 1. Load your module HTML into the container
+    document.getElementById('active-module-content').innerHTML = modules[moduleId].content;
+
+    // 2. TRIGGER THE MODULE BACKGROUND
+    document.body.classList.add('module-active');
+}
+
+function returnToHome() {
+    // 1. Clear the container
+    document.getElementById('active-module-content').innerHTML = "";
+
+    // 2. REMOVE THE MODULE BACKGROUND
+    document.body.classList.remove('module-active');
+}
+
+// Global simulation calculator for Submodule 1.1 interactive widget
+// 1.1 Spam Classifier Simulator
+window.updateSpamSimulator = function() {
+    const kw = parseFloat(document.getElementById('slider-kw')?.value) || 0;
+    const links = parseFloat(document.getElementById('slider-links')?.value) || 0;
+
+    const labelKw = document.getElementById('label-kw');
+    const labelLinks = document.getElementById('label-links');
+    if (labelKw) labelKw.innerText = kw;
+    if (labelLinks) labelLinks.innerText = links;
+
+    const score = (kw * 0.12 + links * 0.20).toFixed(2);
+    const outputScore = document.getElementById('output-score');
+    if (outputScore) outputScore.innerText = score;
+
+    const badge = document.getElementById('output-badge');
+    if (badge) {
+        if (score >= 0.5) {
+            badge.style.background = '#ef4444';
+            badge.innerText = 'SPAM DETECTED';
+        } else {
+            badge.style.background = '#10b981';
+            badge.innerText = 'LEGITIMATE (HAM)';
+        }
+    }
+};
+
+
 
 let maxUnlockedModule = parseInt(localStorage.getItem('maxUnlockedModule')) || 1;
 
@@ -157,41 +201,267 @@ function updateModuleLockUI() {
 
 // Submodules detailed lesson data for all 6 modules
 const moduleLessons = {
-    1: {
+1: {
         title: "Module 1: Fundamental AI Concepts",
         submodules: {
             1: {
-                title: "1.1 Machine Learning Fundamentals",
-                type: "rocket",
-                content: `
-                    <h3>What is Machine Learning?</h3>
-                    <p>Machine Learning (ML) is a branch of artificial intelligence where algorithms identify statistical patterns in large datasets to make accurate predictions on new data without being explicitly programmed with manual IF-THEN rules.</p>
-                    <h3>Key Learning Paradigms</h3>
-                    <ul>
-                        <li><strong>Supervised Learning:</strong> Models learn using labeled input-output pairs (e.g., training a spam filter on labeled emails).</li>
-                        <li><strong>Unsupervised Learning:</strong> Models discover natural clusters or patterns in unlabeled data.</li>
-                        <li><strong>Reinforcement Learning:</strong> Agents learn optimal actions through trial-and-error rewards.</li>
-                    </ul>
-                `
-            },
+    title: "1.1 Machine Learning Fundamentals",
+    type: "rocket",
+    content: `
+        <div class="lesson-article-container">
+            
+            <!-- Article Header -->
+            <div class="article-header">
+                <span class="article-badge">Core Concept Article</span>
+                <h2>Demystifying Machine Learning</h2>
+                <p>An exciting journey into how computers stop following rigid rules and start learning from experience just like humans do.</p>
+            </div>
+
+            <!-- Section 1 -->
+            <h3>1. The Big Shift: Traditional Coding vs. Machine Learning</h3>
+            <p>
+                For a long time, writing computer software meant giving a computer strict, step-by-step instructions. If a programmer wanted to build a spam filter for an email inbox, they had to sit down and write thousands of manual rules by hand—such as <code>IF message contains "WINNER" AND sender is unknown THEN mark as spam</code>. While this works for simple tasks, it totally falls apart in the real world where language changes constantly, pictures look different every time, and new tricks pop up every single day.
+            </p>
+            <p>
+                <strong>Machine Learning (ML)</strong> completely flips this script. Instead of forcing human programmers to invent every single rule, engineers feed the computer massive amounts of examples and correct answers. The computer then looks at the data, figures out patterns all on its own, and creates its own rules to make smart guesses about new things it has never seen before.
+            </p>
+
+            <img src="images/Module1Image.jpg" alt="Comparison diagram showing traditional programming versus machine learning data flow" class="content-lesson-img">
+
+            <!-- Callout Box -->
+            <div class="article-callout">
+                <h4>Key Takeaway</h4>
+                <p>
+                    Traditional programming is like teaching someone a recipe step-by-step; Machine Learning is like showing someone hundreds of pictures of food until they learn how to cook on their own.
+                </p>
+            </div>
+
+            <!-- Section 2 -->
+            <h3>2. The Four Core Pillars of Machine Learning</h3>
+            <p>
+                To solve different kinds of problems and build powerful technologies, computer scientists divide machine learning into four fundamental pillars. Each one handles data and challenges in a unique way:
+            </p>
+
+            <!-- Stacked Row Format (A, B, C, D) -->
+            <div class="paradigms-stack">
+                <div class="paradigm-row-card">
+                    <h4>A. Supervised Learning</h4>
+                    <p>
+                        Think of this like learning with a teacher checking your homework. The computer is given practice questions that already have the correct answers attached. It practices over and over until it can solve new, unreleased problems accurately. Common examples include email spam filters and apps that predict house prices.
+                    </p>
+                </div>
+
+                <div class="paradigm-row-card">
+                    <h4>B. Unsupervised Learning</h4>
+                    <p>
+                        Think of this like exploring a messy room with no guide. The computer is given a pile of completely unlabeled data and has to find hidden groups, patterns, or similarities on its own. Stores use this to group shoppers with similar buying habits into categories.
+                    </p>
+                </div>
+
+                <div class="paradigm-row-card">
+                    <h4>C. Reinforcement Learning</h4>
+                    <p>
+                        Think of this like playing a video game through trial and error. An AI agent takes actions in an environment, earning points for good moves and losing points for mistakes. Over time, it figures out the best strategy to win. This is how self-driving cars and robot arms learn to navigate.
+                    </p>
+                </div>
+
+                <div class="paradigm-row-card">
+                    <h4>D. Deep Learning & Neural Networks</h4>
+                    <p>
+                        Inspired by the human brain, deep learning uses multi-layered artificial neural networks to process complex data. This is the advanced engine behind modern breakthroughs like facial recognition, voice assistants, and generative AI art tools.
+                    </p>
+                </div>
+            </div>
+
+            <img src="images/Module1Image1.1.jpg" alt="Illustration of the four machine learning paradigms with icons and brief descriptions" class="content-lesson-img">
+            <!-- Interactive Simulator Widget 1.1 -->
+            <div class="simulator-box">
+                <div class="simulator-header">
+                    <span class="sim-icon">🔬</span>
+                    <div>
+                        <h4>Interactive Model Simulator: Supervised Spam Classifier</h4>
+                        <p>Adjust the sliders below to see how a live AI calculates threat probabilities in real time!</p>
+                    </div>
+                </div>
+
+                <div class="slider-wrapper">
+                    <div class="slider-label-row">
+                        <span>Trigger Words Count ("Win", "Free", "Urgent"):</span>
+                        <span id="label-kw" class="highlight-val">3</span>
+                    </div>
+                    <input type="range" id="slider-kw" min="0" max="10" value="3" oninput="window.updateSpamSimulator()">
+                </div>
+
+                <div class="slider-wrapper">
+                    <div class="slider-label-row">
+                        <span>Suspicious External Links Count:</span>
+                        <span id="label-links" class="highlight-val">2</span>
+                    </div>
+                    <input type="range" id="slider-links" min="0" max="5" value="2" oninput="window.updateSpamSimulator()">
+                </div>
+
+                <div class="simulator-output-row">
+                    <div>
+                        <span class="output-title">Calculated Probability Score:</span>
+                        <span id="output-score">0.65</span>
+                    </div>
+                    <div id="output-badge" class="spam-badge-pill">
+                        SPAM DETECTED
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    `
+},
             2: {
                 title: "1.2 Neural Networks & Deep Learning",
                 type: "blockblast",
                 content: `
-                    <h3>Artificial Neural Networks (ANNs)</h3>
-                    <p>Neural networks are computational structures inspired by the human brain's interconnected biological neurons, featuring input, hidden, and output layers.</p>
-                    <h3>Deep Learning & Transformers</h3>
-                    <p>Deep Learning uses networks with many hidden layers for hierarchical feature learning. Modern LLMs use Transformer architectures powered by Self-Attention mechanisms.</p>
+                    <div class="lesson-article-container">
+                        
+                        <!-- Article Header -->
+                        <div class="article-header">
+                            <span class="article-badge" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8; border-color: #38bdf8;">Deep Architecture</span>
+                            <h2>Inside Artificial Neural Networks & Transformers</h2>
+                            <p>An architectural deep dive into multi-layered computational graphs, activation functions, and self-attention mechanisms.</p>
+                        </div>
+
+                        <!-- Section 1 -->
+                        <h3>1. Artificial Neural Networks (ANNs)</h3>
+                        <p>
+                            Artificial Neural Networks are computational architectures inspired by biological neural processing in animal and human brains. At their core, ANNs consist of thousands or millions of interconnected nodes (artificial neurons) arranged in distinct architectural tiers: the <strong>Input Layer</strong> (which ingests raw feature vectors), one or more <strong>Hidden Layers</strong> (which perform non-linear transformations and feature extraction), and the <strong>Output Layer</strong> (which produces final classification or regression predictions).
+                        </p>
+                        <p>
+                            Each connection between neurons holds a numerical parameter called a <em>weight</em>. As data flows forward through the network, signals are multiplied by these weights, summed at each receiving node, and passed through non-linear activation functions (like ReLU or Sigmoid) to determine whether the neuron fires.
+                        </p>
+
+                        <!-- Callout Box -->
+                        <div class="article-callout">
+                            <h4>The Power of Depth</h4>
+                            <p>
+                                Adding multiple hidden layers (Deep Learning) allows networks to learn hierarchical representations—early layers detect simple edges and lines, intermediate layers combine them into shapes, and deep layers recognize complex semantic objects.
+                            </p>
+                        </div>
+
+                        <!-- Section 2 -->
+                        <h3>2. The Transformer Revolution & Self-Attention</h3>
+                        <p>
+                            Traditional deep learning models like Recurrent Neural Networks (RNNs) processed text sequentially word-by-word, creating bottlenecks for long-range context. In 2017, researchers introduced the <strong>Transformer architecture</strong>, powered entirely by <strong>Self-Attention</strong> mechanisms.
+                        </p>
+                        <p>
+                            Self-attention enables models to evaluate the contextual relationship between every single word in a sentence simultaneously, regardless of their distance from one another. This breakthrough forms the computational foundation behind modern Large Language Models (LLMs) like GPT and Claude.
+                        </p>
+
+                        <!-- Interactive Simulator Widget 1.2 -->
+                        <div class="simulator-box">
+                            <div class="simulator-header">
+                                <span class="sim-icon">⚡</span>
+                                <div>
+                                    <h4>Interactive Simulator: Neural Weight Propagation</h4>
+                                    <p>Tweak the synaptic weight multiplier to see how signals amplify across hidden layers.</p>
+                                </div>
+                            </div>
+
+                            <div class="slider-wrapper">
+                                <div class="slider-label-row">
+                                    <span>Input Signal Strength ($$X_1$$):</span>
+                                    <span id="label-signal" class="highlight-val">5.0</span>
+                                </div>
+                                <input type="range" id="slider-signal" min="1" max="10" step="0.5" value="5.0" oninput="window.updateNeuralSimulator()">
+                            </div>
+
+                            <div class="slider-wrapper">
+                                <div class="slider-label-row">
+                                    <span>Synaptic Weight ($$W_1$$):</span>
+                                    <span id="label-weight" class="highlight-val">1.5</span>
+                                </div>
+                                <input type="range" id="slider-weight" min="0.1" max="3.0" step="0.1" value="1.5" oninput="window.updateNeuralSimulator()">
+                            </div>
+
+                            <div class="simulator-output-row">
+                                <div>
+                                    <span class="output-title">Activated Output Signal (σ(z)):</span>
+                                    <span id="output-neural">0.99</span>
+                                </div>
+                                <div id="neural-status" class="spam-badge-pill" style="background: #3b82f6;">
+                                    STRONG FIRING
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 `
             },
             3: {
                 title: "1.3 Computer Vision & Generative AI Risks",
                 type: "angrybirds",
                 content: `
-                    <h3>Computer Vision (CV)</h3>
-                    <p>Computer Vision enables machines to analyze, interpret, and extract visual semantics from digital images and videos using CNNs.</p>
-                    <h3>Generative Model Hallucinations</h3>
-                    <p>Generative models occasionally output plausibly structured but factually false information known as hallucinations. Verification against primary sources is mandatory.</p>
+                    <div class="lesson-article-container">
+                        
+                        <!-- Article Header -->
+                        <div class="article-header">
+                            <span class="article-badge" style="background: rgba(52, 211, 153, 0.1); color: #34d399; border-color: #34d399;">Vision & Reliability</span>
+                            <h2>Computer Vision & Generative Hallucinations</h2>
+                            <p>Analyzing how machines interpret pixel data and examining the critical safety risks of generative model hallucinations.</p>
+                        </div>
+
+                        <!-- Section 1 -->
+                        <h3>1. Computer Vision (CV) Fundamentals</h3>
+                        <p>
+                            Computer Vision is a subfield of artificial intelligence that trains computers to extract high-level semantic understanding from digital images, video feeds, and multi-dimensional sensor arrays. Utilizing specialized architectures known as <strong>Convolutional Neural Networks (CNNs)</strong>, CV systems apply mathematical filters (kernels) across pixel grids to automatically detect edges, textures, contours, and complex object geometries.
+                        </p>
+                        <p>
+                            From autonomous vehicle lane detection and facial recognition to medical MRI scan tumor segmentation, computer vision bridges the gap between raw optical data and actionable automated decisions.
+                        </p>
+
+                        <!-- Callout Box -->
+                        <div class="article-callout">
+                            <h4>Pixels to Semantics</h4>
+                            <p>
+                                A computer does not "see" an image the way humans do; it processes a massive grid of multi-channel numerical matrix values (RGB values ranging from 0 to 255 per pixel).
+                            </p>
+                        </div>
+
+                        <!-- Section 2 -->
+                        <h3>2. Generative Model Hallucinations</h3>
+                        <p>
+                            As generative AI models become ubiquitous, understanding their failure modes is critical. One of the most prominent risks is the <strong>hallucination phenomenon</strong>, where an AI model generates factually incorrect, nonsensical, or entirely fabricated information while maintaining an authoritative, highly confident tone.
+                        </p>
+                        <p>
+                            Because generative models predict the next most statistically likely token based on training correlations rather than performing logical truth verification, they can easily invent fake citations, historical events, or code snippets. Cross-referencing primary human sources is therefore mandatory.
+                        </p>
+
+                        <!-- Interactive Simulator Widget 1.3 -->
+                        <div class="simulator-box">
+                            <div class="simulator-header">
+                                <span class="sim-icon">🎯</span>
+                                <div>
+                                    <h4>Interactive Simulator: Object Detection Confidence</h4>
+                                    <p>Simulate image resolution clarity to evaluate model classification confidence thresholds.</p>
+                                </div>
+                            </div>
+
+                            <div class="slider-wrapper">
+                                <div class="slider-label-row">
+                                    <span>Image Resolution Clarity (%):</span>
+                                    <span id="label-res" class="highlight-val">85%</span>
+                                </div>
+                                <input type="range" id="slider-res" min="10" max="100" value="85" oninput="window.updateVisionSimulator()">
+                            </div>
+
+                            <div class="simulator-output-row">
+                                <div>
+                                    <span class="output-title">Detection Confidence:</span>
+                                    <span id="output-conf">94.2%</span>
+                                </div>
+                                <div id="vision-status" class="spam-badge-pill" style="background: #10b981;">
+                                    OBJECT VERIFIED
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 `
             }
         }
