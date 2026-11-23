@@ -4,230 +4,401 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Learning Portal - TSA Webmaster Competition</title>
-    <link rel="stylesheet" href="style.css">
-    <link href=https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Boldonse&display=swap rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&family=Oxanium:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Archivo:wght@500;600;700;800&family=Boldonse&display=swap" rel="stylesheet">
+</head>
 <body style="background: #0a0a14; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0;">
+    
     <!-- Fixed Sticky Navbar -->
     <nav class="navbar" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18, 18, 30, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #2d2d42; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; box-sizing: border-box;">
         <div class="logo" style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 22px; color: #00f2fe; text-shadow: 0 0 10px rgba(0,242,254,0.5);">AI Portal</div>
-        <ul class="nav-links" style="display: flex; list-style: none; gap: 25px; margin: 0; padding: 0;">
+        <ul class="nav-links" style="display: flex; list-style: none; gap: 25px; margin: 0; padding: 0; align-items: center;">
             <li><a href="#home" onclick="showPage('home')" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Home</a></li>
             <li><a href="#modules" onclick="showPage('modules-grid')" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Modules</a></li>
             <li><a href="#dashboard" onclick="showPage('dashboard')" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Dashboard</a></li>
             <li><a href="#chatbot" onclick="showPage('chatbot')" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Chatbot</a></li>
-            <li><a href="references.html" style="color: #00f2fe; text-decoration: none; font-weight: 600; transition: color 0.3s;">References</a></li>
+            <li><a href="#references" onclick="showPage('references-page-view')" style="color: #00f2fe; text-decoration: none; font-weight: 600; transition: color 0.3s;">References</a></li>
+            <li>
+    <button class="nav-tab-btn" id="nav-profile-btn" onclick="showPage('profile-page')" style="background: rgba(0,242,254,0.1); border: 1px solid #00f2fe; color: #00f2fe; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+        👤 <span id="nav-username-label">Create Profile</span>
+    </button>
+</li>
         </ul>
     </nav>
 
-<!-- 1. HOME PAGE VIEW -->
-<div id="home-page-view" style="padding-top: 100px; display: flex; flex-direction: column; min-height: 100vh;">
-    <!-- HERO SECTION -->
-    <div class="hero" style="min-height: 75vh; flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px;">
-      <div class="hero-content" style="max-width: 800px;">
-        <img src="images/ScrappyV2.png" alt="Site Logo" class="hero-logo" style="width: 400px; max-width: 90%; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(0,242,254,0.6));">
-        <h1 style="font-family: 'Orbitron', sans-serif; font-size: 42px; color: #00f2fe; margin-bottom: 20px;">Master Artificial Intelligence</h1>
-        <p class="hero-text" style="color: #cbd5e1; font-size: 18px; line-height: 1.7; margin-bottom: 35px;">
-            Welcome to the ultimate AI Learning Portal! Join Scrappy to explore machine learning fundamentals, prompt engineering, ethics, and neural networks through thrilling high school arcade minigames.
-        </p>
-        <a href="javascript:void(0)" onclick="showPage('modules-grid')" class="btn-explore" style="background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%); color: #000; padding: 16px 36px; border-radius: 8px; font-weight: bold; text-decoration: none; font-family: 'Orbitron', sans-serif; box-shadow: 0 4px 20px rgba(0,242,254,0.4); display: inline-block; transition: transform 0.2s;">Explore Modules →</a>
-      </div>
-    </div>
-
-    <!-- HOME-ONLY FOOTER -->
-    <footer class="site-footer" style="background: rgba(15, 23, 42, 0.9); border-top: 1px solid rgba(0, 242, 254, 0.2); padding: 40px 20px 20px; font-family: sans-serif; color: #94a3b8; font-size: 14px;">
-
-        <!-- Grid Container for Side-by-Side Sections -->
-        <div class="footer-grid" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; text-align: left;">
-
-            <div class="footer-section">
-                <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">CONTACT US</h3>
-                <p style="margin: 6px 0;">AI Learning Portal Dev Team</p>
-                <p style="margin: 6px 0;">Technology Student Association</p>
-                <p style="margin: 6px 0;">Student Innovation Division</p>
-                <p style="margin: 6px 0;">Parker, Colorado</p>
+    <main id="main-content-area">
+        <!-- 1. HOME PAGE VIEW -->
+        <div id="home-page-view" style="padding-top: 100px; display: flex; flex-direction: column; min-height: 100vh;">
+            <div class="hero" style="min-height: 75vh; flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px;">
+              <div class="hero-content" style="max-width: 800px;">
+                <img src="images/ScrappyV2.png" alt="Site Logo" class="hero-logo" style="width: 400px; max-width: 90%; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(0,242,254,0.6));">
+                <h1 style="font-family: 'Orbitron', sans-serif; font-size: 42px; color: #00f2fe; margin-bottom: 20px;">Master Artificial Intelligence</h1>
+                <p class="hero-text" style="color: #cbd5e1; font-size: 18px; line-height: 1.7; margin-bottom: 35px;">
+                    Welcome to the ultimate AI Learning Portal! Join Scrappy to explore machine learning fundamentals, prompt engineering, ethics, and neural networks through thrilling high school arcade minigames.
+                </p>
+                <a href="javascript:void(0)" onclick="showPage('modules-grid')" class="btn-explore" style="background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%); color: #000; padding: 16px 36px; border-radius: 8px; font-weight: bold; text-decoration: none; font-family: 'Orbitron', sans-serif; box-shadow: 0 4px 20px rgba(0,242,254,0.4); display: inline-block; transition: transform 0.2s;">Explore Modules →</a>
+              </div>
             </div>
 
-            <div class="footer-section">
-                <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">LOCATIONS</h3>
-                <!-- Horizontal/Side-by-side pills for location items -->
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
-                    <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">New York City, NY</span>
-                    <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">Los Angeles, CA</span>
-                    <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">Chicago, IL</span>
-                    <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">Parker, CO</span>
+            <footer class="site-footer" style="background: rgba(15, 23, 42, 0.9); border-top: 1px solid rgba(0, 242, 254, 0.2); padding: 40px 20px 20px; font-family: sans-serif; color: #94a3b8; font-size: 14px;">
+                <div class="footer-grid" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; text-align: left;">
+                    <div class="footer-section">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">CONTACT US</h3>
+                        <p style="margin: 6px 0;">AI Learning Portal Dev Team</p>
+                        <p style="margin: 6px 0;">Technology Student Association</p>
+                        <p style="margin: 6px 0;">Student Innovation Division</p>
+                        <p style="margin: 6px 0;">Parker, Colorado</p>
+                    </div>
+                    <div class="footer-section">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">LOCATIONS</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+                            <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">New York City, NY</span>
+                            <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">Los Angeles, CA</span>
+                            <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">Chicago, IL</span>
+                            <span style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #cbd5e1;">Parker, CO</span>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">PROJECT INFO</h3>
+                        <p style="margin: 6px 0;">AI Learning Portal</p>
+                        <p style="margin: 6px 0;">Interactive AI Education Platform</p>
+                        <p style="margin: 6px 0;">Built with HTML, CSS & JavaScript</p>
+                        <p style="margin: 6px 0;">TSA Webmaster Competition Entry</p>
+                    </div>
+                    <div class="footer-section">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">LATEST UPDATE</h3>
+                        <p style="margin: 6px 0;"><strong style="color: #00f2fe;">Version 1.0</strong></p>
+                        <p style="margin: 6px 0;">Interactive Modules Added</p>
+                        <p style="margin: 6px 0;">Enhanced UI / Arcade Engine</p>
+                        <p style="margin: 6px 0;">Last Updated: October 2026</p>
+                    </div>
+                </div>
+                <div class="footer-bottom" style="max-width: 1200px; margin: 30px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; color: #64748b; font-size: 13px;">
+                    © 2026 AI Learning Portal • Technology Student Association • All Rights Reserved
+                </div>
+            </footer>
+        </div>
+
+        <!-- 2. ALL MODULES GRID PAGE VIEW -->
+        <section id="modules-grid-view" style="display: none; padding: 120px 20px 60px;">
+            <h2 class="module-title" style="text-align: center; color: #00f2fe; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; font-size: 32px;">ALL LEARNING MODULES</h2>
+            <p style="text-align: center; color: #aaa; margin-bottom: 40px; font-size: 16px;">Complete all sub-lessons and pass their arcade quizzes to unlock the next module in your tech journey!</p>
+           
+            <div class="modules-overview">
+                <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;">
+                    <div class="module-card" id="card-module-1" data-module="1" style="background: #161625; border: 1px solid #3b82f6; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 1: INTRO TO AI</h3>
+                        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Foundations of artificial intelligence, machine learning, and basic neural networks.</p>
+                        <button class="quiz-btn" id="btn-module-1" onclick="navigateToModule(1)" style="width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-family: 'Manrope', sans-serif; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; margin-top: 15px;">Explore Module</button>
+                    </div>
+                    <div class="module-card" id="card-module-2" data-module="2" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 2: PRACTICAL AI TOOLS</h3>
+                        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Prompt engineering, context strategies, model temperature, and verification.</p>
+                        <button class="quiz-btn" id="btn-module-2" onclick="navigateToModule(2)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
+                    </div>
+                    <div class="module-card" id="card-module-3" data-module="3" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 3: ETHICS & INTEGRITY</h3>
+                        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Academic citing guidelines, dataset bias, data privacy, and synthetic media risks.</p>
+                        <button class="quiz-btn" id="btn-module-3" onclick="navigateToModule(3)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
+                    </div>
+                </div>
+                <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 25px;">
+                    <div class="module-card" id="card-module-4" data-module="4" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 4: DATA & TRAINING</h3>
+                        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Data cleaning, supervised/unsupervised learning, and training pipelines.</p>
+                        <button class="quiz-btn" id="btn-module-4" onclick="navigateToModule(4)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
+                    </div>
+                    <div class="module-card" id="card-module-5" data-module="5" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 5: ADVANCED ETHICS</h3>
+                        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Algorithmic fairness, transparency, policy governance, and safety protocols.</p>
+                        <button class="quiz-btn" id="btn-module-5" onclick="navigateToModule(5)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
+                    </div>
+                    <div class="module-card" id="card-module-6" data-module="6" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                        <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 6: TESTING & EVALUATION</h3>
+                        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Benchmark testing, precision/recall metrics, alignment, and AI guardrails.</p>
+                        <button class="quiz-btn" id="btn-module-6" onclick="navigateToModule(6)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. DEDICATED INDIVIDUAL LESSON VIEW -->
+        <section id="modules-page-view" style="display: none;">
+            <div class="module-view-inner">
+                <button class="back-to-modules-btn" onclick="showPage('modules-grid')">
+                    ← Back to All Modules
+                </button>
+                <div id="active-module-content"></div>
+            </div>
+        </section>
+
+        <!-- 4. GAMIFIED DASHBOARD PAGE VIEW -->
+        <section id="dashboard-page-view" style="display: none; padding: 120px 20px 60px; max-width: 1000px; margin: 0 auto; color: #fff;">
+            <h2 style="text-align: center; color: #00f2fe; margin-bottom: 10px; font-size: 32px; font-family: 'Orbitron', sans-serif;">STUDENT PROGRESS DASHBOARD</h2>
+            <p style="text-align: center; color: #aaa; margin-bottom: 40px;">Track your AI learning journey, earned badges, and arcade experience points!</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                <div style="background: #161625; border: 1px solid #3b82f6; border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <span style="font-size: 36px;">🏆</span>
+                    <h4 style="color: #aaa; margin: 10px 0 5px 0;">Total Experience</h4>
+                    <p id="dashboard-xp-text" style="font-size: 28px; font-weight: bold; color: #00f2fe; margin: 0;">0 XP</p>
+                </div>
+                <div style="background: #161625; border: 1px solid #a855f7; border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <span style="font-size: 36px;">📚</span>
+                    <h4 style="color: #aaa; margin: 10px 0 5px 0;">Modules Completed</h4>
+                    <p id="dashboard-modules-count" style="font-size: 28px; font-weight: bold; color: #a855f7; margin: 0;">0 / 6</p>
+                </div>
+                <div style="background: #161625; border: 1px solid #2ed573; border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <span style="font-size: 36px;">⚡</span>
+                    <h4 style="color: #aaa; margin: 10px 0 5px 0;">Overall Completion</h4>
+                    <p id="dashboard-progress-percent" style="font-size: 28px; font-weight: bold; color: #2ed573; margin: 0;">0%</p>
                 </div>
             </div>
 
-            <div class="footer-section">
-                <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">PROJECT INFO</h3>
-                <p style="margin: 6px 0;">AI Learning Portal</p>
-                <p style="margin: 6px 0;">Interactive AI Education Platform</p>
-                <p style="margin: 6px 0;">Built with HTML, CSS & JavaScript</p>
-                <p style="margin: 6px 0;">TSA Webmaster Competition Entry</p>
+            <div style="background: #161625; border: 1px solid #2d2d42; border-radius: 10px; padding: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px;">Curriculum Progress Bar</h3>
+                <div style="width: 100%; background: #090910; height: 20px; border-radius: 10px; overflow: hidden; border: 1px solid #3f3f46;">
+                    <div id="dashboard-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #00f2fe 0%, #2563eb 100%); transition: width 0.5s ease;"></div>
+                </div>
             </div>
 
-            <div class="footer-section">
-                <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">LATEST UPDATE</h3>
-                <p style="margin: 6px 0;"><strong style="color: #00f2fe;">Version 1.0</strong></p>
-                <p style="margin: 6px 0;">Interactive Modules Added</p>
-                <p style="margin: 6px 0;">Enhanced UI / Arcade Engine</p>
-                <p style="margin: 6px 0;">Last Updated: October 2026</p>
+            <div style="background: #161625; border: 1px solid #2d2d42; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <h3 style="color: #fff; margin-top: 0; margin-bottom: 20px; font-family: 'Orbitron', sans-serif;">Earned Achievement Badges</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+                    <div id="badge-1" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                        <span style="font-size: 40px;">🚀</span>
+                        <h4 style="color: #fff; margin: 10px 0 5px 0;">AI Pioneer</h4>
+                        <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 1</p>
+                    </div>
+                    <div id="badge-2" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                        <span style="font-size: 40px;">🧱</span>
+                        <h4 style="color: #fff; margin: 10px 0 5px 0;">Prompt Architect</h4>
+                        <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 2</p>
+                    </div>
+                    <div id="badge-3" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                        <span style="font-size: 40px;">⚖️</span>
+                        <h4 style="color: #fff; margin: 10px 0 5px 0;">Ethical Scholar</h4>
+                        <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 3</p>
+                    </div>
+                    <div id="badge-4" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                        <span style="font-size: 40px;">📊</span>
+                        <h4 style="color: #fff; margin: 10px 0 5px 0;">Data Expert</h4>
+                        <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 4</p>
+                    </div>
+                    <div id="badge-5" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                        <span style="font-size: 40px;">🛡️</span>
+                        <h4 style="color: #fff; margin: 10px 0 5px 0;">Governance Guru</h4>
+                        <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 5</p>
+                    </div>
+                    <div id="badge-6" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                        <span style="font-size: 40px;">🎯</span>
+                        <h4 style="color: #fff; margin: 10px 0 5px 0;">Alignment Master</h4>
+                        <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 6</p>
+                    </div>
+                    <div id="badge-7" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                        <span style="font-size: 40px;">🧠</span>
+                        <h4 style="color: #fff; margin: 10px 0 5px 0;">Quiz Ace</h4>
+                        <p style="color: #aaa; font-size: 13px; margin: 0;">Unlock Half of Curriculum</p>
+                    </div>
+                    <div id="badge-8" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                        <span style="font-size: 40px;">🕹️</span>
+                        <h4 style="color: #fff; margin: 10px 0 5px 0;">Arcade Pro</h4>
+                        <p style="color: #aaa; font-size: 13px; margin: 0;">Unlock Multiple Minigames</p>
+                    </div>
+                    <div id="badge-9" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
+                        <span style="font-size: 40px;">🔥</span>
+                        <h4 style="color: #fff; margin: 10px 0 5px 0;">Streak Master</h4>
+                        <p style="color: #aaa; font-size: 13px; margin: 0;">Master All 6 Modules</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. REFERENCES PAGE VIEW -->
+        <div id="references-page-view" class="portal-view" style="display: none; padding-top: 100px; min-height: 100vh; box-sizing: border-box;">
+            <main class="container references-page" style="max-width: 1000px; margin: 0 auto; padding: 40px 20px 80px; color: #fff;">
+                <h2 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 32px; margin-bottom: 10px; text-align: center;">PROJECT REFERENCES & DOCUMENTATION</h2>
+                <p style="text-align: center; color: #aaa; margin-bottom: 40px; font-size: 16px;">Citations, tool disclosures, and academic integrity guidelines for our TSA Webmaster entry.</p>
+
+                <section class="sources-list" style="margin-bottom: 40px;">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 22px; border-bottom: 1px solid #2d2d42; padding-bottom: 10px; margin-bottom: 20px;">Sources List</h3>
+                    <div class="source-items" style="display: flex; flex-direction: column; gap: 15px;">
+                        <div class="source-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px;">
+                            <h4 style="color: #fff; margin: 0 0 8px 0; font-size: 18px;">Textbook: "Artificial Intelligence: A Modern Approach"</h4>
+                            <p style="color: #aaa; margin: 0; font-size: 14px;">Russell, S. & Norvig, P. (2021). Pearson Education.</p>
+                        </div>
+                        <div class="source-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px;">
+                            <h4 style="color: #fff; margin: 0 0 8px 0; font-size: 18px;">OpenAI Documentation</h4>
+                            <p style="color: #aaa; margin: 0; font-size: 14px;">OpenAI API Documentation (2024). Retrieved from https://platform.openai.com/docs</p>
+                        </div>
+                        <div class="source-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px;">
+                            <h4 style="color: #fff; margin: 0 0 8px 0; font-size: 18px;">Wikipedia: Machine Learning</h4>
+                            <p style="color: #aaa; margin: 0; font-size: 14px;">Wikipedia contributors. (2024). "Machine learning." Wikipedia.</p>
+                        </div>
+                        <div class="source-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px;">
+                            <h4 style="color: #fff; margin: 0 0 8px 0; font-size: 18px;">IEEE: Computer Vision Resources</h4>
+                            <p style="color: #aaa; margin: 0; font-size: 14px;">IEEE Xplore Digital Library (2024).</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="framework-documentation" style="margin-bottom: 40px;">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 22px; border-bottom: 1px solid #2d2d42; padding-bottom: 10px; margin-bottom: 20px;">Framework & Tool Documentation</h3>
+                    <div class="framework-items" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                        <div class="framework-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px;">
+                            <h4 style="color: #fff; margin: 0 0 8px 0; font-size: 18px;">HTML5</h4>
+                            <p style="color: #aaa; margin: 0; font-size: 14px; line-height: 1.5;">Standard markup language for structuring web content. Used for all page semantics and layout.</p>
+                        </div>
+                        <div class="framework-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px;">
+                            <h4 style="color: #fff; margin: 0 0 8px 0; font-size: 18px;">CSS3</h4>
+                            <p style="color: #aaa; margin: 0; font-size: 14px; line-height: 1.5;">Styling language for visual presentation. Implements dark mode, gradients, responsive design, and animations.</p>
+                        </div>
+                        <div class="framework-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px;">
+                            <h4 style="color: #fff; margin: 0 0 8px 0; font-size: 18px;">JavaScript (ES6+)</h4>
+                            <p style="color: #aaa; margin: 0; font-size: 14px; line-height: 1.5;">Programming language for interactive elements. Handles quiz logic, XP tracking, badge unlocking, and arcade features.</p>
+                        </div>
+                        <div class="framework-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px;">
+                            <h4 style="color: #fff; margin: 0 0 8px 0; font-size: 18px;">No External Frameworks</h4>
+                            <p style="color: #aaa; margin: 0; font-size: 14px; line-height: 1.5;">This portal is hand-coded without Wix, Squarespace, Webflow, WordPress, Joomla, or Drupal CMS platforms.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="copyright-checklist" style="margin-bottom: 40px;">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 22px; border-bottom: 1px solid #2d2d42; padding-bottom: 10px; margin-bottom: 20px;">Student Copyright Checklist</h3>
+                    <div class="checklist-content" style="background: #161625; border: 1px solid #2d2d42; padding: 25px; border-radius: 8px; color: #aaa;">
+                        <ol style="margin: 0; padding-left: 20px; line-height: 1.7;">
+                            <li>I have not copied text word-for-word from AI outputs without attribution.</li>
+                            <li>I have cited all AI-generated content using proper academic citation format.</li>
+                            <li>I have transformed and rephrased AI ideas into my own words.</li>
+                            <li>I have verified that all images and resources are either original or properly licensed.</li>
+                            <li>I understand that submitting AI-generated work as my own violates academic integrity policies.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="ai-reflection">
+                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 22px; border-bottom: 1px solid #2d2d42; padding-bottom: 10px; margin-bottom: 20px;">Resources & AI Reflection</h3>
+                    <div class="reflection-content" style="background: #161625; border: 1px solid #2d2d42; padding: 25px; border-radius: 8px; color: #aaa; line-height: 1.7;">
+                        <p style="margin-top: 0;">This section documents GenAI usage for this project:</p>
+                        <ul style="margin-bottom: 0; padding-left: 20px;">
+                            <li><strong>AI Tools Used:</strong> ChatGPT for concept explanations, Claude for code debugging support.</li>
+                            <li><strong>Purpose:</strong> Ideation, outline generation, and layout architecture assistance.</li>
+                            <li><strong>Ethics:</strong> All code and content has been reviewed, modified, and verified independently.</li>
+                            <li><strong>Reflection:</strong> The AI assisted in structuring modular components and providing syntax guidance, but all final content and design decisions were made by the student team.</li>
+                        </ul>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- 6. PROFILE PAGE VIEW -->
+        <section id="profile-page" class="page-section" style="display: none; padding-top: 100px;">
+            <!-- VIEW 1: CREATE ACCOUNT SCREEN -->
+            <div id="create-account-view" class="profile-card-container">
+                <div class="profile-header-center">
+                    <span class="profile-badge-tag">AI LEARNING PORTAL ID</span>
+                    <h1 class="profile-main-title">Create Your Cadet Profile</h1>
+                    <p class="profile-subtext">Your profile, avatar, XP, and arcade high scores are saved directly to this browser and searchable in the directory.</p>
+                </div>
+
+                <form id="create-account-form" class="profile-form-stack">
+                    <div class="form-group">
+                        <label for="new-username">Choose a Callsign (Username)</label>
+                        <input type="text" id="new-username" placeholder="e.g., CyberNinja99" maxlength="18" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-bio">Player Bio / Tagline</label>
+                        <input type="text" id="new-bio" placeholder="e.g., Mastering Prompt Engineering & Space Defense" maxlength="60">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Starting Avatar</label>
+                        <div class="avatar-picker-grid" id="create-avatar-picker">
+                            <button type="button" class="avatar-pick selected" data-avatar="🚀">🚀</button>
+                            <button type="button" class="avatar-pick" data-avatar="🤖">🤖</button>
+                            <button type="button" class="avatar-pick" data-avatar="👾">👾</button>
+                            <button type="button" class="avatar-pick" data-avatar="⚡">⚡</button>
+                            <button type="button" class="avatar-pick" data-avatar="🧠">🧠</button>
+                            <button type="button" class="avatar-pick" data-avatar="🔥">🔥</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-cyan-primary">⚡ Initialize Profile</button>
+                </form>
             </div>
 
-        </div>
+            <!-- VIEW 2: ACTIVE PROFILE DASHBOARD + GLOBAL SEARCHER -->
+            <div id="active-profile-view" style="display: none;">
+                <div class="profile-card-container">
+                    <div class="profile-top-banner">
+                        <div class="profile-avatar-ring" id="dash-avatar">🚀</div>
+                        <div class="profile-identity">
+                            <div class="profile-name-row">
+                                <h1 id="dash-username">Cadet</h1>
+                                <span class="profile-rank-pill" id="dash-rank">Rookie AI Explorer</span>
+                            </div>
+                            <p id="dash-bio" class="profile-bio-text">Ready to conquer the AI modules.</p>
+                            <span class="profile-joined-date" id="dash-joined">Browser ID Active</span>
+                        </div>
+                    </div>
 
-        <div class="footer-bottom" style="max-width: 1200px; margin: 30px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; color: #64748b; font-size: 13px;">
-            © 2026 AI Learning Portal • Technology Student Association • All Rights Reserved
-        </div>
+                    <div class="profile-stats-row">
+                        <div class="p-stat-box">
+                            <span class="p-stat-label">TOTAL XP</span>
+                            <span class="p-stat-num" id="dash-xp">0</span>
+                        </div>
+                        <div class="p-stat-box">
+                            <span class="p-stat-label">ROCKET DEFENDER</span>
+                            <span class="p-stat-num" id="dash-score-rocket">0</span>
+                        </div>
+                        <div class="p-stat-box">
+                            <span class="p-stat-label">BLOCK BLAST AI</span>
+                            <span class="p-stat-num" id="dash-score-blockblast">0</span>
+                        </div>
+                        <div class="p-stat-box">
+                            <span class="p-stat-label">CANNON LAUNCHER</span>
+                            <span class="p-stat-num" id="dash-score-angrybirds">0</span>
+                        </div>
+                    </div>
 
-    </footer>
+                    <div class="profile-edit-section">
+                        <h3>Customize Profile</h3>
+                        <div class="edit-controls-row">
+                            <input type="text" id="edit-username-input" placeholder="New Callsign..." maxlength="18">
+                            <input type="text" id="edit-bio-input" placeholder="Update Bio..." maxlength="60">
+                            <button type="button" id="btn-save-profile-edits" class="btn-cyan-secondary">Update Info</button>
+                        </div>
+                        <!-- Create Account Avatar Picker -->
+<div class="avatar-picker-grid" id="create-avatar-picker">
+    <button type="button" class="avatar-pick selected" data-avatar="images/avatar-cyber-rocket.png">
+        <img src="images/avatar-cyber-rocket.png" alt="Cyber Rocket" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+    </button>
+    <button type="button" class="avatar-pick" data-avatar="images/avatar-ai-bot.png">
+        <img src="images/avatar-ai-bot.png" alt="AI Bot" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+    </button>
+    <button type="button" class="avatar-pick" data-avatar="images/avatar-neural-glitch.png">
+        <img src="images/avatar-neural-glitch.png" alt="Neural Glitch" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+    </button>
 </div>
 
-<!-- 2. ALL MODULES GRID PAGE VIEW -->
-    <section id="modules-grid-view" style="display: none; padding: 120px 20px 60px; ">
-        <h2 class="module-title" style="text-align: center; color: #00f2fe; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; font-size: 32px;">ALL LEARNING MODULES</h2>
-        <p style="text-align: center; color: #aaa; margin-bottom: 40px; font-size: 16px;">Complete all sub-lessons and pass their arcade quizzes to unlock the next module in your tech journey!</p>
-       
-        <div class="modules-overview">
-            <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;">
-                <div class="module-card" id="card-module-1" data-module="1" style="background: #161625; border: 1px solid #3b82f6; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
-                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 1: INTRO TO AI</h3>
-                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Foundations of artificial intelligence, machine learning, and basic neural networks.</p>
-                    <button class="quiz-btn" id="btn-module-1" onclick="navigateToModule(1)" style="width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-family: 'Manrope', sans-serif; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; margin-top: 15px;">Explore Module</button>
-                </div>
-                <div class="module-card" id="card-module-2" data-module="2" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
-                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 2: PRACTICAL AI TOOLS</h3>
-                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Prompt engineering, context strategies, model temperature, and verification.</p>
-                    <button class="quiz-btn" id="btn-module-2" onclick="navigateToModule(2)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
-                </div>
-                <div class="module-card" id="card-module-3" data-module="3" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
-                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 3: ETHICS & INTEGRITY</h3>
-                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Academic citing guidelines, dataset bias, data privacy, and synthetic media risks.</p>
-                    <button class="quiz-btn" id="btn-module-3" onclick="navigateToModule(3)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
-                </div>
-            </div>
-            <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 25px;">
-                <div class="module-card" id="card-module-4" data-module="4" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
-                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 4: DATA & TRAINING</h3>
-                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Data cleaning, supervised/unsupervised learning, and training pipelines.</p>
-                    <button class="quiz-btn" id="btn-module-4" onclick="navigateToModule(4)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
-                </div>
-                <div class="module-card" id="card-module-5" data-module="5" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
-                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 5: ADVANCED ETHICS</h3>
-                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Algorithmic fairness, transparency, policy governance, and safety protocols.</p>
-                    <button class="quiz-btn" id="btn-module-5" onclick="navigateToModule(5)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
-                </div>
-                <div class="module-card" id="card-module-6" data-module="6" style="background: #161625; border: 1px solid #27272a; border-radius: 12px; padding: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
-                    <h3 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 20px;">MODULE 6: TESTING & EVALUATION</h3>
-                    <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; min-height: 45px;">Benchmark testing, precision/recall metrics, alignment, and AI guardrails.</p>
-                    <button class="quiz-btn" id="btn-module-6" onclick="navigateToModule(6)" disabled style="width: 100%; padding: 12px; background: #1e1e2e; color: #fff; border: 1px solid #3f3f46; border-radius: 6px; font-weight: bold; opacity: 0.5; margin-top: 15px;">🔒 Locked</button>
-                </div>
-            </div>
-        </div>
-    </section>
+                <div class="profile-card-container" style="margin-top: 24px;">
+                    <div class="directory-header">
+                        <div>
+                            <h2 class="directory-title">🌐 Global Cadet Directory & Leaderboard</h2>
+                            <p class="profile-subtext">Search profiles recorded on this browser or compare top arcade scores.</p>
+                        </div>
+                        <input type="text" id="global-profile-search" class="directory-search-input" placeholder="🔍 Search callsign...">
+                    </div>
 
-    <!-- 3. DEDICATED INDIVIDUAL LESSON VIEW WITH SUBMODULE TABS -->
-    <section id="modules-page-view" style="display: none; padding: 120px 20px 60px; max-width: 1000px; margin: 0 auto; color: #fff;">
-        <button onclick="showPage('modules-grid')" style="background: #1e1e2e; color: #60a5fa; border: 1px solid #3b82f6; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-bottom: 25px; font-weight: bold; font-family: inherit;">← Back to All Modules</button>
-       
-        <div id="active-module-content">
-    <!-- Lesson content and submodules render dynamically -->
-</div>
-    </section>
-
-    <!-- 4. GAMIFIED DASHBOARD PAGE VIEW -->
-    <section id="dashboard-page-view" style="display: none; padding: 120px 20px 60px; max-width: 1000px; margin: 0 auto; color: #fff;">
-        <h2 style="text-align: center; color: #00f2fe; margin-bottom: 10px; font-size: 32px; font-family: 'Orbitron', sans-serif;">STUDENT PROGRESS DASHBOARD</h2>
-        <p style="text-align: center; color: #aaa; margin-bottom: 40px;">Track your AI learning journey, earned badges, and arcade experience points!</p>
-
-        <!-- Stats Overview Cards -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
-            <div style="background: #161625; border: 1px solid #3b82f6; border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <span style="font-size: 36px;">🏆</span>
-                <h4 style="color: #aaa; margin: 10px 0 5px 0;">Total Experience</h4>
-                <p id="dashboard-xp-text" style="font-size: 28px; font-weight: bold; color: #00f2fe; margin: 0;">0 XP</p>
-            </div>
-            <div style="background: #161625; border: 1px solid #a855f7; border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <span style="font-size: 36px;">📚</span>
-                <h4 style="color: #aaa; margin: 10px 0 5px 0;">Modules Completed</h4>
-                <p id="dashboard-modules-count" style="font-size: 28px; font-weight: bold; color: #a855f7; margin: 0;">0 / 6</p>
-            </div>
-            <div style="background: #161625; border: 1px solid #2ed573; border-radius: 10px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <span style="font-size: 36px;">⚡</span>
-                <h4 style="color: #aaa; margin: 10px 0 5px 0;">Overall Completion</h4>
-                <p id="dashboard-progress-percent" style="font-size: 28px; font-weight: bold; color: #2ed573; margin: 0;">0%</p>
-            </div>
-        </div>
-
-        <!-- Progress Bar Card -->
-        <div style="background: #161625; border: 1px solid #2d2d42; border-radius: 10px; padding: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-            <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px;">Curriculum Progress Bar</h3>
-            <div style="width: 100%; background: #090910; height: 20px; border-radius: 10px; overflow: hidden; border: 1px solid #3f3f46;">
-                <div id="dashboard-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #00f2fe 0%, #2563eb 100%); transition: width 0.5s ease;"></div>
-            </div>
-        </div>
-
-        <!-- Badges Showcase (Expanded 9 Badges for All 6 Modules & Milestones) -->
-        <div style="background: #161625; border: 1px solid #2d2d42; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-            <h3 style="color: #fff; margin-top: 0; margin-bottom: 20px; font-family: 'Orbitron', sans-serif;">Earned Achievement Badges</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
-                <!-- Module 1 -->
-                <div id="badge-1" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
-                    <span style="font-size: 40px;">🚀</span>
-                    <h4 style="color: #fff; margin: 10px 0 5px 0;">AI Pioneer</h4>
-                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 1</p>
-                </div>
-                <!-- Module 2 -->
-                <div id="badge-2" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
-                    <span style="font-size: 40px;">🧱</span>
-                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Prompt Architect</h4>
-                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 2</p>
-                </div>
-                <!-- Module 3 -->
-                <div id="badge-3" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
-                    <span style="font-size: 40px;">⚖️</span>
-                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Ethical Scholar</h4>
-                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 3</p>
-                </div>
-                <!-- Module 4 -->
-                <div id="badge-4" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
-                    <span style="font-size: 40px;">📊</span>
-                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Data Expert</h4>
-                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 4</p>
-                </div>
-                <!-- Module 5 -->
-                <div id="badge-5" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
-                    <span style="font-size: 40px;">🛡️</span>
-                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Governance Guru</h4>
-                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 5</p>
-                </div>
-                <!-- Module 6 -->
-                <div id="badge-6" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
-                    <span style="font-size: 40px;">🎯</span>
-                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Alignment Master</h4>
-                    <p style="color: #aaa; font-size: 13px; margin: 0;">Complete Module 6</p>
-                </div>
-                <!-- Milestone Badge: Quiz Ace -->
-                <div id="badge-7" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
-                    <span style="font-size: 40px;">🧠</span>
-                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Quiz Ace</h4>
-                    <p style="color: #aaa; font-size: 13px; margin: 0;">Unlock Half of Curriculum</p>
-                </div>
-                <!-- Milestone Badge: Arcade High Scorer -->
-                <div id="badge-8" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
-                    <span style="font-size: 40px;">🕹️</span>
-                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Arcade Pro</h4>
-                    <p style="color: #aaa; font-size: 13px; margin: 0;">Unlock Multiple Minigames</p>
-                </div>
-                <!-- Milestone Badge: Streak Master -->
-                <div id="badge-9" style="background: #181824; border: 2px solid #3f3f46; border-radius: 8px; padding: 20px; text-align: center; opacity: 0.35; transition: all 0.3s;">
-                    <span style="font-size: 40px;">🔥</span>
-                    <h4 style="color: #fff; margin: 10px 0 5px 0;">Streak Master</h4>
-                    <p style="color: #aaa; font-size: 13px; margin: 0;">Master All 6 Modules</p>
+                    <div id="global-directory-list" class="directory-list">
+                        <!-- Populated dynamically by JS -->
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <script src="app.js"></script>
 </body>

@@ -23,82 +23,277 @@
 }
 
 * 
+/* ==================================================
+   FINAL TSA AI NAVBAR
+   ================================================== */
 
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-  background-color: var(--bg-primary);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-/* Navbar */
 .navbar {
+
     position: fixed;
+
     top: 0;
+    left: 0;
+
     width: 100%;
-    background: rgba(10, 10, 15, 0.98);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    border-bottom: 1px solid var(--border-color);
+
+    height: 92px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 42px;
+
+    z-index: 9999;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(5,10,20,.98) 0%,
+            rgba(13,24,48,.98) 35%,
+            rgba(18,34,65,.98) 50%,
+            rgba(13,24,48,.98) 65%,
+            rgba(5,10,20,.98) 100%
+        );
+
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.35);
+
+    backdrop-filter:
+        blur(14px);
+
 }
+
+
+/* ==================================================
+   NAVBAR UNDERGLOW
+   ================================================== */
+
+.navbar::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            #3b82f6,
+            #06d6a0,
+            #a855f7,
+            transparent
+        );
+
+    box-shadow:
+        0 0 15px rgba(59,130,246,.4),
+        0 0 25px rgba(6,214,160,.3);
+
+}
+
+
+/* ==================================================
+   LOGO AREA
+   ================================================== */
 
 .navbar .logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--accent-cyan);
-    padding: 1rem 2rem;
+
     display: flex;
+
     align-items: center;
-    gap: 0.5rem;
-    user-select: none;
+
+    gap: 14px;
+
+    color: white;
+
+    font-family: 'Outfit', sans-serif;
+
+    font-size: 1.28rem;
+
+    font-weight: 800;
+
+    letter-spacing: -.03em;
+
 }
+
+
+/* ==================================================
+   SCRAPPY LOGO
+   ================================================== */
 
 .navbar .logo::before {
+
     content: "";
+
     display: inline-block;
-    width: 80px;
-    height: 80px;
-    background-image: url("images/scrappy_general.png");
+
+    width: 84px;
+
+    height: 84px;
+
+    background-image:
+        url("images/scrappy_general.png");
+
     background-size: contain;
+
     background-repeat: no-repeat;
+
     background-position: center;
-    margin-right: 10px;
-    vertical-align: middle;
+
+    margin-right: 8px;
+
+    filter:
+
+        drop-shadow(
+            0 0 10px rgba(59,130,246,.9)
+        )
+
+        drop-shadow(
+            0 0 20px rgba(59,130,246,.65)
+        )
+
+        drop-shadow(
+            0 0 35px rgba(6,214,160,.35)
+        )
+
+        drop-shadow(
+            0 0 45px rgba(168,85,247,.25)
+        );
+
 }
+
+
+/* ==================================================
+   NAV LINKS CONTAINER
+   ================================================== */
 
 .navbar .nav-links {
-    list-style: none;
+
     display: flex;
-    gap: 0.5rem;
+
+    align-items: center;
+
+    gap: 10px;
+
+    list-style: none;
+
     margin: 0;
+
     padding: 0;
+
 }
 
-.navbar .nav-links li {
-    position: relative;
-}
+
+/* ==================================================
+   LINKS
+   ================================================== */
 
 .navbar .nav-links a {
-    color: var(--text-secondary);
+
+    color: #cbd5e1;
+
     text-decoration: none;
-    padding: 1rem 2rem;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    display: block;
-    transition: color 0.2s ease;
+
+    font-family: 'Outfit', sans-serif;
+
+    font-size: .97rem;
+
+    font-weight: 700;
+
+    letter-spacing: .04em;
+
+    padding: 13px 18px;
+
+    border-radius: 12px;
+
+    transition: all .25s ease;
+
 }
+
+
+/* ==================================================
+   HOVER EFFECT
+   ================================================== */
 
 .navbar .nav-links a:hover {
-    color: var(--accent-blue);
+
+    color: white;
+
+    background:
+        rgba(255,255,255,.06);
+
+    transform:
+        translateY(-2px);
+
 }
 
+
+/* ==================================================
+   ACTIVE PAGE
+   ================================================== */
+
 .navbar .nav-links .active {
-    color: var(--accent-blue) !important;
+
+    color: white !important;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(59,130,246,.20),
+            rgba(168,85,247,.12)
+        );
+
+    border:
+        1px solid rgba(59,130,246,.22);
+
+    box-shadow:
+        0 0 12px rgba(59,130,246,.18);
+
+}
+
+
+/* ==================================================
+   MOBILE
+   ================================================== */
+
+@media (max-width: 768px) {
+
+    .navbar {
+
+        padding: 0 18px;
+
+        height: 82px;
+
+    }
+
+    .navbar .logo {
+
+        font-size: 1rem;
+
+    }
+
+    .navbar .logo::before {
+
+        width: 58px;
+
+        height: 58px;
+
+    }
+
 }
 
 /* Hero Section */
@@ -894,206 +1089,276 @@ footer.site-footer {
         height: 50px;
         font-size: 1.25rem;
     }
-
-    /* Quiz Modal Styles */
-    .quiz-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(5px);
-        z-index: 200;
-        display: none;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .quiz-modal.open {
-        display: flex;
-    }
-
-    .quiz-modal-content {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 2rem;
-        width: 90%;
-        max-width: 500px;
-        max-height: 80%;
-        overflow-y: auto;
-        color: var(--text-primary);
-        position: relative;
-    }
-
-    .quiz-modal-content h2 {
-        color: var(--accent-cyan);
-        margin-bottom: 1.5rem;
-        font-size: 1.5rem;
-        text-align: center;
-    }
-
-    .quiz-modal-content .quiz-question {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .quiz-modal-content .quiz-question:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-    }
-
-    .quiz-modal-content p {
-        color: var(--text-secondary);
-        margin-bottom: 1rem;
-        font-size: 0.875rem;
-    }
-
-    .quiz-options {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .quiz-option {
-        display: block;
-        padding: 0.75rem 1rem;
-        background: var(--bg-accent);
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        color: var(--text-secondary);
-        cursor: pointer;
-        font-size: 0.875rem;
-        transition: all 0.2s ease;
-    }
-
-    .quiz-option:hover {
-        border-color: var(--accent-blue);
-        color: var(--accent-blue);
-        background: var(--bg-primary);
-    }
-
-    .quiz-option input[type="radio"] {
-        display: none;
-    }
-
-    .quiz-submit {
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
-        margin-top: 1.5rem;
-    }
-
-    .btn-submit-quiz,
-    .btn-close-quiz,
-    .btn-continue {
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.875rem;
-        transition: all 0.2s ease;
-    }
-
-    .btn-submit-quiz {
-        background: var(--accent-blue);
-        color: white;
-    }
-
-    .btn-submit-quiz:hover {
-        background: var(--accent-purple);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
-    }
-
-    .btn-close-quiz {
-        background: var(--bg-accent);
-        color: var(--text-secondary);
-        width: 24px;
-        height: 24px;
-        padding: 0;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-    }
-
-    .btn-close-quiz:hover {
-        background: var(--error);
-        color: white;
-    }
-
-    .btn-continue {
-        background: var(--accent-purple);
-        color: white;
-    }
-
-    .btn-continue:hover {
-        background: var(--bg-primary);
-        border: 1px solid var(--accent-purple);
-        color: var(--accent-purple);
-    }
-
-    .quiz-feedback {
-        text-align: center;
-        margin-top: 1rem;
-        padding: 0.5rem;
-        border-radius: 4px;
-        font-size: 1.25rem;
-    }
-
-    .perfect {
-        background: var(--success);
-        color: white;
-    }
-
-    .good-effort {
-        background: var(--warning);
-        color: #1a1a24;
-    }
-
-    .error {
-        background: var(--error);
-        color: white;
-    }
-
-    /* Quiz Modal Overlay Click Handler */
-    .quiz-modal.clickable {
-        cursor: pointer;
-    }
-
-    .quiz-modal.clickable:hover {
-        background: rgba(0, 0, 0, 0.5);
-    }
 }
+ 
 
 /* ==========================================================================
-   CLEAN COBALT & TITANIUM PORTAL OVERRIDE (SINGLE UNIFIED CONTAINER)
+   OBSIDIAN & ELECTRIC NEON THEME + ANIMATIONS
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;700&family=CommitMono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-@keyframes cobaltPulse {
-    0% {
-        box-shadow: 0 0 30px rgba(14, 165, 233, 0.2), 0 20px 40px rgba(0, 0, 0, 0.6);
-        border-color: rgba(14, 165, 233, 0.5);
-    }
-    50% {
-        box-shadow: 0 0 50px rgba(56, 189, 248, 0.4), 0 20px 40px rgba(0, 0, 0, 0.7);
-        border-color: rgba(56, 189, 248, 0.8);
-    }
-    100% {
-        box-shadow: 0 0 30px rgba(14, 165, 233, 0.2), 0 20px 40px rgba(0, 0, 0, 0.6);
-        border-color: rgba(14, 165, 233, 0.5);
-    }
+/* 1. Global Dark Page & Lesson Bar Background */
+#modules-page-view,
+#modules-page-view div:has(> button[id^="btn-lesson"]) {
+    background-color: #090a0f !important;
+    color: #f1f5f9 !important;
+    min-height: 100vh;
 }
 
-@keyframes modulePopup {
+/* 2. Unselected Lesson Buttons */
+#modules-page-view button[id^="btn-lesson"] {
+    background: #131822 !important;
+    color: #94a3b8 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    padding: 10px 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+#modules-page-view button[id^="btn-lesson"]:hover {
+    border-color: #38bdf8 !important;
+    color: #ffffff !important;
+}
+
+/* Active Lesson Button with Neon Glow */
+#modules-page-view button[id^="btn-lesson"].active {
+    background: linear-gradient(135deg, #0284c7, #38bdf8) !important;
+    color: #ffffff !important;
+    border-color: #38bdf8 !important;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4) !important;
+}
+
+/* 3. Main Lesson Container (Sleek Dark Card with Idle Animation) */
+#active-module-content .lesson-article-container {
+    position: relative !important;
+    background: #111827 !important; 
+    border-radius: 24px !important;
+    padding: 60px !important;
+    margin: 40px auto !important;
+    max-width: 1000px !important;
+    width: 100% !important;
+    border: 1px solid rgba(56, 189, 248, 0.15) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+    box-sizing: border-box !important;
+    display: block !important;
+    
+    /* Animations */
+    animation: popUpFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, 
+               subtleIdleFloat 6s ease-in-out infinite 0.6s !important;
+}
+
+/* Top Neon Gradient Accent Line */
+#active-module-content .lesson-article-container::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 3px !important;
+    background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc) !important;
+}
+
+/* 4. Typography */
+#active-module-content h1, 
+#active-module-content h2, 
+#active-module-content h3, 
+#active-module-content h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    color: #f8fafc !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+}
+
+#active-module-content h2 { 
+    font-size: 2.3rem !important; 
+    margin-bottom: 16px !important; 
+}
+
+#active-module-content h3 { 
+    font-size: 1.45rem !important; 
+    margin-top: 3rem !important; 
+    margin-bottom: 1rem !important;
+    padding-bottom: 8px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    color: #38bdf8 !important;
+}
+
+#active-module-content p, 
+#active-module-content li {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    color: #94a3b8 !important;
+    line-height: 1.85 !important;
+    font-size: 16px !important;
+}
+
+#active-module-content strong { 
+    color: #ffffff !important; 
+    font-weight: 700 !important;
+}
+
+/* 5. Headers & Badges */
+#active-module-content .article-header {
+    margin-bottom: 45px !important;
+    padding-bottom: 25px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+#active-module-content .article-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 6px 14px !important;
+    background: rgba(56, 189, 248, 0.1) !important;
+    color: #38bdf8 !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    border-radius: 999px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    margin-bottom: 12px !important;
+}
+
+/* 6. Callouts & Cards */
+#active-module-content .article-callout {
+    background: rgba(17, 24, 39, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-left: 3px solid #38bdf8 !important;
+    border-radius: 12px !important;
+    padding: 24px 28px !important;
+    margin: 30px 0 !important;
+    transition: transform 0.3s ease, border-color 0.3s ease !important;
+}
+
+#active-module-content .article-callout:hover {
+    transform: translateY(-2px) !important;
+    border-color: rgba(56, 189, 248, 0.3) !important;
+}
+
+#active-module-content .article-callout h4 {
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+    color: #38bdf8 !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* 7. Paradigms Grid */
+#active-module-content .paradigms-stack {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    margin: 30px 0 !important;
+}
+
+#active-module-content .paradigm-row-card {
+    background: rgba(17, 24, 39, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 12px !important;
+    padding: 24px !important;
+    transition: all 0.3s ease !important;
+}
+
+#active-module-content .paradigm-row-card:hover {
+    transform: translateY(-3px) !important;
+    border-color: rgba(56, 189, 248, 0.4) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+
+#active-module-content .paradigm-row-card h4 {
+    color: #38bdf8 !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+    font-size: 1.05rem !important;
+}
+
+/* 8. Simulators */
+#active-module-content .simulator-box {
+    position: relative !important;
+    background: #0d1322 !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    border-radius: 16px !important;
+    padding: 36px !important;
+    margin: 35px 0 !important;
+}
+
+#active-module-content .simulator-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    margin-bottom: 24px !important;
+    padding-bottom: 18px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+#active-module-content .sim-icon {
+    width: 48px !important;
+    height: 48px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-size: 1.4rem !important;
+    border-radius: 12px !important;
+    background: rgba(56, 189, 248, 0.1) !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+
+#active-module-content .slider-label-row {
+    color: #f1f5f9 !important;
+    font-weight: 600 !important;
+}
+
+#active-module-content .highlight-val {
+    color: #38bdf8 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    background: rgba(56, 189, 248, 0.1) !important;
+    padding: 2px 8px !important;
+    border-radius: 6px !important;
+}
+
+#active-module-content input[type="range"] {
+    background: #1e293b !important;
+}
+
+#active-module-content input[type="range"]::-webkit-slider-thumb {
+    appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    border: 3px solid #38bdf8 !important;
+    cursor: pointer !important;
+    box-shadow: 0 0 10px #38bdf8 !important;
+}
+
+#active-module-content .simulator-output-row {
+    background: rgba(17, 24, 39, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+#active-module-content .output-title {
+    color: #64748b !important;
+}
+
+#active-module-content #output-score,
+#active-module-content #output-conf {
+    color: #38bdf8 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+
+/* ==========================================================================
+   KEYFRAME ANIMATIONS (Pop-Up Entrance & Subtle Idle Float)
+   ========================================================================== */
+
+@keyframes popUpFadeIn {
     0% {
         opacity: 0;
-        transform: translateY(20px) scale(0.98);
+        transform: translateY(25px) scale(0.98);
     }
     100% {
         opacity: 1;
@@ -1101,350 +1366,1124 @@ footer.site-footer {
     }
 }
 
-@keyframes fadeInElement {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+
+
+@media (max-width: 768px) {
+    #active-module-content .lesson-article-container {
+        padding: 30px 20px !important;
+    }
+    #active-module-content .paradigms-stack {
+        grid-template-columns: 1fr !important;
+    }
 }
 
-/* --- GLOBAL & OUTER CONTAINER RESET (NO DOUBLE BORDER) --- */
-body {
-    background-color: #030712 !important;
-    color: #f3f4f6 !important;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
-}
+/* ==========================================================================
+   TRANSPARENT LESSON TABS (Blending into the Light Gray Background)
+   ========================================================================== */
 
-div#active-module-content {
-    max-width: 980px !important;
-    margin: 40px auto !important;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
+/* 1. Reset the container holding the lesson buttons so it has no background block */
+#modules-page-view .lesson-tabs,
+#modules-page-view .lesson-nav-container,
+#modules-page-view div:has(> button[id^="btn-lesson"]) {
     background: transparent !important;
+    background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    padding: 0 !important;
-    animation: fadeInElement 0.4s ease-out forwards !important;
+    padding: 10px 0 !important;
+    margin-bottom: 20px !important;
 }
 
-div#active-module-content .lesson-body {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-}
-
-/* --- THE SINGLE UNIFIED LESSON ARTICLE CONTAINER --- */
-div#active-module-content .lesson-article-container,
-.lesson-article-container {
-    background: #0b0f19 !important;
-    color: #f9fafb !important;
-    padding: 48px !important;
-    border-radius: 20px !important;
-    border: 2px solid #0ea5e9 !important;
-    box-shadow: 0 0 35px rgba(14, 165, 233, 0.25), 0 20px 40px rgba(0, 0, 0, 0.6) !important;
-    margin-bottom: 30px !important;
-    animation: modulePopup 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards, cobaltPulse 6s ease-in-out infinite 0.5s !important;
-    position: relative !important;
-}
-
-/* --- HEADINGS (SPACE GROTESK - CRISP, MODERN TECH) --- */
-div#active-module-content h1,
-div#active-module-content h2,
-div#active-module-content h3,
-div#active-module-content h4,
-div#active-module-content h1[style],
-div#active-module-content h2[style],
-div#active-module-content h3[style],
-div#active-module-content h4[style] {
-    font-family: 'Space Grotesk', sans-serif !important;
-    font-weight: 700 !important;
-    color: #ffffff !important;
-    text-shadow: none !important;
-    letter-spacing: -0.02em !important;
-    margin-top: 32px !important;
-    margin-bottom: 14px !important;
-}
-
-div#active-module-content h1 { font-size: 34px !important; color: #ffffff !important; }
-div#active-module-content h2 { font-size: 26px !important; color: #e0f2fe !important; }
-div#active-module-content h3 { font-size: 20px !important; color: #bae6fd !important; }
-div#active-module-content h4 { font-size: 16px !important; color: #7dd3fc !important; }
-
-/* --- BODY TEXT & LISTS --- */
-div#active-module-content p,
-div#active-module-content p[style],
-div#active-module-content li,
-div#active-module-content li[style],
-div#active-module-content span:not(.highlight-val):not(.article-badge):not(.output-title) {
-    color: #94a3b8 !important;
-    font-size: 16px !important;
-    line-height: 1.8 !important;
-    font-weight: 400 !important;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    margin-bottom: 18px !important;
-}
-
-div#active-module-content strong,
-div#active-module-content b {
-    color: #38bdf8 !important;
+/* 2. Make unselected lesson buttons blend into the light gray background */
+#modules-page-view button[id^="btn-lesson"],
+#modules-page-view .lesson-tabs button {
+    background: #d8dadf !important; /* Matches the light gray page nicely */
+    color: #374151 !important;
+    border: 1px solid #cbd5e1 !important;
+    font-family: 'Inter', sans-serif !important;
     font-weight: 600 !important;
-}
-
-/* --- ARTICLE HEADER & BADGE --- */
-div#active-module-content .article-header,
-.article-header {
-    border-bottom: 1px solid #1e293b !important;
-    padding-bottom: 20px !important;
-    margin-bottom: 30px !important;
-}
-
-div#active-module-content .article-badge,
-.article-badge {
-    display: inline-block !important;
-    background: rgba(14, 165, 233, 0.1) !important;
-    color: #38bdf8 !important;
-    padding: 6px 14px !important;
-    border-radius: 6px !important;
-    font-family: 'Space Grotesk', sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    border: 1px solid rgba(14, 165, 233, 0.25) !important;
-    box-shadow: none !important;
-    transition: background 0.2s ease, transform 0.2s ease !important;
-}
-
-div#active-module-content .article-badge:hover {
-    background: rgba(14, 165, 233, 0.2) !important;
-    transform: translateY(-1px) !important;
-}
-
-/* --- CALLOUT BOXES & CARDS --- */
-div#active-module-content .article-callout,
-div#active-module-content .paradigm-card,
-div#active-module-content .paradigm-row-card,
-div#active-module-content .simulator-box {
-    background: #030712 !important;
-    color: #f3f4f6 !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
-}
-
-div#active-module-content .article-callout {
-    border-left: 4px solid #0ea5e9 !important;
-    border-radius: 0 12px 12px 0 !important;
-    padding: 22px 24px !important;
-    margin: 30px 0 !important;
-}
-
-div#active-module-content .article-callout:hover {
-    box-shadow: 0 6px 25px rgba(14, 165, 233, 0.15) !important;
-}
-
-div#active-module-content .article-callout h4 {
-    color: #38bdf8 !important;
-    margin-top: 0 !important;
-    text-shadow: none !important;
-}
-
-div#active-module-content .article-callout p,
-div#active-module-content .paradigm-card p,
-div#active-module-content .paradigm-row-card p,
-div#active-module-content .simulator-box p {
-    color: #94a3b8 !important;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    font-weight: 400 !important;
-    font-size: 14px !important;
-    margin-bottom: 0 !important;
-}
-
-/* --- STACKED ROW CARDS (A, B, C, D) --- */
-div#active-module-content .paradigms-stack {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-    margin: 25px 0 35px 0 !important;
-}
-
-div#active-module-content .paradigm-row-card {
-    border: 1px solid #1e293b !important;
-    border-left: 4px solid #0ea5e9 !important;
-    border-radius: 0 12px 12px 0 !important;
-    padding: 22px 24px !important;
-}
-
-div#active-module-content .paradigm-row-card:hover {
-    transform: translateX(4px) !important;
-    border-color: #0ea5e9 !important;
-    background: #0b0f19 !important;
-    box-shadow: 0 8px 25px rgba(14, 165, 233, 0.15) !important;
-}
-
-div#active-module-content .paradigm-row-card h4 {
-    margin-top: 0 !important;
-    text-shadow: none !important;
-    color: #f0fdf4 !important;
-    font-size: 17px !important;
-    font-family: 'Space Grotesk', sans-serif !important;
-}
-
-/* --- INTERACTIVE SIMULATOR WIDGET --- */
-div#active-module-content .simulator-box {
-    border: 1px solid #1e293b !important;
-    padding: 30px !important;
-    margin-top: 40px !important;
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4) !important;
-}
-
-div#active-module-content .simulator-box:hover {
-    border-color: rgba(14, 165, 233, 0.5) !important;
-}
-
-div#active-module-content .simulator-header {
-    display: flex !important;
-    align-items: center !important;
-    gap: 14px !important;
-    margin-bottom: 24px !important;
-}
-
-div#active-module-content .sim-icon {
-    font-size: 26px !important;
-}
-
-div#active-module-content .simulator-box h4 {
-    margin: 0 !important;
-    text-shadow: none !important;
-    color: #ffffff !important;
-}
-
-div#active-module-content .slider-wrapper {
-    margin: 24px 0 !important;
-}
-
-div#active-module-content .slider-label-row {
-    display: flex !important;
-    justify-content: space-between !important;
-    font-size: 13px !important;
-    margin-bottom: 8px !important;
-    color: #e2e8f0 !important;
-    font-weight: 500 !important;
-    font-family: 'Space Grotesk', sans-serif !important;
-}
-
-div#active-module-content .highlight-val {
-    color: #38bdf8 !important;
-    font-weight: 700 !important;
-    font-family: 'Space Grotesk', sans-serif !important;
-}
-
-div#active-module-content .simulator-box input[type="range"] {
-    accent-color: #0ea5e9 !important;
-    height: 6px !important;
-    width: 100% !important;
-    cursor: pointer !important;
-    background: #1e293b !important;
-    border-radius: 4px !important;
-    transition: background 0.2s ease !important;
-}
-
-div#active-module-content .simulator-output-row {
-    background: #030712 !important;
-    border: 1px solid #1e293b !important;
     border-radius: 8px !important;
-    padding: 16px 20px !important;
+    padding: 10px 20px !important;
+    box-shadow: none !important;
+}
+
+/* 3. Active lesson button gets the bold orange accent */
+#modules-page-view button[id^="btn-lesson"].active,
+#modules-page-view .lesson-tabs button.active {
+    background: #ea580c !important;
+    color: #ffffff !important;
+    border-color: #c2410c !important;
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25) !important;
+}
+
+/* ==========================================================================
+   TURN THE LESSON BUTTON BAR BACKGROUND BLACK
+   ========================================================================== */
+
+#modules-page-view .lesson-tabs-wrapper,
+#modules-page-view .lesson-nav-bar,
+#modules-page-view .lesson-header-section,
+#modules-page-view header + div,
+#modules-page-view div:has(> #btn-lesson-1),
+#modules-page-view div:has(> button[id^="btn-lesson"]) {
+    background-color: #000000 !important;
+    background: #000000 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Also ensure the outer page background around the cream card is pure black */
+#modules-page-view {
+    background-color: #202020 !important;
+}
+
+/* ==========================================================================
+   INTERACTIVE SIMULATOR WIDGET STYLING SUITE
+   ========================================================================== */
+
+/* 1. Main Simulator Box Container */
+#active-module-content .simulator-box {
+    position: relative !important;
+    background: linear-gradient(135deg, #0f172a 0%, #090d16 100%) !important;
+    border: 1px solid rgba(56, 189, 248, 0.25) !important;
+    border-radius: 20px !important;
+    padding: 36px !important;
+    margin: 45px 0 !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    overflow: hidden !important;
+}
+
+/* Subtle glowing light effect in the corner of the simulator box */
+#active-module-content .simulator-box::after {
+    content: "" !important;
+    position: absolute !important;
+    top: -50px !important;
+    right: -50px !important;
+    width: 150px !important;
+    height: 150px !important;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%) !important;
+    pointer-events: none !important;
+}
+
+/* 2. Simulator Header & Icon */
+#active-module-content .simulator-header {
     display: flex !important;
-    justify-content: space-between !important;
     align-items: center !important;
-    margin-top: 24px !important;
+    gap: 18px !important;
+    margin-bottom: 30px !important;
+    padding-bottom: 20px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+#active-module-content .sim-icon {
+    width: 54px !important;
+    height: 54px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-size: 1.5rem !important;
+    border-radius: 14px !important;
+    background: rgba(56, 189, 248, 0.1) !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.15) !important;
+    flex-shrink: 0 !important;
+}
+
+#active-module-content .simulator-header h4 {
+    margin: 0 0 4px 0 !important;
+    font-size: 1.15rem !important;
+    color: #f8fafc !important;
+}
+
+#active-module-content .simulator-header p {
+    margin: 0 !important;
+    font-size: 0.9rem !important;
+    color: #94a3b8 !important;
+}
+
+/* 3. Slider Wrappers */
+#active-module-content .slider-wrapper {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
+    border-radius: 12px !important;
+    padding: 18px 20px !important;
+    margin-bottom: 18px !important;
     transition: border-color 0.2s ease !important;
 }
 
-div#active-module-content .simulator-output-row:hover {
-    border-color: rgba(14, 165, 233, 0.4) !important;
+#active-module-content .slider-wrapper:hover {
+    border-color: rgba(56, 189, 248, 0.2) !important;
 }
 
-div#active-module-content .output-title {
-    font-size: 11px !important;
+#active-module-content .slider-label-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 12px !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    color: #cbd5e1 !important;
+}
+
+#active-module-content .highlight-val {
+    color: #38bdf8 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 1rem !important;
+    background: rgba(56, 189, 248, 0.12) !important;
+    padding: 2px 10px !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+}
+
+/* Custom Range Input Styling */
+#active-module-content input[type="range"] {
+    width: 100% !important;
+    height: 8px !important;
+    appearance: none !important;
+    background: #1e293b !important;
+    border-radius: 999px !important;
+    outline: none !important;
+    cursor: pointer !important;
+}
+
+#active-module-content input[type="range"]::-webkit-slider-thumb {
+    appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    border: 3px solid #38bdf8 !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.6) !important;
+    cursor: pointer !important;
+    transition: transform 0.1s ease !important;
+}
+
+#active-module-content input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15) !important;
+}
+
+/* 4. Simulator Output Results Footer */
+#active-module-content .simulator-output-row {
+    margin-top: 25px !important;
+    padding: 20px 24px !important;
+    border-radius: 14px !important;
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+#active-module-content .output-title {
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
     color: #64748b !important;
     display: block !important;
-    text-transform: uppercase !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.05em !important;
-    font-family: 'Space Grotesk', sans-serif !important;
+    margin-bottom: 4px !important;
 }
 
-div#active-module-content #output-score, 
-div#active-module-content #output-neural, 
-div#active-module-content #output-conf {
-    font-size: 22px !important;
-    font-weight: 700 !important;
+#active-module-content #output-score {
+    font-size: 1.8rem !important;
+    font-weight: 800 !important;
     color: #38bdf8 !important;
-    font-family: 'Space Grotesk', sans-serif !important;
+    font-family: 'JetBrains Mono', monospace !important;
 }
 
-div#active-module-content .spam-badge-pill {
-    padding: 6px 14px !important;
-    border-radius: 6px !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    color: white !important;
-    letter-spacing: 0.05em !important;
-    box-shadow: none !important;
-    font-family: 'Space Grotesk', sans-serif !important;
-    background: #0ea5e9 !important;
-    transition: background 0.2s ease, transform 0.2s ease !important;
+/* Status Badge Pill */
+#active-module-content .spam-badge-pill {
+    padding: 8px 18px !important;
+    border-radius: 999px !important;
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    font-size: 0.75rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.1em !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4) !important;
+    transition: all 0.3s ease !important;
 }
 
-div#active-module-content .spam-badge-pill:hover {
-    background: #0284c7 !important;
-    transform: scale(1.03) !important;
+/* ==========================================================================
+   BUTTERY SMOOTH IDLE ANIMATION (GPU Accelerated)
+   ========================================================================= */
+
+#active-module-content .lesson-article-container {
+    animation: popUpFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, 
+               subtleSmoothIdle 6s ease-in-out infinite 0.6s !important;
+    will-change: transform !important; /* Hints to the browser to use GPU acceleration */
 }
 
-/* --- CODE SNIPPETS --- */
-div#active-module-content code {
-    background: #030712 !important;
-    color: #38bdf8 !important;
-    padding: 3px 8px !important;
-    border-radius: 4px !important;
-    font-family: 'CommitMono', monospace !important;
-    border: 1px solid #1e293b !important;
-    font-weight: 400 !important;
-    font-size: 13px !important;
-    transition: border-color 0.2s ease !important;
+@keyframes subtleSmoothIdle {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    50% {
+        transform: translate3d(0, -8px, 0);
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
 }
 
-div#active-module-content code:hover {
-    border-color: rgba(14, 165, 233, 0.5) !important;
+
+/* ==========================================================================
+   REFERENCES SECTION (MIMICKING MODULES STYLING & ANIMATIONS)
+   ========================================================================== */
+
+#references-page-view {
+  background:
+    linear-gradient(
+      rgba(5, 15, 35, 0.75),
+      rgba(5, 15, 35, 0.75)
+    ),
+    url("images/BlueBackground.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  animation: sectionFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  padding: 120px 20px 60px;
+  box-sizing: border-box;
 }
 
-/* --- ENHANCED BORDER & COBALT UNDERGLOW --- */
-div#active-module-content img,
-.lesson-article-container img {
+/* Staggered card animations for references grid rows */
+#references-page-view .row:nth-child(1) .module-card:nth-child(1) {
+    --pop-delay: 0.15s;
+}
+
+#references-page-view .row:nth-child(1) .module-card:nth-child(2) {
+    --pop-delay: 0.3s;
+}
+
+#references-page-view .row:nth-child(2) .module-card:nth-child(1) {
+    --pop-delay: 0.45s;
+}
+
+#references-page-view .row:nth-child(2) .module-card:nth-child(2) {
+    --pop-delay: 0.6s;
+}
+
+/* ==========================================================================
+   CLEAN SPA VIEW ROUTING STYLES
+   ========================================================================== */
+
+/* Hide all portal views by default */
+.portal-view {
+    display: none !important;
+}
+
+/* Only show the view when it has the active-view class */
+.portal-view.active-view {
     display: block !important;
+}
+
+/* ==========================================================================
+   MODULE 2: NEURAL NETWORK SIMULATOR & ARTICLE STYLES
+   ========================================================================== */
+
+/* External Article Card Layout Fix */
+.external-article-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-top: 15px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.external-article-card .source-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #00f2fe;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.external-article-card .article-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2px;
+}
+
+.external-article-card .article-subtitle {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+/* Read Article Button */
+.read-article-btn {
+    background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%);
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.read-article-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+}
+
+/* Simulator Box & Neural Panel Container */
+.simulator-box.neural-panel {
+    background: #161625;
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.simulator-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.simulator-header .sim-icon {
+    font-size: 32px;
+}
+
+/* Knowledge Check Options (Buttons) */
+.nn-option {
+    width: 100%;
+    padding: 14px 20px;
+    background: #1e293b;
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+.nn-option:hover {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #00f2fe;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    transform: translateY(-2px);
+}
+
+.nn-option:active {
+    transform: translateY(0);
+}
+
+/* Knowledge Check Result Box */
+.nn-result {
+    background: rgba(9, 9, 16, 0.8);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    color: #cbd5e1;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Result States (Handled by your JS trigger) */
+.nn-result.correct {
+    border-color: #2ed573;
+    color: #2ed573;
+    background: rgba(46, 213, 115, 0.1);
+}
+
+.nn-result.incorrect {
+    border-color: #ff4757;
+    color: #ff4757;
+    background: rgba(255, 71, 87, 0.1);
+}
+/* ==================================================
+   OBSIDIAN & ELECTRIC CYAN UI OVERHAUL
+   ================================================== */
+
+/* 1. Mission Briefing ("Got It") Pop-up Modal (Bigger & Cleaner) */
+.quiz-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(2, 4, 10, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 24px;
+    box-sizing: border-box;
+    backdrop-filter: blur(16px);
+    animation: backdropFadeIn 0.3s ease forwards;
+}
+
+@keyframes backdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.quiz-modal-card {
+    background: linear-gradient(145deg, #0d1322 0%, #080b14 100%);
+    border: 2px solid rgba(0, 242, 254, 0.4);
+    border-radius: 24px;
+    padding: 50px;
+    max-width: 750px; /* Made substantially larger */
+    width: 100%;
+    color: #f8fafc;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 242, 254, 0.2);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    text-align: left;
+    animation: modalPopIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.88) translateY(25px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.quiz-modal-card h2 {
+    color: #00f2fe !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 800;
+    font-size: 2.1rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+}
+
+.quiz-briefing-body {
+    margin: 20px 0 30px 0;
+    line-height: 1.8;
+    color: #94a3b8;
+    font-size: 1.05rem; /* Larger text for readability */
+}
+
+.quiz-briefing-body strong {
+    color: #38bdf8;
+}
+
+#btn-start-mission {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(0, 242, 254, 0.4);
+}
+
+#btn-start-mission:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 242, 254, 0.6);
+    background: linear-gradient(135deg, #33f5ff 0%, #3b82f6 100%);
+}
+
+
+/* 2. Active Quiz Game Card (Bigger & Immersive) */
+.quiz-game-card {
+    background: linear-gradient(145deg, #0d1322 0%, #080b14 100%) !important;
+    border: 2px solid rgba(0, 242, 254, 0.4) !important;
+    border-radius: 24px !important;
+    padding: 45px !important;
+    max-width: 800px !important; /* Made significantly larger */
     width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    margin: 32px auto !important;
-    border: 4px solid #0ea5e9 !important; /* Thicker, prominent techy border */
+    color: #f8fafc !important;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 242, 254, 0.2) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    animation: modalPopIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.quiz-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.quiz-counter {
+    color: #38bdf8 !important;
+    font-weight: 700;
+    font-size: 1.05rem;
+    font-family: 'Outfit', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.quiz-credits {
+    background: rgba(0, 242, 254, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: #00f2fe !important;
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+}
+
+.quiz-title {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 1.65rem !important; /* Bigger, bolder questions */
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    margin-bottom: 28px !important;
+    line-height: 1.5;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 15px;
+}
+
+
+/* 3. Question Option Buttons */
+.opt-btn {
+    padding: 18px 22px !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #cbd5e1 !important;
     border-radius: 14px !important;
-    box-shadow: 0 15px 35px rgba(14, 165, 233, 0.35), 0 5px 15px rgba(0, 0, 0, 0.6) !important; /* Rich cobalt underglow */
-    object-fit: cover !important;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    font-size: 1.05rem !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
 }
 
-div#active-module-content img:hover,
-.lesson-article-container img:hover {
-    transform: scale(1.015) !important;
-    border-color: #38bdf8 !important; /* Brighter sky blue on hover */
-    box-shadow: 0 20px 45px rgba(56, 189, 248, 0.5), 0 8px 20px rgba(0, 0, 0, 0.7) !important; /* Amplified underglow */
-}
-/* Normal page background when on the home screen */
-body {
-    background-color: #030712 !important;
+.opt-btn:hover {
+    transform: translateX(6px);
+    border-color: rgba(0, 242, 254, 0.6) !important;
+    background: rgba(0, 242, 254, 0.08) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
 }
 
-body.module-active {
-    background: linear-gradient(rgba(3, 7, 18, 0.85), rgba(3, 7, 18, 0.85)), 
-                url('images/Space-Background.jpg') no-repeat center center fixed !important;
-    background-size: cover !important;
+.opt-btn.correct {
+    background: rgba(16, 185, 129, 0.25) !important;
+    border-color: #10b981 !important;
+    color: #34d399 !important;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+.opt-btn.incorrect {
+    background: rgba(239, 68, 68, 0.25) !important;
+    border-color: #ef4444 !important;
+    color: #f87171 !important;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+
+/* 4. Canvas & Armory Shop Custom Elements */
+.canvas-card {
+    max-width: 850px !important;
+    text-align: center;
+}
+
+#spaceCanvas {
+    background: #02040a;
+    border: 2px solid rgba(0, 242, 254, 0.3);
+    border-radius: 16px;
+    width: 100%;
+    height: auto;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 242, 254, 0.1);
+}
+
+.canvas-instructions {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin-top: 15px;
+}
+
+.shop-title {
+    font-family: 'Outfit', sans-serif !important;
+    color: #00f2fe !important;
+    margin-top: 0;
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.shop-credits {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.credit-highlight {
+    color: #38bdf8;
+}
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 25px 0;
+}
+
+.shop-btn {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    color: #fff;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.shop-btn:hover {
+    background: rgba(0, 242, 254, 0.12);
+    border-color: #00f2fe;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+}
+
+.shop-btn-full {
+    grid-column: span 2;
+}
+
+.btn-continue-shop {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 1.05rem;
+    font-family: 'Outfit', sans-serif;
+    box-shadow: 0 4px 20px rgba(0, 242, 254, 0.4);
+    transition: all 0.2s ease;
+}
+
+.btn-continue-shop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 242, 254, 0.6);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.summary-title {
+    font-family: 'Outfit', sans-serif !important;
+    color: #00f2fe !important;
+    margin-top: 0;
+    font-size: 2rem;
+}
+
+.summary-stat {
+    color: #fff;
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.summary-arcade {
+    color: #34d399;
+    font-size: 1.1rem;
+}
+
+.summary-total {
+    font-weight: 800;
+    color: #fbbf24;
+    font-size: 1.3rem;
+    margin: 15px 0;
+}
+
+/* ==================================================
+   PROFILE, ACCOUNT CREATION & GLOBAL SEARCHER
+   ================================================== */
+.profile-card-container {
+    background: linear-gradient(145deg, #0d1322 0%, #080b14 100%);
+    border: 2px solid rgba(0, 242, 254, 0.35);
+    border-radius: 22px;
+    padding: 36px;
+    max-width: 850px;
+    margin: 20px auto;
+    color: #f8fafc;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(0, 242, 254, 0.12);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.profile-header-center {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.profile-badge-tag {
+    display: inline-block;
+    padding: 5px 14px;
+    background: rgba(0, 242, 254, 0.12);
+    border: 1px solid rgba(0, 242, 254, 0.4);
+    border-radius: 20px;
+    color: #00f2fe;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.profile-main-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+    color: #ffffff;
+}
+
+.profile-subtext {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.profile-form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.profile-form-stack input,
+.edit-controls-row input,
+.directory-search-input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: 12px;
+    color: #ffffff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-form-stack input:focus,
+.edit-controls-row input:focus,
+.directory-search-input:focus {
+    outline: none;
+    border-color: #00f2fe;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+}
+
+.avatar-picker-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.avatar-pick {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.avatar-pick:hover,
+.avatar-pick.selected {
+    border-color: #00f2fe;
+    background: rgba(0, 242, 254, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+}
+
+.btn-cyan-primary {
+    padding: 15px 24px;
+    background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%);
+    color: #000000;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 242, 254, 0.35);
+    transition: all 0.2s ease;
+}
+
+.btn-cyan-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 242, 254, 0.55);
+}
+
+.btn-cyan-secondary {
+    padding: 14px 22px;
+    background: rgba(0, 242, 254, 0.15);
+    border: 1px solid #00f2fe;
+    color: #00f2fe;
+    border-radius: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-cyan-secondary:hover {
+    background: #00f2fe;
+    color: #000000;
+}
+
+/* Active Dashboard Header */
+.profile-top-banner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.profile-avatar-ring {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background: rgba(0, 242, 254, 0.1);
+    border: 2px solid #00f2fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.3);
+    flex-shrink: 0;
+}
+
+.profile-name-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.profile-name-row h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.9rem;
+    margin: 0;
+}
+
+.profile-rank-pill {
+    padding: 4px 12px;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: #38bdf8;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.profile-bio-text {
+    color: #cbd5e1;
+    margin: 6px 0;
+    font-size: 0.95rem;
+}
+
+.profile-joined-date {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.profile-stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+}
+
+.p-stat-box {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+}
+
+.p-stat-label {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.p-stat-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #00f2fe;
+}
+
+.profile-edit-section {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.profile-edit-section h3 {
+    font-family: 'Outfit', sans-serif;
+    color: #38bdf8;
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
+}
+
+.edit-controls-row {
+    display: flex;
+    gap: 12px;
+}
+
+/* Global Directory & Searcher */
+.directory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.directory-title {
+    font-family: 'Outfit', sans-serif;
+    color: #00f2fe;
+    margin: 0 0 4px 0;
+    font-size: 1.4rem;
+}
+
+.directory-search-input {
+    max-width: 260px;
+}
+
+.directory-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.directory-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+}
+
+.directory-row.is-me {
+    border-color: rgba(0, 242, 254, 0.5);
+    background: rgba(0, 242, 254, 0.06);
+}
+
+.dir-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dir-rank {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    color: #fbbf24;
+    width: 28px;
+}
+
+.dir-avatar {
+    font-size: 1.5rem;
+}
+
+.dir-name {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.dir-bio {
+    display: block;
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.dir-scores {
+    text-align: right;
+    font-family: 'Outfit', sans-serif;
+}
+
+.dir-xp {
+    color: #00f2fe;
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.dir-best {
+    display: block;
+    font-size: 0.78rem;
+    color: #34d399;
+}
+
+.avatar-picker-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.avatar-pick {
+    width: 55px;
+    height: 55px;
+    padding: 3px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-pick:hover,
+.avatar-pick.selected {
+    border-color: #00f2fe;
+    background: rgba(0, 242, 254, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
 }

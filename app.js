@@ -1,25 +1,27 @@
-/*
- * AI Learning Portal - JavaScript App
- * TSA Webmaster Competition - Hand-coded HTML5, CSS3, Modern JavaScript
- * Gamified Arcade Rocket, Drag-and-Drop Block Blast, and Pirate Ship Cannon Minigames Engine
- */
 function loadModule(moduleId) {
-    // 1. Load your module HTML into the container
     document.getElementById('active-module-content').innerHTML = modules[moduleId].content;
-
-    // 2. TRIGGER THE MODULE BACKGROUND
     document.body.classList.add('module-active');
 }
 
 function returnToHome() {
-    // 1. Clear the container
     document.getElementById('active-module-content').innerHTML = "";
-
-    // 2. REMOVE THE MODULE BACKGROUND
     document.body.classList.remove('module-active');
 }
 
-// Global simulation calculator for Submodule 1.1 interactive widget
+window.checkNeuralAnswer = function(correct) {
+    const result = document.getElementById("nn-result");
+    if (!result) return;
+
+    if (correct) {
+        result.textContent = "✅ Correct! Neural networks process data from input to output through hidden layers.";
+        result.style.background = "#16a34a";
+    } else {
+        result.textContent = "❌ Not quite. Review the article and try again.";
+        result.style.background = "#dc2626";
+    }
+};
+
+
 // 1.1 Spam Classifier Simulator
 window.updateSpamSimulator = function() {
     const kw = parseFloat(document.getElementById('slider-kw')?.value) || 0;
@@ -46,7 +48,43 @@ window.updateSpamSimulator = function() {
     }
 };
 
+window.updateVisionSimulator = function() {
+    const slider = document.getElementById('slider-res');
+    const labelRes = document.getElementById('label-res');
+    const outputConf = document.getElementById('output-conf');
+    const statusBadge = document.getElementById('vision-status');
+    const targetImage = document.getElementById('sim-target-image');
 
+    if (!slider) return;
+
+    const val = parseInt(slider.value);
+    labelRes.textContent = val + '%';
+
+    // Calculate dynamic blur: 100% clarity = 0px blur, 10% clarity = 12px blur
+    const blurAmount = ((100 - val) / 100) * 12;
+    if (targetImage) {
+        targetImage.style.filter = `blur(${blurAmount}px)`;
+    }
+
+    // Calculate dynamic confidence score
+    let confidence = Math.min(99.8, Math.max(15.0, (val * 0.95) + (Math.sin(val) * 3))).toFixed(1);
+    outputConf.textContent = confidence + '%';
+
+    // Update the status badge based on clarity thresholds
+    if (val >= 75) {
+        statusBadge.textContent = 'OBJECT VERIFIED';
+        statusBadge.style.background = '#10b981'; // Green
+        statusBadge.style.color = '#fff';
+    } else if (val >= 40) {
+        statusBadge.textContent = 'UNCERTAIN';
+        statusBadge.style.background = '#f59e0b'; // Amber
+        statusBadge.style.color = '#000';
+    } else {
+        statusBadge.textContent = 'LOW CONFIDENCE / RISK';
+        statusBadge.style.background = '#ef4444'; // Red
+        statusBadge.style.color = '#fff';
+    }
+};
 
 let maxUnlockedModule = parseInt(localStorage.getItem('maxUnlockedModule')) || 1;
 
@@ -57,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initChatbot();
     updateModuleLockUI();
 
-    // Handle hash routing from references or direct bookmarking
     if (window.location.hash) {
         const hash = window.location.hash.substring(1);
         if (hash === 'modules' || hash === 'modules-grid') {
@@ -85,23 +122,36 @@ window.showPage = function(pageId) {
     const modulesGridView = document.getElementById('modules-grid-view');
     const modulesPageView = document.getElementById('modules-page-view');
     const dashboardView = document.getElementById('dashboard-page-view');
+    const referencesView = document.getElementById('references-page-view');
+    const profileView = document.getElementById('profile-page');
 
+    // Hide all main page views
     if (homeView) homeView.style.display = 'none';
     if (modulesGridView) modulesGridView.style.display = 'none';
     if (modulesPageView) modulesPageView.style.display = 'none';
     if (dashboardView) dashboardView.style.display = 'none';
+    if (referencesView) referencesView.style.display = 'none';
+    if (profileView) profileView.style.display = 'none';
 
+    // Show the requested view
     if (pageId === 'modules-grid' || pageId === 'modules') {
         if (modulesGridView) {
             modulesGridView.style.display = 'block';
-            updateModuleLockUI();
+            if (typeof updateModuleLockUI === 'function') updateModuleLockUI();
         }
     } else if (pageId === 'home') {
         if (homeView) homeView.style.display = 'block';
     } else if (pageId === 'dashboard') {
         if (dashboardView) {
             dashboardView.style.display = 'block';
-            updateDashboardStats();
+            if (typeof updateDashboardStats === 'function') updateDashboardStats();
+        }
+    } else if (pageId === 'references-page-view' || pageId === 'references') {
+        if (referencesView) referencesView.style.display = 'block';
+    } else if (pageId === 'profile-page' || pageId === 'profile') {
+        if (profileView) {
+            profileView.style.display = 'block';
+            // Trigger profile UI refresh if the IIFE function exposes it or listens to DOM changes
         }
     }
 
@@ -124,7 +174,6 @@ function updateDashboardStats() {
     if (xpText) xpText.textContent = `${xpPoints} XP`;
     if (modCount) modCount.textContent = `${unlocked} / ${totalModules}`;
 
-    // Check all 9 badges dynamically
     for (let i = 1; i <= 9; i++) {
         const badge = document.getElementById(`badge-${i}`);
         if (badge) {
@@ -132,11 +181,11 @@ function updateDashboardStats() {
             if (i <= 6) {
                 isUnlocked = unlocked >= i;
             } else if (i === 7) {
-                isUnlocked = unlocked >= 3; // Quiz Ace
+                isUnlocked = unlocked >= 3;
             } else if (i === 8) {
-                isUnlocked = unlocked >= 2; // Arcade Pro
+                isUnlocked = unlocked >= 2;
             } else if (i === 9) {
-                isUnlocked = unlocked >= 6; // Streak Master
+                isUnlocked = unlocked >= 6;
             }
 
             if (isUnlocked) {
@@ -201,195 +250,252 @@ function updateModuleLockUI() {
 
 // Submodules detailed lesson data for all 6 modules
 const moduleLessons = {
-1: {
+    1: {
         title: "Module 1: Fundamental AI Concepts",
         submodules: {
             1: {
-    title: "1.1 Machine Learning Fundamentals",
-    type: "rocket",
-    content: `
-        <div class="lesson-article-container">
-            
-            <!-- Article Header -->
-            <div class="article-header">
-                <span class="article-badge">Core Concept Article</span>
-                <h2>Demystifying Machine Learning</h2>
-                <p>An exciting journey into how computers stop following rigid rules and start learning from experience just like humans do.</p>
-            </div>
-
-            <!-- Section 1 -->
-            <h3>1. The Big Shift: Traditional Coding vs. Machine Learning</h3>
-            <p>
-                For a long time, writing computer software meant giving a computer strict, step-by-step instructions. If a programmer wanted to build a spam filter for an email inbox, they had to sit down and write thousands of manual rules by hand—such as <code>IF message contains "WINNER" AND sender is unknown THEN mark as spam</code>. While this works for simple tasks, it totally falls apart in the real world where language changes constantly, pictures look different every time, and new tricks pop up every single day.
-            </p>
-            <p>
-                <strong>Machine Learning (ML)</strong> completely flips this script. Instead of forcing human programmers to invent every single rule, engineers feed the computer massive amounts of examples and correct answers. The computer then looks at the data, figures out patterns all on its own, and creates its own rules to make smart guesses about new things it has never seen before.
-            </p>
-
-            <img src="images/Module1Image.jpg" alt="Comparison diagram showing traditional programming versus machine learning data flow" class="content-lesson-img">
-
-            <!-- Callout Box -->
-            <div class="article-callout">
-                <h4>Key Takeaway</h4>
-                <p>
-                    Traditional programming is like teaching someone a recipe step-by-step; Machine Learning is like showing someone hundreds of pictures of food until they learn how to cook on their own.
-                </p>
-            </div>
-
-            <!-- Section 2 -->
-            <h3>2. The Four Core Pillars of Machine Learning</h3>
-            <p>
-                To solve different kinds of problems and build powerful technologies, computer scientists divide machine learning into four fundamental pillars. Each one handles data and challenges in a unique way:
-            </p>
-
-            <!-- Stacked Row Format (A, B, C, D) -->
-            <div class="paradigms-stack">
-                <div class="paradigm-row-card">
-                    <h4>A. Supervised Learning</h4>
-                    <p>
-                        Think of this like learning with a teacher checking your homework. The computer is given practice questions that already have the correct answers attached. It practices over and over until it can solve new, unreleased problems accurately. Common examples include email spam filters and apps that predict house prices.
-                    </p>
-                </div>
-
-                <div class="paradigm-row-card">
-                    <h4>B. Unsupervised Learning</h4>
-                    <p>
-                        Think of this like exploring a messy room with no guide. The computer is given a pile of completely unlabeled data and has to find hidden groups, patterns, or similarities on its own. Stores use this to group shoppers with similar buying habits into categories.
-                    </p>
-                </div>
-
-                <div class="paradigm-row-card">
-                    <h4>C. Reinforcement Learning</h4>
-                    <p>
-                        Think of this like playing a video game through trial and error. An AI agent takes actions in an environment, earning points for good moves and losing points for mistakes. Over time, it figures out the best strategy to win. This is how self-driving cars and robot arms learn to navigate.
-                    </p>
-                </div>
-
-                <div class="paradigm-row-card">
-                    <h4>D. Deep Learning & Neural Networks</h4>
-                    <p>
-                        Inspired by the human brain, deep learning uses multi-layered artificial neural networks to process complex data. This is the advanced engine behind modern breakthroughs like facial recognition, voice assistants, and generative AI art tools.
-                    </p>
-                </div>
-            </div>
-
-            <img src="images/Module1Image1.1.jpg" alt="Illustration of the four machine learning paradigms with icons and brief descriptions" class="content-lesson-img">
-            <!-- Interactive Simulator Widget 1.1 -->
-            <div class="simulator-box">
-                <div class="simulator-header">
-                    <span class="sim-icon">🔬</span>
-                    <div>
-                        <h4>Interactive Model Simulator: Supervised Spam Classifier</h4>
-                        <p>Adjust the sliders below to see how a live AI calculates threat probabilities in real time!</p>
-                    </div>
-                </div>
-
-                <div class="slider-wrapper">
-                    <div class="slider-label-row">
-                        <span>Trigger Words Count ("Win", "Free", "Urgent"):</span>
-                        <span id="label-kw" class="highlight-val">3</span>
-                    </div>
-                    <input type="range" id="slider-kw" min="0" max="10" value="3" oninput="window.updateSpamSimulator()">
-                </div>
-
-                <div class="slider-wrapper">
-                    <div class="slider-label-row">
-                        <span>Suspicious External Links Count:</span>
-                        <span id="label-links" class="highlight-val">2</span>
-                    </div>
-                    <input type="range" id="slider-links" min="0" max="5" value="2" oninput="window.updateSpamSimulator()">
-                </div>
-
-                <div class="simulator-output-row">
-                    <div>
-                        <span class="output-title">Calculated Probability Score:</span>
-                        <span id="output-score">0.65</span>
-                    </div>
-                    <div id="output-badge" class="spam-badge-pill">
-                        SPAM DETECTED
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    `
-},
-            2: {
-                title: "1.2 Neural Networks & Deep Learning",
-                type: "blockblast",
+                title: "1.1 Machine Learning Fundamentals",
+                type: "rocket",
                 content: `
                     <div class="lesson-article-container">
                         
                         <!-- Article Header -->
                         <div class="article-header">
-                            <span class="article-badge" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8; border-color: #38bdf8;">Deep Architecture</span>
-                            <h2>Inside Artificial Neural Networks & Transformers</h2>
-                            <p>An architectural deep dive into multi-layered computational graphs, activation functions, and self-attention mechanisms.</p>
+                            <span class="article-badge">Core Concept Article</span>
+                            <h2>Demystifying Machine Learning</h2>
+                            <p>An exciting journey into how computers stop following rigid rules and start learning from experience just like humans do.</p>
                         </div>
 
                         <!-- Section 1 -->
-                        <h3>1. Artificial Neural Networks (ANNs)</h3>
+                        <h3>1. The Big Shift: Traditional Coding vs. Machine Learning</h3>
                         <p>
-                            Artificial Neural Networks are computational architectures inspired by biological neural processing in animal and human brains. At their core, ANNs consist of thousands or millions of interconnected nodes (artificial neurons) arranged in distinct architectural tiers: the <strong>Input Layer</strong> (which ingests raw feature vectors), one or more <strong>Hidden Layers</strong> (which perform non-linear transformations and feature extraction), and the <strong>Output Layer</strong> (which produces final classification or regression predictions).
+                            For a long time, writing computer software meant giving a computer strict, step-by-step instructions. If a programmer wanted to build a spam filter for an email inbox, they had to sit down and write thousands of manual rules by hand—such as <code>IF message contains "WINNER" AND sender is unknown THEN mark as spam</code>. While this works for simple tasks, it totally falls apart in the real world where language changes constantly, pictures look different every time, and new tricks pop up every single day.
                         </p>
                         <p>
-                            Each connection between neurons holds a numerical parameter called a <em>weight</em>. As data flows forward through the network, signals are multiplied by these weights, summed at each receiving node, and passed through non-linear activation functions (like ReLU or Sigmoid) to determine whether the neuron fires.
+                            <strong>Machine Learning (ML)</strong> completely flips this script. Instead of forcing human programmers to invent every single rule, engineers feed the computer massive amounts of examples and correct answers. The computer then looks at the data, figures out patterns all on its own, and creates its own rules to make smart guesses about new things it has never seen before.
                         </p>
+
+                        <img src="images/Module1Image.jpg" alt="Comparison diagram showing traditional programming versus machine learning data flow" class="content-lesson-img">
 
                         <!-- Callout Box -->
                         <div class="article-callout">
-                            <h4>The Power of Depth</h4>
+                            <h4>Key Takeaway</h4>
                             <p>
-                                Adding multiple hidden layers (Deep Learning) allows networks to learn hierarchical representations—early layers detect simple edges and lines, intermediate layers combine them into shapes, and deep layers recognize complex semantic objects.
+                                Traditional programming is like teaching someone a recipe step-by-step; Machine Learning is like showing someone hundreds of pictures of food until they learn how to cook on their own.
                             </p>
                         </div>
 
                         <!-- Section 2 -->
-                        <h3>2. The Transformer Revolution & Self-Attention</h3>
+                        <h3>2. The Four Core Pillars of Machine Learning</h3>
                         <p>
-                            Traditional deep learning models like Recurrent Neural Networks (RNNs) processed text sequentially word-by-word, creating bottlenecks for long-range context. In 2017, researchers introduced the <strong>Transformer architecture</strong>, powered entirely by <strong>Self-Attention</strong> mechanisms.
-                        </p>
-                        <p>
-                            Self-attention enables models to evaluate the contextual relationship between every single word in a sentence simultaneously, regardless of their distance from one another. This breakthrough forms the computational foundation behind modern Large Language Models (LLMs) like GPT and Claude.
+                            To solve different kinds of problems and build powerful technologies, computer scientists divide machine learning into four fundamental pillars. Each one handles data and challenges in a unique way:
                         </p>
 
-                        <!-- Interactive Simulator Widget 1.2 -->
+                        <!-- Stacked Row Format (A, B, C, D) -->
+                        <div class="paradigms-stack">
+                            <div class="paradigm-row-card">
+                                <h4>A. Supervised Learning</h4>
+                                <p>
+                                    Think of this like learning with a teacher checking your homework. The computer is given practice questions that already have the correct answers attached. It practices over and over until it can solve new, unreleased problems accurately. Common examples include email spam filters and apps that predict house prices.
+                                </p>
+                            </div>
+
+                            <div class="paradigm-row-card">
+                                <h4>B. Unsupervised Learning</h4>
+                                <p>
+                                    Think of this like exploring a messy room with no guide. The computer is given a pile of completely unlabeled data and has to find hidden groups, patterns, or similarities on its own. Stores use this to group shoppers with similar buying habits into categories.
+                                </p>
+                            </div>
+
+                            <div class="paradigm-row-card">
+                                <h4>C. Reinforcement Learning</h4>
+                                <p>
+                                    Think of this like playing a video game through trial and error. An AI agent takes actions in an environment, earning points for good moves and losing points for mistakes. Over time, it figures out the best strategy to win. This is how self-driving cars and robot arms learn to navigate.
+                                </p>
+                            </div>
+
+                            <div class="paradigm-row-card">
+                                <h4>D. Deep Learning & Neural Networks</h4>
+                                <p>
+                                    Inspired by the human brain, deep learning uses multi-layered artificial neural networks to process complex data. This is the advanced engine behind modern breakthroughs like facial recognition, voice assistants, and generative AI art tools.
+                                </p>
+                            </div>
+                        </div>
+
+                        <img src="images/Module1Image1.1.jpg" alt="Illustration of the four machine learning paradigms with icons and brief descriptions" class="content-lesson-img">
+                        
+                        <!-- Interactive Simulator Widget 1.1 -->
                         <div class="simulator-box">
                             <div class="simulator-header">
-                                <span class="sim-icon">⚡</span>
+                                <span class="sim-icon">🔬</span>
                                 <div>
-                                    <h4>Interactive Simulator: Neural Weight Propagation</h4>
-                                    <p>Tweak the synaptic weight multiplier to see how signals amplify across hidden layers.</p>
+                                    <h4>Interactive Model Simulator: Supervised Spam Classifier</h4>
+                                    <p>Adjust the sliders below to see how a live AI calculates threat probabilities in real time!</p>
                                 </div>
                             </div>
 
                             <div class="slider-wrapper">
                                 <div class="slider-label-row">
-                                    <span>Input Signal Strength ($$X_1$$):</span>
-                                    <span id="label-signal" class="highlight-val">5.0</span>
+                                    <span>Trigger Words Count ("Win", "Free", "Urgent"):</span>
+                                    <span id="label-kw" class="highlight-val">3</span>
                                 </div>
-                                <input type="range" id="slider-signal" min="1" max="10" step="0.5" value="5.0" oninput="window.updateNeuralSimulator()">
+                                <input type="range" id="slider-kw" min="0" max="10" value="3" oninput="window.updateSpamSimulator()">
                             </div>
 
                             <div class="slider-wrapper">
                                 <div class="slider-label-row">
-                                    <span>Synaptic Weight ($$W_1$$):</span>
-                                    <span id="label-weight" class="highlight-val">1.5</span>
+                                    <span>Suspicious External Links Count:</span>
+                                    <span id="label-links" class="highlight-val">2</span>
                                 </div>
-                                <input type="range" id="slider-weight" min="0.1" max="3.0" step="0.1" value="1.5" oninput="window.updateNeuralSimulator()">
+                                <input type="range" id="slider-links" min="0" max="5" value="2" oninput="window.updateSpamSimulator()">
                             </div>
 
                             <div class="simulator-output-row">
                                 <div>
-                                    <span class="output-title">Activated Output Signal (σ(z)):</span>
-                                    <span id="output-neural">0.99</span>
+                                    <span class="output-title">Calculated Probability Score:</span>
+                                    <span id="output-score">0.65</span>
                                 </div>
-                                <div id="neural-status" class="spam-badge-pill" style="background: #3b82f6;">
-                                    STRONG FIRING
+                                <div id="output-badge" class="spam-badge-pill">
+                                    SPAM DETECTED
                                 </div>
                             </div>
                         </div>
 
+                    </div>
+                `
+            },
+            2: {
+                title: "1.2 Neural Networks & Deep Learning",
+                type: "blockblast",
+                content: `
+                    <div class="lesson-article-container">
+                        <div class="article-header">
+                            <span class="article-badge neural-badge">
+                                Deep Learning
+                            </span>
+                            <h2>Neural Networks & Modern AI Systems</h2>
+                            <p>
+                                Learn how neural networks process information,
+                                recognize patterns, and power today's advanced
+                                AI systems such as ChatGPT and image generators.
+                            </p>
+                        </div>
+
+                        <br><br>
+
+                        <div class="article-callout article-reading-card">
+                            <h4>📖 Required Reading</h4>
+                            <p>
+                                Read IBM's explanation of Neural Networks before
+                                completing the activity below.
+                            </p>
+                            <div class="external-article-card">
+                                <div>
+                                    <div class="source-label">
+                                        IBM Technology
+                                    </div>
+                                    <div class="article-title">
+                                        What Are Neural Networks?
+                                    </div>
+                                    <div class="article-subtitle">
+                                        External educational article
+                                    </div>
+                                </div>
+                                <a
+                                    class="read-article-btn"
+                                    href="https://www.ibm.com/topics/neural-networks"
+                                    target="_blank"
+                                >
+                                    Read Article →
+                                </a>
+                            </div>
+                        </div>
+
+                        <br><br>
+
+                        <h3>Focus Questions</h3>
+
+                        <ul class="focus-list">
+                            <li>What is an artificial neuron?</li>
+                            <li>What are weights and biases?</li>
+                            <li>What is an activation function?</li>
+                            <li>Why do neural networks need hidden layers?</li>
+                            <li>How do neural networks learn?</li>
+                        </ul>
+
+                        <br><br>
+
+                        <div class="simulator-box neural-panel">
+                            <div class="simulator-header">
+                                <span class="sim-icon">🧠</span>
+                                <div>
+                                    <h4>Knowledge Check</h4>
+                                    <p>
+                                        Select the correct neural network architecture.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <button
+                                class="nn-option"
+                                onclick="checkNeuralAnswer(true)"
+                            >
+                                Input Layer → Hidden Layer →
+                                Activation Function → Output Layer
+                            </button>
+
+                            <br><br>
+
+                            <button
+                                class="nn-option"
+                                onclick="checkNeuralAnswer(false)"
+                            >
+                                Hidden Layer → Input Layer →
+                                Output Layer
+                            </button>
+
+                            <br><br>
+
+                            <button
+                                class="nn-option"
+                                onclick="checkNeuralAnswer(false)"
+                            >
+                                Output Layer → Hidden Layer →
+                                Input Layer
+                            </button>
+
+                            <br><br>
+
+                            <button
+                                class="nn-option"
+                                onclick="checkNeuralAnswer(false)"
+                            >
+                                Activation Function → Output Layer →
+                                Input Layer
+                            </button>
+
+                            <br><br>
+
+                            <div
+                                id="nn-result"
+                                class="nn-result"
+                            >
+                                Select an answer above.
+                            </div>
+                        </div>
+
+                        <br><br>
+
+                        <div class="article-callout">
+                            <h4>🎮 BlockBlast Challenge</h4>
+                            <p>
+                                After completing the knowledge check,
+                                continue to the BlockBlast activity to
+                                reinforce what you've learned.
+                            </p>
+                        </div>
                     </div>
                 `
             },
@@ -403,60 +509,80 @@ const moduleLessons = {
                         <div class="article-header">
                             <span class="article-badge" style="background: rgba(52, 211, 153, 0.1); color: #34d399; border-color: #34d399;">Vision & Reliability</span>
                             <h2>Computer Vision & Generative Hallucinations</h2>
-                            <p>Analyzing how machines interpret pixel data and examining the critical safety risks of generative model hallucinations.</p>
+                            <p>Analyzing how machines interpret pixel data, exploring feature extraction, and examining the critical reliability risks of generative AI hallucinations.</p>
                         </div>
+
+                        <br><br>
 
                         <!-- Section 1 -->
                         <h3>1. Computer Vision (CV) Fundamentals</h3>
                         <p>
-                            Computer Vision is a subfield of artificial intelligence that trains computers to extract high-level semantic understanding from digital images, video feeds, and multi-dimensional sensor arrays. Utilizing specialized architectures known as <strong>Convolutional Neural Networks (CNNs)</strong>, CV systems apply mathematical filters (kernels) across pixel grids to automatically detect edges, textures, contours, and complex object geometries.
+                            Computer Vision is a subfield of artificial intelligence that trains computers to extract high-level semantic understanding from digital images, video feeds, and multi-dimensional sensor arrays. Unlike humans—who instantly recognize a face or a road sign—a computer processes a massive grid of multi-channel numerical matrix values (RGB values ranging from 0 to 255 per pixel).
                         </p>
                         <p>
-                            From autonomous vehicle lane detection and facial recognition to medical MRI scan tumor segmentation, computer vision bridges the gap between raw optical data and actionable automated decisions.
+                            To bridge this gap, CV systems utilize specialized architectures called <strong>Convolutional Neural Networks (CNNs)</strong>. CNNs slide mathematical filters (called kernels) across pixel grids layer by layer:
                         </p>
+                        
+                        <ul class="focus-list" style="margin-bottom: 20px;">
+                            <li><strong>Early Layers:</strong> Detect basic geometric traits like sharp edges, horizontal lines, and color gradients.</li>
+                            <li><strong>Middle Layers:</strong> Combine edges to recognize textures, curves, and patterns (like fur texture or tire treads).</li>
+                            <li><strong>Deep Layers:</strong> Assemble features into complete objects (like a cat, a pedestrian, or a traffic light).</li>
+                        </ul>
 
-                        <!-- Callout Box -->
                         <div class="article-callout">
-                            <h4>Pixels to Semantics</h4>
+                            <h4>🚗 Real-World Impact</h4>
                             <p>
-                                A computer does not "see" an image the way humans do; it processes a massive grid of multi-channel numerical matrix values (RGB values ranging from 0 to 255 per pixel).
+                                From autonomous vehicle lane detection and facial recognition to medical MRI scan tumor segmentation, computer vision transforms raw optical matrix data into life-saving automated decisions.
                             </p>
                         </div>
+
+                        <br><br>
 
                         <!-- Section 2 -->
                         <h3>2. Generative Model Hallucinations</h3>
                         <p>
-                            As generative AI models become ubiquitous, understanding their failure modes is critical. One of the most prominent risks is the <strong>hallucination phenomenon</strong>, where an AI model generates factually incorrect, nonsensical, or entirely fabricated information while maintaining an authoritative, highly confident tone.
+                            As generative AI models become a standard part of software toolkits, understanding their failure modes is crucial. One of the most prominent risks is the <strong>hallucination phenomenon</strong>, where an AI model generates factually incorrect, nonsensical, or entirely fabricated information while maintaining an authoritative, highly confident tone.
                         </p>
                         <p>
-                            Because generative models predict the next most statistically likely token based on training correlations rather than performing logical truth verification, they can easily invent fake citations, historical events, or code snippets. Cross-referencing primary human sources is therefore mandatory.
+                            Because generative language models predict the next most statistically likely token based on training correlations rather than performing logical truth verification, they can easily invent fake academic citations, non-existent historical events, or buggy code snippets. Cross-referencing primary human sources is therefore mandatory in professional and academic environments.
                         </p>
 
-                        <!-- Interactive Simulator Widget 1.3 -->
-                        <div class="simulator-box">
-                            <div class="simulator-header">
-                                <span class="sim-icon">🎯</span>
+                        <br><br>
+
+                        <!-- Section 3 -->
+                        <h3>3. Edge Cases & Adversarial Vulnerabilities</h3>
+                        <p>
+                            Computer vision systems are also vulnerable to <strong>adversarial attacks</strong>—tiny, human-imperceptible pixel modifications that trick neural networks into misclassifying objects entirely. For example, placing a tiny, inconspicuous sticker on a stop sign can cause an autonomous vehicle's vision model to classify it as a 45 MPH speed limit sign, proving that AI pattern recognition operates very differently from human cognitive reasoning.
+                        </p>
+
+                        <br><br>
+
+                        <!-- Interactive Simulator Widget 1.3 (Upgraded with Visual Blur/Sharpness Preview) -->
+                        <div class="simulator-box" style="background: #161625; border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 12px; padding: 30px;">
+                            <div class="simulator-header" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                <span class="sim-icon" style="font-size: 32px;">🎯</span>
                                 <div>
-                                    <h4>Interactive Simulator: Object Detection Confidence</h4>
-                                    <p>Simulate image resolution clarity to evaluate model classification confidence thresholds.</p>
+                                    <h4 style="color: #00f2fe; margin: 0 0 5px 0; font-family: 'Orbitron', sans-serif;">Interactive Simulator: Object Detection Confidence</h4>
+                                    <p style="color: #aaa; margin: 0; font-size: 14px;">Adjust image resolution clarity to evaluate how pixel quality affects model classification confidence.</p>
                                 </div>
                             </div>
 
-                            <div class="slider-wrapper">
-                                <div class="slider-label-row">
-                                    <span>Image Resolution Clarity (%):</span>
-                                    <span id="label-res" class="highlight-val">85%</span>
+                            <img id="sim-target-image" src="images/NYC.jpg" alt="Target Object" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-bottom: 20px; filter: blur(3px); transition: filter 0.2s ease; display: block;">
+                            <div class="slider-wrapper" style="margin-bottom: 20px;">
+                                <div class="slider-label-row" style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
+                                    <span>Image Resolution Clarity:</span>
+                                    <span id="label-res" class="highlight-val" style="color: #34d399; font-weight: bold;">50%</span>
                                 </div>
-                                <input type="range" id="slider-res" min="10" max="100" value="85" oninput="window.updateVisionSimulator()">
+                                <input type="range" id="slider-res" min="10" max="100" value="50" oninput="window.updateVisionSimulator()" style="width: 100%; accent-color: #34d399; cursor: pointer;">
                             </div>
 
-                            <div class="simulator-output-row">
+                            <div class="simulator-output-row" style="display: flex; justify-content: space-between; align-items: center; background: #0b0f19; padding: 15px 20px; border-radius: 8px;">
                                 <div>
-                                    <span class="output-title">Detection Confidence:</span>
-                                    <span id="output-conf">94.2%</span>
+                                    <span class="output-title" style="color: #aaa; font-size: 13px; display: block;">Model Detection Confidence:</span>
+                                    <span id="output-conf" style="font-size: 20px; font-weight: bold; color: #fff;">65.4%</span>
                                 </div>
-                                <div id="vision-status" class="spam-badge-pill" style="background: #10b981;">
-                                    OBJECT VERIFIED
+                                <div id="vision-status" class="spam-badge-pill" style="background: #f59e0b; color: #000; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 12px; letter-spacing: 0.5px;">
+                                    UNCERTAIN
                                 </div>
                             </div>
                         </div>
@@ -791,20 +917,15 @@ const arcadeQuizDB = {
 
 function showInstructionsModal(gameTitle, rulesHTML, onStartCallback) {
     const modal = document.createElement('div');
-    modal.className = 'quiz-modal';
-    modal.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(5, 5, 15, 0.95); display: flex; justify-content: center;
-        align-items: center; z-index: 10000; padding: 20px; box-sizing: border-box;
-    `;
+    modal.className = 'quiz-modal'; // Uses your CSS class directly
 
     modal.innerHTML = `
-        <div style="background: #161625; border: 2px solid #00f2fe; border-radius: 12px; padding: 35px; max-width: 600px; width: 100%; color: #fff; box-shadow: 0 0 35px rgba(0,242,254,0.4); text-align: left;">
-            <h2 style="color: #00f2fe; margin-top: 0; font-size: 24px; text-align: center; font-family: 'Orbitron', sans-serif;">📜 Mission Briefing: ${gameTitle}</h2>
-            <div style="margin: 20px 0; line-height: 1.6; color: #d1d5db; font-size: 15px;">
+        <div class="quiz-modal-card">
+            <h2 style="font-family: 'Orbitron', sans-serif;">📜 Mission Briefing: ${gameTitle}</h2>
+            <div class="quiz-briefing-body">
                 ${rulesHTML}
             </div>
-            <button id="btn-start-mission" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%); color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,242,254,0.4); font-family: 'Orbitron', sans-serif;">
+            <button id="btn-start-mission">
                 ✅ Got It! Start Challenge
             </button>
         </div>
@@ -816,7 +937,6 @@ function showInstructionsModal(gameTitle, rulesHTML, onStartCallback) {
         onStartCallback();
     };
 }
-
 window.startArcadeQuiz = function(modId, subId) {
     const key = `${modId}.${subId}`;
     const modData = moduleLessons[modId] || moduleLessons[1];
@@ -865,7 +985,7 @@ window.startArcadeQuiz = function(modId, subId) {
 };
 
 // ============================================================================
-// MINIGAME 1: ROCKET SPACE SHOOTER
+// MINIGAME 1: ROCKET SPACE SHOOTER (Fully Unified & Sleek)
 // ============================================================================
 function runRocketGame(modId, subId, key) {
     const questions = arcadeQuizDB[key] || arcadeQuizDB["1.1"];
@@ -883,12 +1003,26 @@ function runRocketGame(modId, subId, key) {
 
     const modal = document.createElement('div');
     modal.className = 'quiz-modal';
-    modal.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(5, 5, 12, 0.95); display: flex; justify-content: center;
-        align-items: center; z-index: 10000; padding: 20px; box-sizing: border-box;
-    `;
     document.body.appendChild(modal);
+
+    let particles = [];
+
+    function spawnExplosion(x, y, color = '#00f2fe') {
+        for (let i = 0; i < 18; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 1.5 + Math.random() * 4.5;
+            particles.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                alpha: 1.0,
+                decay: 0.02 + Math.random() * 0.025,
+                color: color,
+                size: 2 + Math.random() * 3.5
+            });
+        }
+    }
 
     function renderQuestionStep() {
         if (currentQ >= questions.length) {
@@ -898,15 +1032,15 @@ function runRocketGame(modId, subId, key) {
 
         const qData = questions[currentQ];
         modal.innerHTML = `
-            <div style="background: #12121e; border: 2px solid #00f2fe; border-radius: 12px; padding: 30px; max-width: 600px; width: 100%; color: #fff; box-shadow: 0 0 30px rgba(0,242,254,0.3);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <span style="color: #60a5fa; font-weight: bold;">Question ${currentQ + 1} of ${questions.length}</span>
-                    <span style="background: #1e1e2e; padding: 4px 12px; border-radius: 20px; color: #00f2fe; border: 1px solid #00f2fe;">Credits: ${credits} 💰</span>
+            <div class="quiz-game-card">
+                <div class="quiz-header-row">
+                    <span class="quiz-counter">Question ${currentQ + 1} of ${questions.length}</span>
+                    <span class="quiz-credits">Credits: ${credits} 💰</span>
                 </div>
-                <h2 style="font-size: 20px; margin-bottom: 20px; color: #fff;">${qData.question}</h2>
-                <div class="options-container" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                <h2 class="quiz-title">${qData.question}</h2>
+                <div class="options-container">
                     ${qData.options.map((opt, i) => `
-                        <button class="opt-btn" data-idx="${i}" style="padding: 12px; background: #1e1e2e; border: 1px solid #3f3f46; color: #fff; border-radius: 6px; text-align: left; cursor: pointer; font-size: 15px;">${opt}</button>
+                        <button class="opt-btn" data-idx="${i}">${opt}</button>
                     `).join('')}
                 </div>
             </div>
@@ -919,17 +1053,14 @@ function runRocketGame(modId, subId, key) {
                 allBtns.forEach(b => b.style.pointerEvents = 'none');
 
                 if (selected === qData.correct) {
-                    btn.style.background = '#2ed573';
-                    btn.style.borderColor = '#2ed573';
+                    btn.classList.add('correct');
                     btn.innerHTML += ' ✓';
                     credits += 100;
                     quizScore++;
                 } else {
-                    btn.style.background = '#ff4757';
-                    btn.style.borderColor = '#ff4757';
+                    btn.classList.add('incorrect');
                     btn.innerHTML += ' ✗';
-                    allBtns[qData.correct].style.background = '#2ed573';
-                    allBtns[qData.correct].style.borderColor = '#2ed573';
+                    allBtns[qData.correct].classList.add('correct');
                 }
 
                 setTimeout(() => launchSpaceWave(), 1000);
@@ -939,14 +1070,14 @@ function runRocketGame(modId, subId, key) {
 
     function launchSpaceWave() {
         modal.innerHTML = `
-            <div style="background: #0a0a14; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; max-width: 700px; width: 100%; color: #fff; text-align: center;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="color: #00f2fe; font-weight: bold;">Wave ${currentQ + 1} - Rocket Defense</span>
-                    <span id="game-timer" style="color: #ff4757; font-weight: bold;">Time: 30s</span>
-                    <span id="game-score" style="color: #2ed573;">Score: ${spaceScore}</span>
+            <div class="quiz-game-card canvas-card">
+                <div class="quiz-header-row">
+                    <span class="quiz-counter">Wave ${currentQ + 1} - Rocket Defense</span>
+                    <span id="game-timer" class="quiz-credits" style="color: #ef4444 !important; border-color: rgba(239, 68, 68, 0.4);">Time: 30s</span>
+                    <span id="game-score" class="quiz-credits">Score: ${spaceScore}</span>
                 </div>
-                <canvas id="spaceCanvas" width="640" height="360" style="background: #000; border: 1px solid #333; border-radius: 6px; width: 100%; height: auto;"></canvas>
-                <p style="color: #aaa; font-size: 13px; margin-top: 8px;">Use <strong>LEFT / RIGHT Arrows (or A/D)</strong> to Move | Press <strong>UP Arrow (W / Space)</strong> to Shoot!</p>
+                <canvas id="spaceCanvas" width="640" height="360"></canvas>
+                <p class="canvas-instructions">Use <strong>LEFT / RIGHT Arrows (or A/D)</strong> to Move | Press <strong>UP Arrow (W / Space)</strong> to Shoot!</p>
             </div>
         `;
 
@@ -954,7 +1085,7 @@ function runRocketGame(modId, subId, key) {
         const ctx = canvas.getContext('2d');
         let timeLeft = 30;
 
-        let player = { x: canvas.width / 2 - 18, y: canvas.height - 42, w: 36, h: 36, speed: shipSpeedBoost ? 10 : 6 };
+        let player = { x: canvas.width / 2 - 18, y: canvas.height - 45, w: 36, h: 36, speed: shipSpeedBoost ? 9 : 5.5 };
         let bullets = [];
         let asteroids = [];
         let keys = {};
@@ -965,6 +1096,15 @@ function runRocketGame(modId, subId, key) {
         window.addEventListener('keyup', keyupHandler);
 
         let lastShoot = 0;
+        let starfield = [];
+        for (let i = 0; i < 45; i++) {
+            starfield.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2 + 1,
+                speed: Math.random() * 1.8 + 0.5
+            });
+        }
 
         const timerInterval = setInterval(() => {
             timeLeft--;
@@ -988,73 +1128,132 @@ function runRocketGame(modId, subId, key) {
         function gameLoop(now) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = '#ffffff';
-            for (let i = 0; i < 20; i++) {
-                ctx.fillRect((i * 47) % canvas.width, (i * 29 + now * 0.05) % canvas.height, 2, 2);
-            }
+            // Dynamic Gradient Background
+            let bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            bgGradient.addColorStop(0, '#060919');
+            bgGradient.addColorStop(0.5, '#0b1329');
+            bgGradient.addColorStop(1, '#02040a');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+            // Scrolling Starfield
+            ctx.fillStyle = '#38bdf8';
+            starfield.forEach(star => {
+                star.y += star.speed;
+                if (star.y > canvas.height) star.y = 0;
+                ctx.globalAlpha = star.size > 2 ? 0.9 : 0.4;
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+            });
+            ctx.globalAlpha = 1.0;
+
+            // Player Movement
             if ((keys['ArrowLeft'] || keys['KeyA']) && player.x > 0) player.x -= player.speed;
             if ((keys['ArrowRight'] || keys['KeyD']) && player.x < canvas.width - player.w) player.x += player.speed;
 
-            const shootCooldown = rapidFire ? 150 : 350;
+            // Bullet Firing Logic
+            const shootCooldown = rapidFire ? 150 : 320;
             if ((keys['ArrowUp'] || keys['KeyW'] || keys['Space']) && now - lastShoot > shootCooldown) {
                 if (tripleBullets) {
-                    bullets.push({ x: player.x + 2, y: player.y, w: 4, h: 12 });
-                    bullets.push({ x: player.x + player.w / 2 - 2, y: player.y - 4, w: 4, h: 12 });
-                    bullets.push({ x: player.x + player.w - 6, y: player.y, w: 4, h: 12 });
+                    bullets.push({ x: player.x + 2, y: player.y, w: 4, h: 14, color: '#38bdf8' });
+                    bullets.push({ x: player.x + player.w / 2 - 2, y: player.y - 6, w: 4, h: 14, color: '#00f2fe' });
+                    bullets.push({ x: player.x + player.w - 6, y: player.y, w: 4, h: 14, color: '#38bdf8' });
                 } else if (doubleLaser) {
-                    bullets.push({ x: player.x + 6, y: player.y, w: 4, h: 12 });
-                    bullets.push({ x: player.x + player.w - 10, y: player.y, w: 4, h: 12 });
+                    bullets.push({ x: player.x + 6, y: player.y, w: 4, h: 14, color: '#00f2fe' });
+                    bullets.push({ x: player.x + player.w - 10, y: player.y, w: 4, h: 14, color: '#00f2fe' });
                 } else {
-                    bullets.push({ x: player.x + player.w / 2 - 2, y: player.y, w: 4, h: 12 });
+                    bullets.push({ x: player.x + player.w / 2 - 2, y: player.y, w: 4, h: 14, color: '#00f2fe' });
                 }
                 lastShoot = now;
             }
 
+            // Render Sleek Vector Rocket Model & Pulsing Engine Flame
             ctx.save();
             ctx.translate(player.x + player.w / 2, player.y + player.h / 2);
-            ctx.fillStyle = '#e2e8f0';
+
+            const flameHeight = 12 + Math.sin(now * 0.04) * 5;
+            ctx.fillStyle = '#ff7b00';
             ctx.beginPath();
-            ctx.moveTo(0, -18);
-            ctx.lineTo(12, 10);
-            ctx.lineTo(8, 16);
-            ctx.lineTo(-8, 16);
-            ctx.lineTo(-12, 10);
+            ctx.moveTo(-5, 16);
+            ctx.lineTo(0, 16 + flameHeight);
+            ctx.lineTo(5, 16);
             ctx.closePath();
             ctx.fill();
 
-            ctx.fillStyle = '#ef4444';
+            // Rocket Hull
+            ctx.fillStyle = '#f8fafc';
             ctx.beginPath();
-            ctx.moveTo(0, -18);
-            ctx.lineTo(8, -2);
-            ctx.lineTo(-8, -2);
+            ctx.moveTo(0, -20);
+            ctx.lineTo(14, 12);
+            ctx.lineTo(6, 16);
+            ctx.lineTo(-6, 16);
+            ctx.lineTo(-14, 12);
             ctx.closePath();
             ctx.fill();
 
+            // Wings
+            ctx.fillStyle = '#2563eb';
+            ctx.beginPath();
+            ctx.moveTo(-14, 12);
+            ctx.lineTo(-21, 19);
+            ctx.lineTo(-6, 14);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(14, 12);
+            ctx.lineTo(21, 19);
+            ctx.lineTo(6, 14);
+            ctx.closePath();
+            ctx.fill();
+
+            // Cockpit Glass
             ctx.fillStyle = '#00f2fe';
             ctx.beginPath();
-            ctx.arc(0, -4, 4, 0, Math.PI * 2);
+            ctx.arc(0, -2, 4.5, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
 
-            ctx.fillStyle = '#00f2fe';
+            // Render Bullets with Glow
+            ctx.shadowBlur = 12;
             for (let i = bullets.length - 1; i >= 0; i--) {
-                bullets[i].y -= 8;
-                ctx.fillRect(bullets[i].x, bullets[i].y, bullets[i].w, bullets[i].h);
-                if (bullets[i].y < 0) bullets.splice(i, 1);
+                let b = bullets[i];
+                b.y -= 9.5;
+                ctx.fillStyle = b.color;
+                ctx.shadowColor = b.color;
+                ctx.fillRect(b.x, b.y, b.w, b.h);
+                if (b.y < 0) bullets.splice(i, 1);
             }
+            ctx.shadowBlur = 0;
 
-            if (Math.random() < 0.045) {
+            // Spawn Asteroids
+            if (Math.random() < 0.042) {
                 asteroids.push({
-                    x: Math.random() * (canvas.width - 40),
-                    y: -35,
-                    size: 30 + Math.random() * 15,
+                    x: Math.random() * (canvas.width - 45),
+                    y: -40,
+                    size: 32 + Math.random() * 18,
                     speed: 1.8 + Math.random() * 2.2,
                     rot: Math.random() * Math.PI,
-                    rotSpeed: (Math.random() - 0.5) * 0.03
+                    rotSpeed: (Math.random() - 0.5) * 0.035
                 });
             }
 
+            // Render Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= p.decay;
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            }
+            ctx.globalAlpha = 1.0;
+
+            // Asteroid Physics & Collisions
             for (let i = asteroids.length - 1; i >= 0; i--) {
                 let ast = asteroids[i];
                 ast.y += ast.speed;
@@ -1064,8 +1263,8 @@ function runRocketGame(modId, subId, key) {
                 ctx.translate(ast.x + ast.size / 2, ast.y + ast.size / 2);
                 ctx.rotate(ast.rot);
 
-                ctx.fillStyle = '#64748b';
-                ctx.strokeStyle = '#475569';
+                ctx.fillStyle = '#475569';
+                ctx.strokeStyle = '#64748b';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 const pts = 7;
@@ -1082,9 +1281,11 @@ function runRocketGame(modId, subId, key) {
                 ctx.stroke();
                 ctx.restore();
 
+                // Bullet Hit Asteroid
                 for (let j = bullets.length - 1; j >= 0; j--) {
                     let b = bullets[j];
                     if (b.x < ast.x + ast.size && b.x + b.w > ast.x && b.y < ast.y + ast.size && b.y + b.h > ast.y) {
+                        spawnExplosion(ast.x + ast.size / 2, ast.y + ast.size / 2, '#38bdf8');
                         asteroids.splice(i, 1);
                         bullets.splice(j, 1);
                         spaceScore += 20 * pointMultiplier;
@@ -1094,7 +1295,9 @@ function runRocketGame(modId, subId, key) {
                     }
                 }
 
+                // Player Hit Asteroid
                 if (ast && player.x < ast.x + ast.size && player.x + player.w > ast.x && player.y < ast.y + ast.size && player.y + player.h > ast.y) {
+                    spawnExplosion(ast.x + ast.size / 2, ast.y + ast.size / 2, '#ef4444');
                     asteroids.splice(i, 1);
                     spaceScore = Math.max(0, spaceScore - 15);
                     shipShield = Math.max(0, shipShield - 20);
@@ -1113,30 +1316,18 @@ function runRocketGame(modId, subId, key) {
 
     function openArmoryShop() {
         modal.innerHTML = `
-            <div style="background: #121224; border: 2px solid #a855f7; border-radius: 12px; padding: 25px; max-width: 600px; width: 100%; color: #fff; text-align: center;">
-                <h2 style="color: #a855f7; margin-top: 0; font-family: 'Orbitron', sans-serif;">🛠️ Rocket Armory Upgrades</h2>
-                <p style="color: #aaa;">Your Credits: <strong style="color: #00f2fe;">${credits} 💰</strong></p>
+            <div class="quiz-game-card">
+                <h2 class="shop-title">🛠️ Rocket Armory Upgrades</h2>
+                <p class="shop-credits">Your Credits: <strong class="credit-highlight">${credits} 💰</strong></p>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0;">
-                    <button id="buy-speed" style="padding: 10px; background: #1e1e2e; border: 1px solid #a855f7; color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px;">
-                        🚀 Faster Ship (50 💰) ${shipSpeedBoost ? '✅' : ''}
-                    </button>
-                    <button id="buy-double" style="padding: 10px; background: #1e1e2e; border: 1px solid #a855f7; color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px;">
-                        🔫 Double Laser (75 💰) ${doubleLaser ? '✅' : ''}
-                    </button>
-                    <button id="buy-rapid" style="padding: 10px; background: #1e1e2e; border: 1px solid #a855f7; color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px;">
-                        ⚡ Rapid Fire (100 💰) ${rapidFire ? '✅' : ''}
-                    </button>
-                    <button id="buy-triple" style="padding: 10px; background: #1e1e2e; border: 1px solid #a855f7; color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px;">
-                        💥 Triple Bullets (150 💰) ${tripleBullets ? '✅' : ''}
-                    </button>
-                    <button id="buy-mult" style="grid-column: span 2; padding: 10px; background: #1e1e2e; border: 1px solid #a855f7; color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px;">
-                        🌟 2x Score Multiplier (125 💰) ${pointMultiplier > 1 ? '✅' : ''}
-                    </button>
+                <div class="shop-grid">
+                    <button id="buy-speed" class="shop-btn">🚀 Faster Ship (50 💰) ${shipSpeedBoost ? '✅' : ''}</button>
+                    <button id="buy-double" class="shop-btn">🔫 Double Laser (75 💰) ${doubleLaser ? '✅' : ''}</button>
+                    <button id="buy-rapid" class="shop-btn">⚡ Rapid Fire (100 💰) ${rapidFire ? '✅' : ''}</button>
+                    <button id="buy-triple" class="shop-btn">💥 Triple Bullets (150 💰) ${tripleBullets ? '✅' : ''}</button>
+                    <button id="buy-mult" class="shop-btn shop-btn-full">🌟 2x Score Multiplier (125 💰) ${pointMultiplier > 1 ? '✅' : ''}</button>
                 </div>
-                <button id="skip-shop" style="width: 100%; padding: 12px; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
-                    Skip Shop & Continue →
-                </button>
+                <button id="skip-shop" class="btn-continue-shop">Skip Shop & Continue →</button>
             </div>
         `;
 
@@ -1175,12 +1366,12 @@ function runRocketGame(modId, subId, key) {
             updateModuleLockUI();
         }
         modal.innerHTML = `
-            <div style="background: #12121e; border: 2px solid #00f2fe; border-radius: 12px; padding: 30px; max-width: 550px; width: 100%; color: #fff; text-align: center;">
-                <h1 style="color: #00f2fe; margin-top: 0; font-family: 'Orbitron', sans-serif;">🚀 Rocket Challenge Complete!</h1>
-                <h3>Quiz Score: ${quizScore} / ${questions.length}</h3>
-                <p style="color: #2ed573;">Arcade Score: ${spaceScore} pts</p>
-                <p style="font-weight: bold; color: #eccc68;">Total Score: ${totalPoints} PTS</p>
-                <button id="close-final" style="width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin-top: 15px;">Continue</button>
+            <div class="quiz-game-card text-center">
+                <h1 class="summary-title">🚀 Rocket Challenge Complete!</h1>
+                <h3 class="summary-stat">Quiz Score: ${quizScore} / ${questions.length}</h3>
+                <p class="summary-arcade">Arcade Score: ${spaceScore} pts</p>
+                <p class="summary-total">Total Score: ${totalPoints} PTS</p>
+                <button id="close-final" class="btn-continue-shop" style="margin-top: 20px;">Continue to Modules</button>
             </div>
         `;
         if (typeof window.updateProgress === 'function') {
@@ -1950,3 +2141,328 @@ function getChatResponse(message) {
     if (lowerMsg.includes('module') || lowerMsg.includes('quiz')) return "Pass each submodule's minigame challenge to unlock the next module!";
     return "Great question! Ask me about prompt engineering tips, academic integrity rules, or neural networks.";
 }
+
+// Function to handle switching views smoothly
+function switchView(viewId) {
+    // 1. Hide all elements with the class 'portal-view'
+    document.querySelectorAll('.portal-view').forEach(view => {
+        view.classList.remove('active-view');
+    });
+
+    // 2. Show the targeted view container
+    const target = document.getElementById(viewId);
+    if (target) {
+        target.classList.add('active-view');
+        window.scrollTo(0, 0); // Jump back to top smoothly
+    }
+}
+
+// 3. Navbar click mapper
+document.addEventListener('DOMContentLoaded', () => {
+    const navMapping = {
+        'Home': 'home-page-view',
+        'Modules': 'modules-page-view',
+        'Dashboard': 'dashboard-page-view',
+        'Chatbot': 'chatbot-page-view',
+        'References': 'references-page-view'
+    };
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const linkText = link.textContent.trim();
+            if (navMapping[linkText]) {
+                e.preventDefault(); // Stop page reload / file not found errors
+                
+                // Update active tab styling on navbar
+                document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                // Switch to the respective view
+                switchView(navMapping[linkText]);
+            }
+        });
+    });
+});
+
+// ==========================================
+// SPA TAB ROUTING SYSTEM FOR INDEX.HTML
+// ==========================================
+
+function showPage(pageId) {
+    // 1. Hide all main portal views
+    const views = [
+        'home-page-view', 
+        'modules-grid', 
+        'modules-page-view', 
+        'dashboard-page-view', 
+        'chatbot-page-view'
+    ];
+    
+    views.forEach(id => {
+        const viewElement = document.getElementById(id);
+        if (viewElement) {
+            viewElement.style.display = 'none';
+        }
+    });
+
+    // 2. Normalize shortcut names if passed from navbar or buttons
+    let targetId = pageId;
+    if (pageId === 'home') targetId = 'home-page-view';
+    if (pageId === 'modules') targetId = 'modules-grid';
+    if (pageId === 'dashboard') targetId = 'dashboard-page-view';
+    if (pageId === 'chatbot') targetId = 'chatbot-page-view';
+
+    // 3. Show the target view container
+    const targetView = document.getElementById(targetId);
+    if (targetView) {
+        targetView.style.display = 'block';
+        window.scrollTo(0, 0); // Smooth jump back to the top of the page
+    }
+}
+
+// Optional: Navigate to a specific sub-lesson module and open the lesson view
+function navigateToModule(moduleNumber) {
+    // Hide the grid view
+    const gridView = document.getElementById('modules-grid');
+    if (gridView) gridView.style.display = 'none';
+
+    // Show the individual lesson view container
+    const lessonView = document.getElementById('modules-page-view');
+    if (lessonView) {
+        lessonView.style.display = 'block';
+    }
+
+    // Populate dynamic lesson content depending on the module number selected
+    const contentContainer = document.getElementById('active-module-content');
+    if (contentContainer) {
+        contentContainer.innerHTML = `
+            <div style="max-width: 900px; margin: 40px auto; padding: 30px; background: #161625; border: 1px solid #3b82f6; border-radius: 12px;">
+                <h2 style="color: #00f2fe; font-family: 'Orbitron', sans-serif; margin-top: 0;">Module ${moduleNumber} Interactive Lesson</h2>
+                <p style="color: #cbd5e1; line-height: 1.7;">Welcome to Module ${moduleNumber}! Complete the reading below and launch the arcade simulator to test your skills, earn XP, and unlock achievement badges.</p>
+            </div>
+        `;
+    }
+
+    window.scrollTo(0, 0);
+}
+
+
+// ============================================================================
+// BROWSER PROFILE SYSTEM, ACCOUNT CREATOR & GLOBAL SEARCHER
+// ============================================================================
+(function initProfileSystem() {
+    const STORAGE_CURRENT_ID = 'ai_portal_active_user_id';
+    const STORAGE_DIRECTORY = 'ai_portal_directory';
+
+    function getDirectory() {
+        let dir = JSON.parse(localStorage.getItem(STORAGE_DIRECTORY) || 'null');
+        if (!dir) {
+            dir = [
+                {
+                    id: 'seed_1',
+                    username: 'NovaPrime',
+                    bio: 'Neural network architect & laser ace',
+                    avatar: '👾',
+                    xp: 650,
+                    scores: { rocket: 1420, blockblast: 980, angrybirds: 1100 }
+                },
+                {
+                    id: 'seed_2',
+                    username: 'ByteRunner',
+                    bio: 'Prompt engineering speedrunner',
+                    avatar: '🤖',
+                    xp: 480,
+                    scores: { rocket: 1150, blockblast: 1240, angrybirds: 890 }
+                }
+            ];
+            localStorage.setItem(STORAGE_DIRECTORY, JSON.stringify(dir));
+        }
+        return dir;
+    }
+
+    function saveDirectory(dir) {
+        localStorage.setItem(STORAGE_DIRECTORY, JSON.stringify(dir));
+    }
+
+    function getActiveUser() {
+        const activeId = localStorage.getItem(STORAGE_CURRENT_ID);
+        if (!activeId) return null;
+        return getDirectory().find(u => u.id === activeId) || null;
+    }
+
+    function getRankTitle(xp) {
+        if (xp >= 1000) return 'Grandmaster AI Architect';
+        if (xp >= 500) return 'Cyber Specialist';
+        if (xp >= 200) return 'Prompt Engineer';
+        return 'Rookie AI Explorer';
+    }
+
+    window.recordArcadeScore = function(gameKey, points) {
+        const user = getActiveUser();
+        if (!user) return;
+
+        const dir = getDirectory();
+        const idx = dir.findIndex(u => u.id === user.id);
+        if (idx === -1) return;
+
+        dir[idx].xp = (dir[idx].xp || 0) + 50;
+        if (!dir[idx].scores) dir[idx].scores = { rocket: 0, blockblast: 0, angrybirds: 0 };
+        if (points > (dir[idx].scores[gameKey] || 0)) {
+            dir[idx].scores[gameKey] = points;
+        }
+
+        saveDirectory(dir);
+        refreshProfileUI();
+    };
+
+    function renderDirectoryList(filterText = '') {
+        const listEl = document.getElementById('global-directory-list');
+        if (!listEl) return;
+
+        const activeUser = getActiveUser();
+        const query = filterText.toLowerCase().trim();
+
+        const sorted = getDirectory()
+            .filter(u => u.username.toLowerCase().includes(query) || (u.bio && u.bio.toLowerCase().includes(query)))
+            .sort((a, b) => {
+                const totalA = a.xp + (a.scores.rocket || 0) + (a.scores.blockblast || 0) + (a.scores.angrybirds || 0);
+                const totalB = b.xp + (b.scores.rocket || 0) + (b.scores.blockblast || 0) + (b.scores.angrybirds || 0);
+                return totalB - totalA;
+            });
+
+        if (sorted.length === 0) {
+            listEl.innerHTML = `<p style="color:#94a3b8; text-align:center; padding:16px;">No cadets found matching "${filterText}".</p>`;
+            return;
+        }
+
+        listEl.innerHTML = sorted.map((u, index) => {
+            const isMe = activeUser && u.id === activeUser.id;
+            const bestScore = Math.max(u.scores.rocket || 0, u.scores.blockblast || 0, u.scores.angrybirds || 0);
+            return `
+                <div class="directory-row ${isMe ? 'is-me' : ''}">
+                    <div class="dir-user-info">
+                        <span class="dir-rank">#${index + 1}</span>
+                        <span class="dir-avatar">${u.avatar}</span>
+                        <div>
+                            <span class="dir-name">${u.username} ${isMe ? '(You)' : ''}</span>
+                            <span class="dir-bio">${u.bio || 'AI Learning Cadet'}</span>
+                        </div>
+                    </div>
+                    <div class="dir-scores">
+                        <span class="dir-xp">${u.xp} XP</span>
+                        <span class="dir-best">Top Arcade: ${bestScore} pts</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function refreshProfileUI() {
+        const user = getActiveUser();
+        const navLabel = document.getElementById('nav-username-label');
+        const createView = document.getElementById('create-account-view');
+        const activeView = document.getElementById('active-profile-view');
+
+        if (!user) {
+            if (navLabel) navLabel.textContent = 'Create Profile';
+            if (createView) createView.style.display = 'block';
+            if (activeView) activeView.style.display = 'none';
+            return;
+        }
+
+        if (navLabel) navLabel.textContent = user.username;
+        if (createView) createView.style.display = 'none';
+        if (activeView) activeView.style.display = 'block';
+
+        document.getElementById('dash-avatar').textContent = user.avatar;
+        document.getElementById('dash-username').textContent = user.username;
+        document.getElementById('dash-rank').textContent = getRankTitle(user.xp);
+        document.getElementById('dash-bio').textContent = user.bio || 'Ready to conquer the AI modules.';
+        document.getElementById('dash-xp').textContent = user.xp;
+        document.getElementById('dash-score-rocket').textContent = user.scores.rocket || 0;
+        document.getElementById('dash-score-blockblast').textContent = user.scores.blockblast || 0;
+        document.getElementById('dash-score-angrybirds').textContent = user.scores.angrybirds || 0;
+
+        document.getElementById('edit-username-input').value = user.username;
+        document.getElementById('edit-bio-input').value = user.bio || '';
+
+        renderDirectoryList(document.getElementById('global-profile-search')?.value || '');
+    }
+
+    let selectedCreateAvatar = '🚀';
+    document.querySelectorAll('#create-avatar-picker .avatar-pick').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#create-avatar-picker .avatar-pick').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedCreateAvatar = btn.getAttribute('data-avatar');
+        });
+    });
+
+    const createForm = document.getElementById('create-account-form');
+    if (createForm) {
+        createForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('new-username').value.trim();
+            const bio = document.getElementById('new-bio').value.trim();
+            if (!username) return;
+
+            const newUser = {
+                id: 'cadet_' + Date.now(),
+                username: username,
+                bio: bio || 'AI Explorer',
+                avatar: selectedCreateAvatar,
+                xp: 100,
+                scores: { rocket: 0, blockblast: 0, angrybirds: 0 }
+            };
+
+            const dir = getDirectory();
+            dir.push(newUser);
+            saveDirectory(dir);
+            localStorage.setItem(STORAGE_CURRENT_ID, newUser.id);
+            refreshProfileUI();
+        });
+    }
+
+    const saveEditsBtn = document.getElementById('btn-save-profile-edits');
+    if (saveEditsBtn) {
+        saveEditsBtn.addEventListener('click', () => {
+            const user = getActiveUser();
+            if (!user) return;
+            const newName = document.getElementById('edit-username-input').value.trim();
+            const newBio = document.getElementById('edit-bio-input').value.trim();
+
+            const dir = getDirectory();
+            const idx = dir.findIndex(u => u.id === user.id);
+            if (idx !== -1 && newName) {
+                dir[idx].username = newName;
+                dir[idx].bio = newBio;
+                saveDirectory(dir);
+                refreshProfileUI();
+            }
+        });
+    }
+
+    document.querySelectorAll('#edit-avatar-picker .avatar-pick').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const user = getActiveUser();
+            if (!user) return;
+            const dir = getDirectory();
+            const idx = dir.findIndex(u => u.id === user.id);
+            if (idx !== -1) {
+                dir[idx].avatar = btn.getAttribute('data-avatar');
+                saveDirectory(dir);
+                refreshProfileUI();
+            }
+        });
+    });
+
+    const searchInput = document.getElementById('global-profile-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            renderDirectoryList(e.target.value);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', refreshProfileUI);
+    refreshProfileUI();
+})();
