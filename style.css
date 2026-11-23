@@ -2212,14 +2212,25 @@ footer.site-footer {
 }
 
 .avatar-pick {
-    width: 50px;
-    height: 50px;
-    font-size: 1.5rem;
+    width: 60px;
+    height: 60px;
+    padding: 3px;
     background: rgba(255, 255, 255, 0.04);
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-pick img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 .avatar-pick:hover,
@@ -2285,9 +2296,15 @@ footer.site-footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.6rem;
+    overflow: hidden;
     box-shadow: 0 0 25px rgba(0, 242, 254, 0.3);
     flex-shrink: 0;
+}
+
+.profile-avatar-ring img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .profile-name-row {
@@ -2428,7 +2445,19 @@ footer.site-footer {
 }
 
 .dir-avatar {
-    font-size: 1.5rem;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dir-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .dir-name {
@@ -2459,31 +2488,449 @@ footer.site-footer {
     color: #34d399;
 }
 
-.avatar-picker-grid {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
+/* ==================================================
+   FINAL THEME OVERRIDES FOR #active-profile-view
+   ================================================== */
+
+/* --- TRUE GOLD THEME --- */
+#active-profile-view.theme-bg_true_gold .profile-card-container,
+#active-profile-view.theme-bg_true_gold .shop-item,
+#active-profile-view.theme-bg_true_gold .directory-row {
+    background: linear-gradient(135deg, #2a2008, #151004) !important;
+    border: 2px solid #ffd700 !important;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3) !important;
+}
+#active-profile-view.theme-bg_true_gold h1, 
+#active-profile-view.theme-bg_true_gold h2, 
+#active-profile-view.theme-bg_true_gold h3, 
+#active-profile-view.theme-bg_true_gold h4, 
+#active-profile-view.theme-bg_true_gold .directory-title {
+    color: #ffd700 !important;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.6) !important;
+    font-family: 'Cinzel', 'Outfit', sans-serif !important;
+}
+#active-profile-view.theme-bg_true_gold p, 
+#active-profile-view.theme-bg_true_gold span, 
+#active-profile-view.theme-bg_true_gold label, 
+#active-profile-view.theme-bg_true_gold input,
+#active-profile-view.theme-bg_true_gold .profile-subtext,
+#active-profile-view.theme-bg_true_gold .dir-name, 
+#active-profile-view.theme-bg_true_gold .dir-bio {
+    color: #fde047 !important;
+}
+#active-profile-view.theme-bg_true_gold button {
+    background: rgba(255, 215, 0, 0.15) !important;
+    border: 1px solid #ffd700 !important;
+    color: #ffd700 !important;
+    font-family: 'Outfit', sans-serif !important;
 }
 
-.avatar-pick {
-    width: 55px;
-    height: 55px;
-    padding: 3px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+/* --- ELECTRIC BLUE THEME --- */
+#active-profile-view.theme-bg_electric_blue .profile-card-container,
+#active-profile-view.theme-bg_electric_blue .shop-item,
+#active-profile-view.theme-bg_electric_blue .directory-row {
+    background: linear-gradient(135deg, rgba(0, 119, 182, 0.15), rgba(3, 4, 94, 0.95)) !important;
+    border: 2px solid #00f2fe !important;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.4) !important;
+}
+#active-profile-view.theme-bg_electric_blue h1, 
+#active-profile-view.theme-bg_electric_blue h2, 
+#active-profile-view.theme-bg_electric_blue h3, 
+#active-profile-view.theme-bg_electric_blue h4, 
+#active-profile-view.theme-bg_electric_blue .directory-title {
+    color: #00f2fe !important;
+    text-shadow: 0 0 10px rgba(0, 242, 254, 0.7) !important;
+}
+#active-profile-view.theme-bg_electric_blue p, 
+#active-profile-view.theme-bg_electric_blue span, 
+#active-profile-view.theme-bg_electric_blue label, 
+#active-profile-view.theme-bg_electric_blue input,
+#active-profile-view.theme-bg_electric_blue .profile-subtext,
+#active-profile-view.theme-bg_electric_blue .dir-name {
+    color: #7dd3fc !important;
+}
+#active-profile-view.theme-bg_electric_blue button {
+    background: rgba(0, 242, 254, 0.15) !important;
+    border: 1px solid #00f2fe !important;
+    color: #00f2fe !important;
 }
 
-.avatar-pick:hover,
-.avatar-pick.selected {
-    border-color: #00f2fe;
-    background: rgba(0, 242, 254, 0.15);
-    transform: translateY(-2px);
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+/* --- DEEP SPACE THEME --- */
+#active-profile-view.theme-bg_deep_space .profile-card-container,
+#active-profile-view.theme-bg_deep_space .shop-item,
+#active-profile-view.theme-bg_deep_space .directory-row {
+    background: linear-gradient(135deg, #1e1b4b, #09090b) !important;
+    border: 1px solid rgba(168, 85, 247, 0.6) !important;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.25) !important;
+}
+#active-profile-view.theme-bg_deep_space h1, 
+#active-profile-view.theme-bg_deep_space h2, 
+#active-profile-view.theme-bg_deep_space h3, 
+#active-profile-view.theme-bg_deep_space h4, 
+#active-profile-view.theme-bg_deep_space .directory-title {
+    color: #ffffff !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8) !important;
+    font-family: 'Orbitron', 'Outfit', sans-serif !important;
+}
+#active-profile-view.theme-bg_deep_space p, 
+#active-profile-view.theme-bg_deep_space span, 
+#active-profile-view.theme-bg_deep_space label, 
+#active-profile-view.theme-bg_deep_space input,
+#active-profile-view.theme-bg_deep_space .profile-subtext,
+#active-profile-view.theme-bg_deep_space .dir-name {
+    color: #e2e8f0 !important;
+}
+#active-profile-view.theme-bg_deep_space button {
+    background: rgba(168, 85, 247, 0.2) !important;
+    border: 1px solid rgba(168, 85, 247, 0.8) !important;
+    color: #c084fc !important;
+}
+
+/* --- ROBOT PAINTING THEME (Soft Cream & Comic Style) --- */
+#active-profile-view.theme-bg_robot_painting .profile-card-container,
+#active-profile-view.theme-bg_robot_painting .shop-item,
+#active-profile-view.theme-bg_robot_painting .directory-row {
+    background: #fdfbf7 !important;
+    border: 3px solid #000000 !important;
+    box-shadow: 5px 5px 0px #000000 !important;
+}
+#active-profile-view.theme-bg_robot_painting h1, 
+#active-profile-view.theme-bg_robot_painting h2, 
+#active-profile-view.theme-bg_robot_painting h3, 
+#active-profile-view.theme-bg_robot_painting h4, 
+#active-profile-view.theme-bg_robot_painting .directory-title {
+    color: #000000 !important;
+    text-shadow: none !important;
+    font-family: 'Comic Sans MS', cursive !important;
+    font-weight: 900 !important;
+}
+#active-profile-view.theme-bg_robot_painting p, 
+#active-profile-view.theme-bg_robot_painting span, 
+#active-profile-view.theme-bg_robot_painting label, 
+#active-profile-view.theme-bg_robot_painting input,
+#active-profile-view.theme-bg_robot_painting .profile-subtext,
+#active-profile-view.theme-bg_robot_painting .dir-name,
+#active-profile-view.theme-bg_robot_painting .dir-bio {
+    color: #111111 !important;
+    font-family: 'Comic Sans MS', cursive !important;
+    text-shadow: none !important;
+}
+#active-profile-view.theme-bg_robot_painting button {
+    background: #ffffff !important;
+    border: 2px solid #000000 !important;
+    color: #000000 !important;
+    font-family: 'Comic Sans MS', cursive !important;
+    font-weight: 800 !important;
+    box-shadow: 3px 3px 0px #000000 !important;
+}
+
+/* --- SCRAPPY ON CONSOLE THEME (Soft Cream & Dark Blue Edges) --- */
+#active-profile-view.theme-bg_scrappy_console .profile-card-container,
+#active-profile-view.theme-bg_scrappy_console .shop-item,
+#active-profile-view.theme-bg_scrappy_console .directory-row {
+    background: #f8f6f0 !important;
+    border: 3px solid #03045e !important;
+    box-shadow: 4px 4px 12px rgba(3, 4, 94, 0.25) !important;
+}
+#active-profile-view.theme-bg_scrappy_console h1, 
+#active-profile-view.theme-bg_scrappy_console h2, 
+#active-profile-view.theme-bg_scrappy_console h3, 
+#active-profile-view.theme-bg_scrappy_console h4, 
+#active-profile-view.theme-bg_scrappy_console .directory-title {
+    color: #03045e !important;
+    text-shadow: none !important;
+    font-family: 'Fredoka', 'Comic Sans MS', sans-serif !important;
+    font-weight: 800 !important;
+}
+#active-profile-view.theme-bg_scrappy_console p, 
+#active-profile-view.theme-bg_scrappy_console span, 
+#active-profile-view.theme-bg_scrappy_console label, 
+#active-profile-view.theme-bg_scrappy_console input,
+#active-profile-view.theme-bg_scrappy_console .profile-subtext,
+#active-profile-view.theme-bg_scrappy_console .dir-name,
+#active-profile-view.theme-bg_scrappy_console .dir-bio {
+    color: #1d3557 !important;
+    font-family: 'Fredoka', sans-serif !important;
+    text-shadow: none !important;
+}
+#active-profile-view.theme-bg_scrappy_console button {
+    background: #ffffff !important;
+    border: 2px solid #03045e !important;
+    color: #03045e !important;
+    font-family: 'Fredoka', sans-serif !important;
+    font-weight: 700 !important;
+    box-shadow: 2px 2px 0px rgba(3, 4, 94, 0.4) !important;
+}
+
+/* ============================================================================
+   DYNAMIC THEME TRANSITION ENGINE & ANIMATED GRADIENTS
+   =========================================================================== */
+
+/* 1. Global View Smooth Transition Setup */
+#active-profile-view {
+  transition: background 0.8s ease-in-out, background-image 0.8s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Base transition rule for all theme-reactive elements */
+#active-profile-view .profile-card-container,
+#active-profile-view .shop-item,
+#active-profile-view .directory-row,
+#active-profile-view h1, 
+#active-profile-view h2, 
+#active-profile-view h3, 
+#active-profile-view h4, 
+#active-profile-view p, 
+#active-profile-view span,
+#active-profile-view button {
+  transition: background 0.6s ease-in-out, 
+              border-color 0.6s ease-in-out, 
+              color 0.6s ease-in-out, 
+              box-shadow 0.6s ease-in-out,
+              transform 0.3s ease;
+}
+
+/* Subtle hover lift animation for interactive cards & items */
+#active-profile-view .shop-item:hover,
+#active-profile-view .directory-row:hover {
+  transform: translateY(-3px);
+}
+
+/* --- DEFAULT / NO BACKGROUND EQUIPPED --- */
+#active-profile-view.theme-default .profile-card-container,
+#active-profile-view.theme-default .shop-item,
+#active-profile-view.theme-default .directory-row {
+    background: linear-gradient(135deg, #0f172a, #1e1b4b) !important;
+    border: 2px solid rgba(0, 242, 254, 0.4) !important;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.15) !important;
+}
+#active-profile-view.theme-default h1, 
+#active-profile-view.theme-default h2, 
+#active-profile-view.theme-default h3, 
+#active-profile-view.theme-default h4, 
+#active-profile-view.theme-default .directory-title {
+    color: #ffffff !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+#active-profile-view.theme-default p, 
+#active-profile-view.theme-default span, 
+#active-profile-view.theme-default label, 
+#active-profile-view.theme-default input,
+#active-profile-view.theme-default .profile-subtext,
+#active-profile-view.theme-default .dir-name, 
+#active-profile-view.theme-default .dir-bio {
+    color: #94a3b8 !important;
+}
+#active-profile-view.theme-default button {
+    background: rgba(0, 242, 254, 0.1) !important;
+    border: 1px solid rgba(0, 242, 254, 0.4) !important;
+    color: #00f2fe !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+/* ============================================================================
+   ANIMATED GRADIENTS FOR BUTTONS & CONTAINERS
+   =========================================================================== */
+@keyframes buttonShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- TRUE GOLD THEME --- */
+#active-profile-view.theme-bg_true_gold .profile-card-container,
+#active-profile-view.theme-bg_true_gold .shop-item,
+#active-profile-view.theme-bg_true_gold .directory-row {
+    background: linear-gradient(135deg, #2a2008, #151004) !important;
+    border: 2px solid #ffd700 !important;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3) !important;
+}
+#active-profile-view.theme-bg_true_gold h1, 
+#active-profile-view.theme-bg_true_gold h2, 
+#active-profile-view.theme-bg_true_gold h3, 
+#active-profile-view.theme-bg_true_gold h4, 
+#active-profile-view.theme-bg_true_gold .directory-title {
+    color: #ffd700 !important;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.6) !important;
+    font-family: 'Cinzel', 'Outfit', sans-serif !important;
+}
+#active-profile-view.theme-bg_true_gold p, 
+#active-profile-view.theme-bg_true_gold span, 
+#active-profile-view.theme-bg_true_gold label, 
+#active-profile-view.theme-bg_true_gold input,
+#active-profile-view.theme-bg_true_gold .profile-subtext,
+#active-profile-view.theme-bg_true_gold .dir-name, 
+#active-profile-view.theme-bg_true_gold .dir-bio {
+    color: #fde047 !important;
+}
+#active-profile-view.theme-bg_true_gold button {
+    background: linear-gradient(270deg, rgba(255, 215, 0, 0.15), rgba(255, 170, 0, 0.35), rgba(255, 215, 0, 0.15)) !important;
+    background-size: 200% 200% !important;
+    animation: buttonShimmer 5s ease infinite !important;
+    border: 1px solid #ffd700 !important;
+    color: #ffd700 !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+#active-profile-view.theme-bg_true_gold button:hover {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6) !important;
+}
+
+/* --- ELECTRIC BLUE THEME --- */
+#active-profile-view.theme-bg_electric_blue .profile-card-container,
+#active-profile-view.theme-bg_electric_blue .shop-item,
+#active-profile-view.theme-bg_electric_blue .directory-row {
+    background: linear-gradient(135deg, rgba(0, 119, 182, 0.15), rgba(3, 4, 94, 0.95)) !important;
+    border: 2px solid #00f2fe !important;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.4) !important;
+}
+#active-profile-view.theme-bg_electric_blue h1, 
+#active-profile-view.theme-bg_electric_blue h2, 
+#active-profile-view.theme-bg_electric_blue h3, 
+#active-profile-view.theme-bg_electric_blue h4, 
+#active-profile-view.theme-bg_electric_blue .directory-title {
+    color: #00f2fe !important;
+    text-shadow: 0 0 10px rgba(0, 242, 254, 0.7) !important;
+}
+#active-profile-view.theme-bg_electric_blue p, 
+#active-profile-view.theme-bg_electric_blue span, 
+#active-profile-view.theme-bg_electric_blue label, 
+#active-profile-view.theme-bg_electric_blue input,
+#active-profile-view.theme-bg_electric_blue .profile-subtext,
+#active-profile-view.theme-bg_electric_blue .dir-name {
+    color: #7dd3fc !important;
+}
+#active-profile-view.theme-bg_electric_blue button {
+    background: linear-gradient(270deg, rgba(0, 242, 254, 0.15), rgba(0, 119, 182, 0.4), rgba(0, 242, 254, 0.15)) !important;
+    background-size: 200% 200% !important;
+    animation: buttonShimmer 4s ease infinite !important;
+    border: 1px solid #00f2fe !important;
+    color: #00f2fe !important;
+}
+#active-profile-view.theme-bg_electric_blue button:hover {
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.8) !important;
+}
+
+/* --- DEEP SPACE THEME --- */
+#active-profile-view.theme-bg_deep_space .profile-card-container,
+#active-profile-view.theme-bg_deep_space .shop-item,
+#active-profile-view.theme-bg_deep_space .directory-row {
+    background: linear-gradient(135deg, #1e1b4b, #09090b) !important;
+    border: 1px solid rgba(168, 85, 247, 0.6) !important;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.25) !important;
+}
+#active-profile-view.theme-bg_deep_space h1, 
+#active-profile-view.theme-bg_deep_space h2, 
+#active-profile-view.theme-bg_deep_space h3, 
+#active-profile-view.theme-bg_deep_space h4, 
+#active-profile-view.theme-bg_deep_space .directory-title {
+    color: #ffffff !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8) !important;
+    font-family: 'Orbitron', 'Outfit', sans-serif !important;
+}
+#active-profile-view.theme-bg_deep_space p, 
+#active-profile-view.theme-bg_deep_space span, 
+#active-profile-view.theme-bg_deep_space label, 
+#active-profile-view.theme-bg_deep_space input,
+#active-profile-view.theme-bg_deep_space .profile-subtext,
+#active-profile-view.theme-bg_deep_space .dir-name {
+    color: #e2e8f0 !important;
+}
+#active-profile-view.theme-bg_deep_space button {
+    background: linear-gradient(270deg, rgba(168, 85, 247, 0.2), rgba(107, 33, 168, 0.4), rgba(168, 85, 247, 0.2)) !important;
+    background-size: 200% 200% !important;
+    animation: buttonShimmer 6s ease infinite !important;
+    border: 1px solid rgba(168, 85, 247, 0.8) !important;
+    color: #c084fc !important;
+}
+#active-profile-view.theme-bg_deep_space button:hover {
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.7) !important;
+}
+
+/* --- ROBOT PAINTING THEME (Soft Cream & Comic Style) --- */
+#active-profile-view.theme-bg_robot_painting .profile-card-container,
+#active-profile-view.theme-bg_robot_painting .shop-item,
+#active-profile-view.theme-bg_robot_painting .directory-row {
+    background: #fdfbf7 !important;
+    border: 3px solid #000000 !important;
+    box-shadow: 5px 5px 0px #000000 !important;
+}
+#active-profile-view.theme-bg_robot_painting h1, 
+#active-profile-view.theme-bg_robot_painting h2, 
+#active-profile-view.theme-bg_robot_painting h3, 
+#active-profile-view.theme-bg_robot_painting h4, 
+#active-profile-view.theme-bg_robot_painting .directory-title {
+    color: #000000 !important;
+    text-shadow: none !important;
+    font-family: 'Comic Sans MS', cursive !important;
+    font-weight: 900 !important;
+}
+#active-profile-view.theme-bg_robot_painting p, 
+#active-profile-view.theme-bg_robot_painting span, 
+#active-profile-view.theme-bg_robot_painting label, 
+#active-profile-view.theme-bg_robot_painting input,
+#active-profile-view.theme-bg_robot_painting .profile-subtext,
+#active-profile-view.theme-bg_robot_painting .dir-name,
+#active-profile-view.theme-bg_robot_painting .dir-bio {
+    color: #111111 !important;
+    font-family: 'Comic Sans MS', cursive !important;
+    text-shadow: none !important;
+}
+#active-profile-view.theme-bg_robot_painting button {
+    background: linear-gradient(270deg, #ffffff, #f0ede6, #ffffff) !important;
+    background-size: 200% 200% !important;
+    animation: buttonShimmer 5s ease infinite !important;
+    border: 2px solid #000000 !important;
+    color: #000000 !important;
+    font-family: 'Comic Sans MS', cursive !important;
+    font-weight: 800 !important;
+    box-shadow: 3px 3px 0px #000000 !important;
+}
+#active-profile-view.theme-bg_robot_painting button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0px #000000 !important;
+}
+
+/* --- SCRAPPY ON CONSOLE THEME (Soft Cream & Dark Blue Edges) --- */
+#active-profile-view.theme-bg_scrappy_console .profile-card-container,
+#active-profile-view.theme-bg_scrappy_console .shop-item,
+#active-profile-view.theme-bg_scrappy_console .directory-row {
+    background: #f8f6f0 !important;
+    border: 3px solid #03045e !important;
+    box-shadow: 4px 4px 12px rgba(3, 4, 94, 0.25) !important;
+}
+#active-profile-view.theme-bg_scrappy_console h1, 
+#active-profile-view.theme-bg_scrappy_console h2, 
+#active-profile-view.theme-bg_scrappy_console h3, 
+#active-profile-view.theme-bg_scrappy_console h4, 
+#active-profile-view.theme-bg_scrappy_console .directory-title {
+    color: #03045e !important;
+    text-shadow: none !important;
+    font-family: 'Fredoka', 'Comic Sans MS', sans-serif !important;
+    font-weight: 800 !important;
+}
+#active-profile-view.theme-bg_scrappy_console p, 
+#active-profile-view.theme-bg_scrappy_console span, 
+#active-profile-view.theme-bg_scrappy_console label, 
+#active-profile-view.theme-bg_scrappy_console input,
+#active-profile-view.theme-bg_scrappy_console .profile-subtext,
+#active-profile-view.theme-bg_scrappy_console .dir-name,
+#active-profile-view.theme-bg_scrappy_console .dir-bio {
+    color: #1d3557 !important;
+    font-family: 'Fredoka', sans-serif !important;
+    text-shadow: none !important;
+}
+#active-profile-view.theme-bg_scrappy_console button {
+    background: linear-gradient(270deg, #ffffff, #edf2f7, #ffffff) !important;
+    background-size: 200% 200% !important;
+    animation: buttonShimmer 5s ease infinite !important;
+    border: 2px solid #03045e !important;
+    color: #03045e !important;
+    font-family: 'Fredoka', sans-serif !important;
+    font-weight: 700 !important;
+    box-shadow: 2px 2px 0px rgba(3, 4, 94, 0.4) !important;
+}
+#active-profile-view.theme-bg_scrappy_console button:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px rgba(3, 4, 94, 0.6) !important;
 }

@@ -1,3 +1,22 @@
+// ============================================================================
+// FIREBASE CONFIGURATION & INITIALIZATION
+// ============================================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyD1frKfVoVSqUk0HDyz2ygY_0oxmCCjMGA",
+  authDomain: "ai-learning-portal-9c023.firebaseapp.com",
+  projectId: "ai-learning-portal-9c023",
+  storageBucket: "ai-learning-portal-9c023.firebasestorage.app",
+  messagingSenderId: "257707620893",
+  appId: "1:257707620893:web:567b9dc9505baa05e464f4"
+};
+
+// Initialize Firebase using compat syntax
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
+
+
 function loadModule(moduleId) {
     document.getElementById('active-module-content').innerHTML = modules[moduleId].content;
     document.body.classList.add('module-active');
@@ -1357,7 +1376,7 @@ function runRocketGame(modId, subId, key) {
         };
     }
 
-    function renderFinalSummary() {
+    async function renderFinalSummary() {
         const totalPoints = (quizScore * 100) + spaceScore;
         const passed = quizScore >= 4;
         if (passed && modId >= maxUnlockedModule && maxUnlockedModule < 6) {
@@ -1365,19 +1384,83 @@ function runRocketGame(modId, subId, key) {
             localStorage.setItem('maxUnlockedModule', maxUnlockedModule);
             updateModuleLockUI();
         }
+
+        let leaderboardHTML = '<p style="color:#94a3b8; font-size:0.9rem;">Loading leaderboard standings...</p>';
+
+        // Award 150 XP and fetch live leaderboard standings from Firebase Firestore
+        if (typeof db !== 'undefined') {
+            const activeId = localStorage.getItem('ai_portal_active_user_id');
+            try {
+                if (activeId) {
+                    const docRef = db.collection('cadets').doc(activeId);
+                    const doc = await docRef.get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        const newXp = (data.xp || 0) + 150;
+                        const scores = data.scores || { rocket: 0, blockblast: 0, angrybirds: 0 };
+                        if (spaceScore > (scores.rocket || 0)) {
+                            scores.rocket = spaceScore;
+                        }
+                        await docRef.update({
+                            xp: newXp,
+                            scores: scores
+                        });
+                    }
+                }
+
+                // Fetch all cadets to build the game-specific leaderboard
+                const snapshot = await db.collection('cadets').get();
+                let allCadets = [];
+                snapshot.forEach(d => {
+                    allCadets.push({ id: d.id, ...d.data() });
+                });
+
+                // Sort cadets by their rocket high score highest to lowest
+                allCadets.sort((a, b) => {
+                    const scoreA = (a.scores && a.scores.rocket) || 0;
+                    const scoreB = (b.scores && b.scores.rocket) || 0;
+                    return scoreB - scoreA;
+                });
+
+                // Build HTML list for top 5 cadets
+                leaderboardHTML = allCadets.slice(0, 5).map((cadet, index) => {
+                    const isMe = activeId && cadet.id === activeId;
+                    const cadetScore = (cadet.scores && cadet.scores.rocket) || 0;
+                    return `
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: ${isMe ? 'rgba(0,242,254,0.15)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${isMe ? '#00f2fe' : 'rgba(255,255,255,0.1)'}; padding: 6px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 0.85rem;">
+                            <span>#${index + 1} <strong>${escapeHTML(cadet.username)}</strong> ${isMe ? '(You)' : ''}</span>
+                            <span style="color: #00f2fe; font-weight: 700;">${cadetScore} pts</span>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error("Error fetching leaderboard standings:", err);
+                leaderboardHTML = '<p style="color:#ef4444; font-size:0.85rem;">Could not load leaderboard.</p>';
+            }
+        }
+
         modal.innerHTML = `
-            <div class="quiz-game-card text-center">
-                <h1 class="summary-title">🚀 Rocket Challenge Complete!</h1>
-                <h3 class="summary-stat">Quiz Score: ${quizScore} / ${questions.length}</h3>
-                <p class="summary-arcade">Arcade Score: ${spaceScore} pts</p>
-                <p class="summary-total">Total Score: ${totalPoints} PTS</p>
-                <button id="close-final" class="btn-continue-shop" style="margin-top: 20px;">Continue to Modules</button>
+            <div class="quiz-game-card text-center" style="max-width: 440px; margin: auto;">
+                <h1 class="summary-title" style="font-size: 1.4rem; margin-bottom: 8px;">🚀 Rocket Challenge Complete!</h1>
+                <h3 class="summary-stat" style="font-size: 1rem;">Quiz Score: ${quizScore} / ${questions.length}</h3>
+                <p class="summary-arcade" style="font-size: 0.95rem;">Your Arcade Score: <strong>${spaceScore} pts</strong></p>
+                <p class="summary-total" style="color: #00f2fe; margin: 6px 0; font-weight: 700; font-size: 0.9rem;">+150 XP Awarded! 🌟</p>
+                
+                <div style="margin: 14px 0; text-align: left;">
+                    <h4 style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 6px; text-align: center;">🏆 Top Rocket Pilots</h4>
+                    ${leaderboardHTML}
+                </div>
+
+                <button id="close-final" class="btn-continue-shop" style="margin-top: 10px; width: 100%;">Continue to Modules</button>
             </div>
         `;
+
         if (typeof window.updateProgress === 'function') {
             window.updateProgress(20);
             checkBadges();
         }
+
         modal.querySelector('#close-final').onclick = () => {
             modal.remove();
             showPage('modules-grid');
@@ -1388,25 +1471,52 @@ function runRocketGame(modId, subId, key) {
 }
 
 // ============================================================================
-// MINIGAME 2: BLOCK BLAST GRID PUZZLE
+// MINIGAME 2: BLOCK BLAST GRID PUZZLE (Stable Hover Ghost + Leaderboard Fix)
 // ============================================================================
 function runBlockBlastGame(modId, subId, key) {
     const questions = arcadeQuizDB[key] || arcadeQuizDB["1.2"];
     let currentQ = 0;
     let gridScore = 0;
     let quizScore = 0;
-    let grid = Array(8).fill(null).map(() => Array(8).fill(0));
+    let grid = Array(8).fill(null).map(() => Array(8).fill(null));
     let trayBlocks = [];
-    let selectedTrayIndex = null;
+    let selectedTrayIndex = 0;
+
+    const blockColors = ['#00f2fe', '#38bdf8', '#a855f7', '#ec4899', '#f59e0b', '#22c55e', '#6366f1'];
+    let particles = [];
 
     const modal = document.createElement('div');
     modal.className = 'quiz-modal';
-    modal.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(5, 5, 12, 0.95); display: flex; justify-content: center;
-        align-items: center; z-index: 10000; padding: 20px; box-sizing: border-box;
-    `;
     document.body.appendChild(modal);
+
+    function spawnParticles(x, y, color = '#00f2fe', count = 12) {
+        for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 1 + Math.random() * 3;
+            particles.push({
+                x: x, y: y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                alpha: 1.0,
+                decay: 0.03 + Math.random() * 0.02,
+                color: color,
+                size: 2 + Math.random() * 2.5
+            });
+        }
+    }
+
+    function triggerHypeText(text) {
+        const hype = document.createElement('div');
+        hype.textContent = text;
+        hype.style.cssText = `
+            position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 28px; font-weight: 800; color: #00f2fe; font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 20px rgba(0,242,254,0.8); z-index: 20000; pointer-events: none;
+            animation: floatUpFade 1.2s ease-out forwards;
+        `;
+        document.body.appendChild(hype);
+        setTimeout(() => hype.remove(), 1200);
+    }
 
     function renderQuestionStep() {
         if (currentQ >= questions.length) {
@@ -1416,121 +1526,130 @@ function runBlockBlastGame(modId, subId, key) {
 
         const qData = questions[currentQ];
         modal.innerHTML = `
-            <div style="background: #12121e; border: 2px solid #a855f7; border-radius: 12px; padding: 30px; max-width: 600px; width: 100%; color: #fff;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <span style="color: #a855f7; font-weight: bold;">Question ${currentQ + 1} of ${questions.length}</span>
-                    <span style="color: #2ed573;">Block Blast Score: ${gridScore}</span>
+            <div class="quiz-game-card">
+                <div class="quiz-header-row">
+                    <span class="quiz-counter">Question ${currentQ + 1} of ${questions.length}</span>
+                    <span class="quiz-credits">Grid Score: ${gridScore} 🧱</span>
                 </div>
-                <h2 style="font-size: 20px; margin-bottom: 20px;">${qData.question}</h2>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
+                <h2 class="quiz-title">${qData.question}</h2>
+                <div class="options-container">
                     ${qData.options.map((opt, i) => `
-                        <button class="opt-btn" data-idx="${i}" style="padding: 12px; background: #1e1e2e; border: 1px solid #3f3f46; color: #fff; border-radius: 6px; text-align: left; cursor: pointer;">${opt}</button>
+                        <button class="opt-btn" data-idx="${i}">${opt}</button>
                     `).join('')}
                 </div>
             </div>
         `;
 
         modal.querySelectorAll('.opt-btn').forEach(btn => {
-            btn.onclick = (e) => {
+            btn.addEventListener('click', (e) => {
                 const selected = parseInt(e.target.getAttribute('data-idx'));
                 const allBtns = modal.querySelectorAll('.opt-btn');
                 allBtns.forEach(b => b.style.pointerEvents = 'none');
 
                 if (selected === qData.correct) {
-                    btn.style.background = '#2ed573';
-                    btn.style.borderColor = '#2ed573';
+                    btn.classList.add('correct');
                     btn.innerHTML += ' ✓';
                     quizScore++;
-                    generateTrayBlocks();
-                    setTimeout(() => renderPuzzleBoard(), 1000);
                 } else {
-                    btn.style.background = '#ff4757';
-                    btn.style.borderColor = '#ff4757';
+                    btn.classList.add('incorrect');
                     btn.innerHTML += ' ✗';
-                    allBtns[qData.correct].style.background = '#2ed573';
-                    allBtns[qData.correct].style.borderColor = '#2ed573';
-                    currentQ++;
-                    setTimeout(() => renderQuestionStep(), 1200);
+                    allBtns[qData.correct].classList.add('correct');
                 }
-            };
+
+                setTimeout(() => {
+                    generateTrayBlocks();
+                    renderPuzzleBoard();
+                }, 1000);
+            });
         });
     }
 
     function generateTrayBlocks() {
         const shapes = [
-            [[1, 1], [1, 1]], // Square 2x2
-            [[1, 1, 1]],      // Horizontal Line
-            [[1], [1], [1]],  // Vertical Line
-            [[1, 0], [1, 1]], // L-Shape
-            [[1]]             // Single Block
+            [[1, 1], [1, 1]],         // Square 2x2
+            [[1, 1, 1]],              // Horizontal Line
+            [[1], [1], [1]],          // Vertical Line
+            [[1, 0], [1, 1]],         // L-Shape
+            [[1, 1, 1], [0, 0, 1]],   // Corner L
+            [[1]]                     // Single Block
         ];
-        trayBlocks = [
-            shapes[Math.floor(Math.random() * shapes.length)],
-            shapes[Math.floor(Math.random() * shapes.length)],
-            shapes[Math.floor(Math.random() * shapes.length)]
-        ];
+
+        trayBlocks = [];
+        for (let i = 0; i < 6; i++) {
+            const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+            const randomColor = blockColors[Math.floor(Math.random() * blockColors.length)];
+            trayBlocks.push({ shape: randomShape, color: randomColor });
+        }
         selectedTrayIndex = 0;
     }
 
-    function triggerHypeText(text) {
-        const hype = document.createElement('div');
-        hype.textContent = text;
-        hype.style.cssText = `
-            position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 32px; font-weight: bold; color: #00f2fe; text-shadow: 0 0 15px rgba(0,242,254,0.8);
-            z-index: 20000; pointer-events: none; animation: floatUpFade 1.2s ease-out forwards;
-        `;
-        document.body.appendChild(hype);
-        setTimeout(() => hype.remove(), 1200);
+    function checkPieceFitsAt(shape, startR, startC) {
+        for (let sr = 0; sr < shape.length; sr++) {
+            for (let sc = 0; sc < shape[sr].length; sc++) {
+                if (shape[sr][sc]) {
+                    const targetR = startR + sr;
+                    const targetC = startC + sc;
+                    if (targetR >= 8 || targetC >= 8 || grid[targetR][targetC] !== null) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     function renderPuzzleBoard() {
-        let gridHTML = '<div id="block-grid" style="display: grid; grid-template-columns: repeat(8, 34px); gap: 3px; background: #1a1a2e; padding: 10px; border-radius: 8px; border: 2px solid #3b82f6;">';
+        let gridHTML = '<div id="block-grid" style="display: grid; grid-template-columns: repeat(8, 36px); gap: 4px; background: rgba(6, 9, 25, 0.9); padding: 12px; border-radius: 12px; border: 2px solid rgba(0,242,254,0.4); box-shadow: inset 0 0 15px rgba(0,0,0,0.8);">';
         
         for (let r = 0; r < 8; r++) {
             for (let c = 0; c < 8; c++) {
-                const isFilled = grid[r][c] === 1;
-                const color = isFilled ? '#a855f7' : '#111118';
-                gridHTML += `<div class="grid-cell" data-row="${r}" data-col="${c}" style="width: 34px; height: 34px; background: ${color}; border-radius: 4px; cursor: pointer; border: 1px solid #2d2d42;"></div>`;
+                const cellColor = grid[r][c];
+                const bg = cellColor ? cellColor : 'rgba(255, 255, 255, 0.03)';
+                const border = cellColor ? cellColor : 'rgba(255, 255, 255, 0.08)';
+                const shadow = cellColor ? `0 0 10px ${cellColor}88` : 'none';
+
+                gridHTML += `<div class="grid-cell" data-row="${r}" data-col="${c}" style="width: 36px; height: 36px; background: ${bg}; border-radius: 6px; cursor: pointer; border: 1px solid ${border}; box-shadow: ${shadow}; transition: background 0.1s ease;"></div>`;
             }
         }
         gridHTML += '</div>';
 
-        let trayHTML = '<div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; background: #181824; padding: 15px; border-radius: 8px;">';
-        trayBlocks.forEach((shape, idx) => {
+        let trayHTML = '<div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px; background: rgba(18, 18, 30, 0.8); padding: 12px; border-radius: 10px; max-width: 650px;">';
+        trayBlocks.forEach((item, idx) => {
+            if (!item) return;
             const isSelected = selectedTrayIndex === idx;
-            const borderCol = isSelected ? '#00f2fe' : '#3f3f46';
+            const borderCol = isSelected ? '#00f2fe' : 'rgba(255,255,255,0.15)';
+            const bgCard = isSelected ? 'rgba(0,242,254,0.12)' : 'rgba(255,255,255,0.04)';
 
-            let previewHTML = '<div style="display:grid; grid-template-columns:repeat(3, 10px); gap:2px; margin-bottom:5px;">';
+            let previewHTML = '<div style="display:grid; grid-template-columns:repeat(3, 9px); gap:2px; margin-bottom:4px;">';
             for (let r = 0; r < 3; r++) {
                 for (let c = 0; c < 3; c++) {
-                    let active = shape[r] && shape[r][c] === 1;
-                    previewHTML += `<div style="width:10px; height:10px; background:${active ? '#a855f7' : 'transparent'}; border-radius:2px;"></div>`;
+                    let active = item.shape[r] && item.shape[r][c] === 1;
+                    previewHTML += `<div style="width:9px; height:9px; background:${active ? item.color : 'transparent'}; border-radius:2px; box-shadow: ${active ? `0 0 6px ${item.color}` : 'none'}"></div>`;
                 }
             }
             previewHTML += '</div>';
 
-            trayHTML += `<div class="tray-piece" data-index="${idx}" style="padding: 8px 12px; background: #1e1e2e; border: 2px solid ${borderCol}; border-radius: 6px; cursor: pointer; text-align: center; display:flex; flex-direction:column; align-items:center;">
+            trayHTML += `<div class="tray-piece" data-index="${idx}" style="padding: 6px 10px; background: ${bgCard}; border: 2px solid ${borderCol}; border-radius: 8px; cursor: pointer; text-align: center; display:flex; flex-direction:column; align-items:center;">
                 ${previewHTML}
-                <span style="font-size: 11px; color: #aaa;">Piece ${idx + 1}</span>
+                <span style="font-size: 10px; color: #94a3b8; font-weight: 600;">Piece #${idx + 1}</span>
             </div>`;
         });
         trayHTML += '</div>';
 
         modal.innerHTML = `
-            <div style="background: #12121e; border: 2px solid #a855f7; border-radius: 12px; padding: 25px; max-width: 650px; width: 100%; color: #fff; text-align: center;">
-                <h3 style="color: #a855f7; margin-top: 0; font-family: 'Orbitron', sans-serif;">🧱 Block Blast Puzzle Arena</h3>
-                <p style="font-size: 13px; color: #aaa;">Click a piece in your tray to select it, then click any cell on the 8x8 grid to place it!</p>
-                
-                <div style="display: flex; justify-content: center; margin: 15px 0;">${gridHTML}</div>
-                ${trayHTML}
-
-                <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-                    <button id="next-question-btn" style="padding: 12px 24px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Next Question →</button>
+            <div class="quiz-game-card canvas-card" style="max-width: 680px;">
+                <div class="quiz-header-row">
+                    <span class="quiz-counter">Wave ${currentQ + 1} - Block Grid Arena</span>
+                    <span class="quiz-credits">Grid Score: ${gridScore} 🧱</span>
                 </div>
+                <p class="canvas-instructions" style="margin-bottom: 12px;">Click a piece to select it, then hover over the grid to see the <strong>ghost outline</strong> before clicking to place!</p>
+                <div style="display: flex; justify-content: center; margin: 5px 0;">${gridHTML}</div>
+                ${trayHTML}
+                <button id="next-question-btn" class="btn-continue-shop" style="margin-top: 15px; width: 100%;">Next Question →</button>
             </div>
         `;
 
+        // Bind tray selection clicks
         modal.querySelectorAll('.tray-piece').forEach(piece => {
             piece.onclick = () => {
                 selectedTrayIndex = parseInt(piece.getAttribute('data-index'));
@@ -1543,23 +1662,30 @@ function runBlockBlastGame(modId, subId, key) {
             const r = parseInt(cell.getAttribute('data-row'));
             const c = parseInt(cell.getAttribute('data-col'));
 
+            // Safe Hover Ghost Preview (Modifies styles directly without re-rendering DOM)
             cell.onmouseenter = () => {
                 if (selectedTrayIndex === null || !trayBlocks[selectedTrayIndex]) return;
-                const shape = trayBlocks[selectedTrayIndex];
-                
+                const shape = trayBlocks[selectedTrayIndex].shape;
+                const pieceColor = trayBlocks[selectedTrayIndex].color;
+                const fits = checkPieceFitsAt(shape, r, c);
+
                 cells.forEach(item => {
                     const ir = parseInt(item.getAttribute('data-row'));
                     const ic = parseInt(item.getAttribute('data-col'));
                     const sr = ir - r;
                     const sc = ic - c;
-                    if (grid[ir][ic] === 0) {
-                        item.style.background = '#111118';
-                        item.style.border = '1px solid #2d2d42';
+
+                    // Reset empty cells
+                    if (!grid[ir][ic]) {
+                        item.style.background = 'rgba(255, 255, 255, 0.03)';
+                        item.style.border = '1px solid rgba(255, 255, 255, 0.08)';
                     }
+
+                    // Apply ghost outline overlay
                     if (sr >= 0 && sr < shape.length && sc >= 0 && sc < shape[0].length && shape[sr][sc] === 1) {
-                        if (grid[ir][ic] === 0) {
-                            item.style.background = 'rgba(0, 242, 254, 0.4)';
-                            item.style.border = '1px dashed #00f2fe';
+                        if (!grid[ir][ic]) {
+                            item.style.background = fits ? `${pieceColor}55` : 'rgba(239, 68, 68, 0.35)';
+                            item.style.border = `1px dashed ${fits ? pieceColor : '#ef4444'}`;
                         }
                     }
                 });
@@ -1573,7 +1699,7 @@ function runBlockBlastGame(modId, subId, key) {
         const gridContainer = modal.querySelector('#block-grid');
         if (gridContainer) {
             gridContainer.onmouseleave = () => {
-                renderPuzzleBoard();
+                renderPuzzleBoard(); // Clean up ghost overlay safely on mouse leave
             };
         }
 
@@ -1585,67 +1711,63 @@ function runBlockBlastGame(modId, subId, key) {
 
     function placeBlockAt(r, c) {
         if (selectedTrayIndex === null || !trayBlocks[selectedTrayIndex]) {
-            alert("⚠️ Please select a shape from your tray first!");
+            alert("⚠️ Please select a piece from your tray first!");
             return;
         }
 
-        const shape = trayBlocks[selectedTrayIndex];
-        let fits = true;
-        for (let sr = 0; sr < shape.length; sr++) {
-            for (let sc = 0; sc < shape[sr].length; sc++) {
-                if (shape[sr][sc] && (r + sr >= 8 || c + sc >= 8 || grid[r + sr][c + sc] === 1)) {
-                    fits = false;
-                }
-            }
-        }
+        const trayItem = trayBlocks[selectedTrayIndex];
+        const shape = trayItem.shape;
+        const color = trayItem.color;
 
-        if (fits) {
+        if (checkPieceFitsAt(shape, r, c)) {
             for (let sr = 0; sr < shape.length; sr++) {
                 for (let sc = 0; sc < shape[sr].length; sc++) {
                     if (shape[sr][sc]) {
-                        grid[r + sr][c + sc] = 1;
+                        grid[r + sr][c + sc] = color;
+                        spawnParticles((c + sc) * 36 + 18, (r + sr) * 36 + 18, color, 8);
                     }
                 }
             }
             trayBlocks.splice(selectedTrayIndex, 1);
             selectedTrayIndex = trayBlocks.length > 0 ? 0 : null;
-            
+
+            gridScore += 50;
             const clearedCount = checkGridClears();
             if (clearedCount > 0) {
-                const phrases = ["Good Job!", "Excellent!", "Amazing!", "Combo!", "Clever Move!"];
+                const phrases = ["Block Blast!", "Awesome Combo!", "Clean Clear!", "Brilliant!"];
                 triggerHypeText(phrases[Math.floor(Math.random() * phrases.length)]);
             }
-            
+
             renderPuzzleBoard();
         } else {
-            alert("⚠️ Cannot place piece there! It overlaps or goes out of bounds.");
+            triggerHypeText("⚠️ Invalid Placement!");
         }
     }
 
     function checkGridClears() {
         let clears = 0;
         for (let r = 0; r < 8; r++) {
-            if (grid[r].every(v => v === 1)) {
-                grid[r] = Array(8).fill(0);
-                gridScore += 100;
+            if (grid[r].every(v => v !== null)) {
+                grid[r] = Array(8).fill(null);
+                gridScore += 200;
                 clears++;
             }
         }
         for (let c = 0; c < 8; c++) {
             let colFull = true;
             for (let r = 0; r < 8; r++) {
-                if (grid[r][c] === 0) colFull = false;
+                if (grid[r][c] === null) colFull = false;
             }
             if (colFull) {
-                for (let r = 0; r < 8; r++) grid[r][c] = 0;
-                gridScore += 100;
+                for (let r = 0; r < 8; r++) grid[r][c] = null;
+                gridScore += 200;
                 clears++;
             }
         }
         return clears;
     }
 
-    function renderFinalSummary() {
+    async function renderFinalSummary() {
         const totalPoints = (quizScore * 100) + gridScore;
         const passed = quizScore >= 4;
         if (passed && modId >= maxUnlockedModule && maxUnlockedModule < 6) {
@@ -1653,19 +1775,80 @@ function runBlockBlastGame(modId, subId, key) {
             localStorage.setItem('maxUnlockedModule', maxUnlockedModule);
             updateModuleLockUI();
         }
+
+        let leaderboardHTML = '<p style="color:#94a3b8; font-size:0.9rem;">No other scores yet. You set the benchmark! 🚀</p>';
+
+        if (typeof db !== 'undefined') {
+            const activeId = localStorage.getItem('ai_portal_active_user_id');
+            try {
+                if (activeId) {
+                    const docRef = db.collection('cadets').doc(activeId);
+                    const doc = await docRef.get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        const newXp = (data.xp || 0) + 100;
+                        const scores = data.scores || { rocket: 0, blockblast: 0, angrybirds: 0 };
+                        if (gridScore > (scores.blockblast || 0)) {
+                            scores.blockblast = gridScore;
+                        }
+                        await docRef.update({
+                            xp: newXp,
+                            scores: scores
+                        });
+                    }
+                }
+
+                const snapshot = await db.collection('cadets').get();
+                let allCadets = [];
+                snapshot.forEach(d => {
+                    allCadets.push({ id: d.id, ...d.data() });
+                });
+
+                allCadets.sort((a, b) => {
+                    const scoreA = (a.scores && a.scores.blockblast) || 0;
+                    const scoreB = (b.scores && b.scores.blockblast) || 0;
+                    return scoreB - scoreA;
+                });
+
+                if (allCadets.length > 0) {
+                    leaderboardHTML = allCadets.slice(0, 5).map((cadet, index) => {
+                        const isMe = activeId && cadet.id === activeId;
+                        const cadetScore = (cadet.scores && cadet.scores.blockblast) || 0;
+                        return `
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: ${isMe ? 'rgba(0,242,254,0.15)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${isMe ? '#00f2fe' : 'rgba(255,255,255,0.1)'}; padding: 6px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 0.85rem;">
+                                <span>#${index + 1} <strong>${escapeHTML(cadet.username)}</strong> ${isMe ? '(You)' : ''}</span>
+                                <span style="color: #00f2fe; font-weight: 700;">${cadetScore} pts</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+            } catch (err) {
+                console.error("Error fetching Block Blast leaderboard:", err);
+            }
+        }
+
         modal.innerHTML = `
-            <div style="background: #12121e; border: 2px solid #a855f7; border-radius: 12px; padding: 30px; max-width: 550px; width: 100%; color: #fff; text-align: center;">
-                <h1 style="color: #a855f7; margin-top: 0; font-family: 'Orbitron', sans-serif;">🧱 Block Blast Complete!</h1>
-                <h3>Quiz Score: ${quizScore} / ${questions.length}</h3>
-                <p style="color: #2ed573;">Grid Score: ${gridScore} pts</p>
-                <p style="font-weight: bold; color: #eccc68;">Total Score: ${totalPoints} PTS</p>
-                <button id="close-final" style="width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin-top: 15px;">Continue</button>
+            <div class="quiz-game-card text-center" style="max-width: 440px; margin: auto;">
+                <h1 class="summary-title" style="font-size: 1.4rem; margin-bottom: 8px;">🧱 Block Blast Complete!</h1>
+                <h3 class="summary-stat" style="font-size: 1rem;">Quiz Score: ${quizScore} / ${questions.length}</h3>
+                <p class="summary-arcade" style="font-size: 0.95rem;">Grid Score: <strong>${gridScore} pts</strong></p>
+                <p class="summary-total" style="color: #00f2fe; margin: 6px 0; font-weight: 700; font-size: 0.9rem;">+100 XP Awarded! 🌟</p>
+                
+                <div style="margin: 14px 0; text-align: left;">
+                    <h4 style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 6px; text-align: center;">🏆 Top Block Masters</h4>
+                    ${leaderboardHTML}
+                </div>
+
+                <button id="close-final" class="btn-continue-shop" style="margin-top: 10px; width: 100%;">Continue to Modules</button>
             </div>
         `;
+
         if (typeof window.updateProgress === 'function') {
             window.updateProgress(20);
             checkBadges();
         }
+
         modal.querySelector('#close-final').onclick = () => {
             modal.remove();
             showPage('modules-grid');
@@ -1676,46 +1859,89 @@ function runBlockBlastGame(modId, subId, key) {
 }
 
 // ============================================================================
-// MINIGAME 3: PIRATE SHIP CANNON LAUNCHER
+// MINIGAME 3: PIRATE SHIP CANNON LAUNCHER (HILLTOP EDITION & 100/ROUND)
 // ============================================================================
 function runAngryBirdsGame(modId, subId, key) {
-    const questions = arcadeQuizDB[key] || arcadeQuizDB["1.3"];
+    const defaultQuestions = [
+        {
+            question: "What is the primary function of a neural network's activation function?",
+            options: [
+                "To introduce non-linearity so the network can learn complex patterns",
+                "To increase the physical memory size of the GPU",
+                "To encrypt training data against hackers",
+                "To compile JavaScript into machine bytecode"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which component stores persistent user data across browser sessions in our portal?",
+            options: [
+                "Local RAM cache only",
+                "Firebase Firestore cloud database",
+                "CSS stylesheets",
+                "DOM event listeners"
+            ],
+            correct: 1
+        },
+        {
+            question: "What does an AI model use during training to measure how wrong its predictions are?",
+            options: [
+                "A Loss Function",
+                "An HTML parser",
+                "A CSS grid template",
+                "A Wi-Fi router"
+            ],
+            correct: 0
+        }
+    ];
+
+    let questions = defaultQuestions;
+    if (typeof arcadeQuizDB !== 'undefined' && arcadeQuizDB && arcadeQuizDB[key]) {
+        questions = arcadeQuizDB[key];
+    } else if (typeof arcadeQuizDB !== 'undefined' && arcadeQuizDB && arcadeQuizDB["1.3"]) {
+        questions = arcadeQuizDB["1.3"];
+    }
+
     let currentQ = 0;
     let launcherScore = 0;
     let quizScore = 0;
-    let credits = 0;
+    let credits = 50; // Lower initial starting cash
     let currentLevel = 1;
 
     let heavyBall = false;
     let bombBall = false;
     let scoreMult = 1;
 
+    const existingModal = document.querySelector('.quiz-modal');
+    if (existingModal) existingModal.remove();
+
     const modal = document.createElement('div');
     modal.className = 'quiz-modal';
     modal.style.cssText = `
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(5, 5, 12, 0.95); display: flex; justify-content: center;
+        background: rgba(5, 5, 15, 0.96); display: flex; justify-content: center;
         align-items: center; z-index: 10000; padding: 20px; box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
     `;
     document.body.appendChild(modal);
 
     function renderQuestionStep() {
-        if (currentQ >= questions.length) {
+        if (!questions || currentQ >= questions.length) {
             renderFinalSummary();
             return;
         }
 
         const qData = questions[currentQ];
         modal.innerHTML = `
-            <div style="background: #12121e; border: 2px solid #ff4757; border-radius: 12px; padding: 30px; max-width: 600px; width: 100%; color: #fff;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <span style="color: #ff4757; font-weight: bold;">Question ${currentQ + 1} of ${questions.length} (Pirate Level ${currentLevel})</span>
-                    <span style="color: #00f2fe;">Credits: ${credits} 💰</span>
+            <div style="background: linear-gradient(135deg, #121224 0%, #1a1a2e 100%); border: 2px solid #ff4757; border-radius: 16px; padding: 35px; max-width: 620px; width: 100%; color: #fff; box-shadow: 0 10px 40px rgba(255, 71, 87, 0.25);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <span style="color: #ff4757; font-weight: 700; font-size: 0.9rem; letter-spacing: 1px;">QUESTION ${currentQ + 1} OF ${questions.length} • HILLTOP LEVEL ${currentLevel}</span>
+                    <span style="color: #00f2fe; background: rgba(0,242,254,0.1); padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 0.85rem;">${credits} 💰 Credits</span>
                 </div>
-                <h2 style="font-size: 20px; margin-bottom: 20px;">${qData.question}</h2>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    ${qData.options.map((opt, i) => `
-                        <button class="opt-btn" data-idx="${i}" style="padding: 12px; background: #1e1e2e; border: 1px solid #3f3f46; color: #fff; border-radius: 6px; text-align: left; cursor: pointer;">${opt}</button>
+                <h2 style="font-size: 1.25rem; line-height: 1.5; margin-bottom: 25px; color: #f8fafc;">${qData.question || ''}</h2>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    ${(qData.options || []).map((opt, i) => `
+                        <button class="opt-btn" data-idx="${i}" style="padding: 14px 18px; background: rgba(30, 30, 46, 0.8); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 10px; text-align: left; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease;">${opt}</button>
                     `).join('')}
                 </div>
             </div>
@@ -1728,92 +1954,140 @@ function runAngryBirdsGame(modId, subId, key) {
                 allBtns.forEach(b => b.style.pointerEvents = 'none');
 
                 if (selected === qData.correct) {
-                    btn.style.background = '#2ed573';
+                    btn.style.background = 'rgba(46, 213, 115, 0.2)';
                     btn.style.borderColor = '#2ed573';
                     btn.innerHTML += ' ✓';
-                    credits += 100;
+                    credits += 100; // Exactly 100 credits awarded per correct round
                     quizScore++;
                 } else {
-                    btn.style.background = '#ff4757';
+                    btn.style.background = 'rgba(255, 71, 87, 0.2)';
                     btn.style.borderColor = '#ff4757';
                     btn.innerHTML += ' ✗';
-                    allBtns[qData.correct].style.background = '#2ed573';
-                    allBtns[qData.correct].style.borderColor = '#2ed573';
+                    if (allBtns[qData.correct]) {
+                        allBtns[qData.correct].style.background = 'rgba(46, 213, 115, 0.2)';
+                        allBtns[qData.correct].style.borderColor = '#2ed573';
+                    }
                 }
 
-                setTimeout(() => launchPhysicsCanvas(), 1000);
+                setTimeout(() => launchPhysicsCanvas(), 900);
             };
         });
     }
 
     function launchPhysicsCanvas() {
         let targets = [];
-        const rows = 2 + Math.min(2, currentLevel);
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < 3; c++) {
-                targets.push({
-                    x: 460 + c * 42,
-                    y: 170 + r * 42,
-                    w: 38,
-                    h: 38
-                });
-            }
+        
+        // Unique box layouts on the lower shore looking down from the hill
+        if (currentLevel === 1) {
+            targets = [
+                { x: 500, y: 235, w: 38, h: 38 },
+                { x: 550, y: 235, w: 38, h: 38 },
+                { x: 600, y: 235, w: 38, h: 38 },
+                { x: 525, y: 190, w: 38, h: 38 },
+                { x: 575, y: 190, w: 38, h: 38 },
+                { x: 550, y: 145, w: 38, h: 38 }
+            ];
+        } else if (currentLevel === 2) {
+            targets = [
+                { x: 480, y: 145, w: 36, h: 36 },
+                { x: 480, y: 185, w: 36, h: 36 },
+                { x: 480, y: 225, w: 36, h: 36 },
+                { x: 540, y: 185, w: 36, h: 36 },
+                { x: 540, y: 225, w: 36, h: 36 },
+                { x: 600, y: 145, w: 36, h: 36 },
+                { x: 600, y: 225, w: 36, h: 36 }
+            ];
+        } else {
+            targets = [
+                { x: 460, y: 235, w: 35, h: 35 },
+                { x: 510, y: 175, w: 35, h: 35 },
+                { x: 560, y: 235, w: 35, h: 35 },
+                { x: 610, y: 175, w: 35, h: 35 },
+                { x: 535, y: 125, w: 35, h: 35 }
+            ];
         }
 
         modal.innerHTML = `
-            <div style="background: #0a0a14; border: 2px solid #ff4757; border-radius: 12px; padding: 20px; max-width: 700px; width: 100%; color: #fff; text-align: center;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="color: #ff4757; font-weight: bold;">Pirate Ship Deck — Level ${currentLevel}</span>
-                    <span id="birds-score" style="color: #2ed573;">Score: ${launcherScore}</span>
+            <div style="background: linear-gradient(135deg, #0a0a14 0%, #121224 100%); border: 2px solid #ff4757; border-radius: 16px; padding: 25px; max-width: 720px; width: 100%; color: #fff; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="color: #ff4757; font-weight: 700; letter-spacing: 1px;">⛰️ HILLTOP CANNON ASSAULT — LEVEL ${currentLevel}</span>
+                    <span id="birds-score" style="color: #2ed573; font-weight: 700; font-size: 1.05rem;">Score: ${launcherScore}</span>
                 </div>
-                <canvas id="birdsCanvas" width="640" height="360" style="background: #111; border: 1px solid #333; border-radius: 6px; width: 100%; height: auto; cursor: crosshair;"></canvas>
-                <p style="color: #aaa; font-size: 13px; margin-top: 8px;">Click & Drag backward on the Cannonball to Aim with Trajectory Arc, Release to Fire!</p>
+                <div style="position: relative;">
+                    <canvas id="birdsCanvas" width="680" height="340" style="background: #0d1117; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; width: 100%; height: auto; cursor: crosshair;"></canvas>
+                    <div id="shot-feedback" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 242, 254, 0.95); color: #0a0a14; padding: 14px 28px; border-radius: 10px; font-weight: 800; font-size: 1.3rem; display: none; box-shadow: 0 4px 25px rgba(0,242,254,0.6); letter-spacing: 1px;">NICE WORK!</div>
+                </div>
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 12px;">Click & Drag backward on the Cannonball on your hilltop to aim down at the crates!</p>
             </div>
         `;
 
         const canvas = document.getElementById('birdsCanvas');
+        if (!canvas) {
+            renderQuestionStep();
+            return;
+        }
         const ctx = canvas.getContext('2d');
 
-        let cannonPos = { x: 90, y: 250 };
-        let ball = { x: 90, y: 250, r: 14, vx: 0, vy: 0, launched: false };
+        // Hilltop coordinates (Cannon is elevated on the left hill looking down)
+        let cannonPos = { x: 110, y: 155 };
+        let ball = { x: 110, y: 155, r: 14, vx: 0, vy: 0, launched: false };
         let dragging = false;
         let particles = [];
         let floatingTexts = [];
         let shakeFrames = 0;
         let muzzleFlashFrames = 0;
+        let roundEnded = false;
+        const groundY = 275; // Lower shore ground level
 
         canvas.onmousedown = (e) => {
+            if (ball.launched || roundEnded) return;
             const rect = canvas.getBoundingClientRect();
-            const mx = e.clientX - rect.left;
-            const my = e.clientY - rect.top;
-            if (Math.hypot(mx - ball.x, my - ball.y) < 35 && !ball.launched) dragging = true;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const mx = (e.clientX - rect.left) * scaleX;
+            const my = (e.clientY - rect.top) * scaleY;
+            if (Math.hypot(mx - ball.x, my - ball.y) < 45) dragging = true;
         };
 
-        canvas.onmousemove = (e) => {
-            if (dragging) {
-                const rect = canvas.getBoundingClientRect();
-                ball.x = e.clientX - rect.left;
-                ball.y = e.clientY - rect.top;
-                if (Math.hypot(ball.x - cannonPos.x, ball.y - cannonPos.y) > 80) {
-                    const angle = Math.atan2(ball.y - cannonPos.y, ball.x - cannonPos.x);
-                    ball.x = cannonPos.x + Math.cos(angle) * 80;
-                    ball.y = cannonPos.y + Math.sin(angle) * 80;
-                }
+        const onMouseMoveHandler = (e) => {
+            if (!dragging) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            ball.x = (e.clientX - rect.left) * scaleX;
+            ball.y = (e.clientY - rect.top) * scaleY;
+            
+            const dist = Math.hypot(ball.x - cannonPos.x, ball.y - cannonPos.y);
+            if (dist > 85) {
+                const angle = Math.atan2(ball.y - cannonPos.y, ball.x - cannonPos.x);
+                ball.x = cannonPos.x + Math.cos(angle) * 85;
+                ball.y = cannonPos.y + Math.sin(angle) * 85;
             }
         };
 
-        canvas.onmouseup = () => {
+        const onMouseUpHandler = () => {
             if (dragging) {
                 dragging = false;
                 ball.launched = true;
-                ball.vx = (cannonPos.x - ball.x) * 0.35;
-                ball.vy = (cannonPos.y - ball.y) * 0.35;
-                muzzleFlashFrames = 8;
+                ball.vx = (cannonPos.x - ball.x) * 0.38;
+                ball.vy = (cannonPos.y - ball.y) * 0.38;
+                muzzleFlashFrames = 10;
+                shakeFrames = 6;
             }
         };
 
+        window.addEventListener('mousemove', onMouseMoveHandler);
+        window.addEventListener('mouseup', onMouseUpHandler);
+
         let animId;
         function loop(now) {
+            if (!document.body.contains(canvas)) {
+                cancelAnimationFrame(animId);
+                window.removeEventListener('mousemove', onMouseMoveHandler);
+                window.removeEventListener('mouseup', onMouseUpHandler);
+                return;
+            }
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             ctx.save();
@@ -1822,64 +2096,73 @@ function runAngryBirdsGame(modId, subId, key) {
                 ctx.translate((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8);
             }
 
-            let grad = ctx.createLinearGradient(0, 0, 0, 300);
-            grad.addColorStop(0, '#1e3a8a');
-            grad.addColorStop(1, '#0284c7');
+            // Sky gradient
+            let grad = ctx.createLinearGradient(0, 0, 0, groundY);
+            grad.addColorStop(0, '#0f172a');
+            grad.addColorStop(1, '#1e3a8a');
             ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, canvas.width, 300);
+            ctx.fillRect(0, 0, canvas.width, groundY);
 
-            ctx.fillStyle = '#0369a1';
-            ctx.beginPath();
-            ctx.moveTo(0, 270);
-            for (let x = 0; x <= canvas.width; x += 40) {
-                ctx.quadraticCurveTo(x + 20, 260 + Math.sin(now * 0.005 + x) * 8, x + 40, 270);
-            }
-            ctx.lineTo(canvas.width, 300); ctx.lineTo(0, 300);
-            ctx.fill();
-
+            // Lower Ground / Shore surface where targets sit
             ctx.fillStyle = '#78350f';
-            ctx.fillRect(0, 290, canvas.width, 70);
+            ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
             ctx.strokeStyle = '#451a03';
             ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.moveTo(0, 290); ctx.lineTo(canvas.width, 290);
+            ctx.moveTo(0, groundY); ctx.lineTo(canvas.width, groundY);
             ctx.stroke();
 
-            ctx.save();
-            ctx.translate(cannonPos.x, cannonPos.y);
-            let angle = dragging ? Math.atan2(ball.y - cannonPos.y, ball.x - cannonPos.x) : -0.2;
-            ctx.rotate(angle);
-            ctx.fillStyle = '#334155';
-            ctx.fillRect(0, -12, 48, 24);
-            ctx.restore();
-
+            // Hilltop Structure on the left (elevated platform for the cannon)
             ctx.fillStyle = '#1e293b';
             ctx.beginPath();
-            ctx.arc(cannonPos.x - 10, cannonPos.y + 12, 10, 0, Math.PI * 2);
-            ctx.arc(cannonPos.x + 10, cannonPos.y + 12, 10, 0, Math.PI * 2);
+            ctx.moveTo(0, groundY);
+            ctx.lineTo(0, 180);
+            ctx.quadraticCurveTo(80, 150, 180, groundY);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Cannon Mount & Barrel on the Hilltop
+            ctx.save();
+            ctx.translate(cannonPos.x, cannonPos.y);
+            let angle = dragging ? Math.atan2(ball.y - cannonPos.y, ball.x - cannonPos.x) : 0.2; // Pointing downward toward targets
+            ctx.rotate(angle);
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(0, -14, 52, 28);
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(44, -16, 8, 32);
+            ctx.restore();
+
+            // Cannon Wheels
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.arc(cannonPos.x - 12, cannonPos.y + 11, 10, 0, Math.PI * 2);
+            ctx.arc(cannonPos.x + 12, cannonPos.y + 11, 10, 0, Math.PI * 2);
             ctx.fill();
 
             if (muzzleFlashFrames > 0) {
                 muzzleFlashFrames--;
                 ctx.fillStyle = '#f59e0b';
                 ctx.beginPath();
-                ctx.arc(cannonPos.x + Math.cos(angle)*50, cannonPos.y + Math.sin(angle)*50, 16, 0, Math.PI * 2);
+                ctx.arc(cannonPos.x + Math.cos(angle)*55, cannonPos.y + Math.sin(angle)*55, 18, 0, Math.PI * 2);
                 ctx.fill();
             }
 
             if (dragging) {
                 let simX = ball.x;
                 let simY = ball.y;
-                let simVx = (cannonPos.x - ball.x) * 0.35;
-                let simVy = (cannonPos.y - ball.y) * 0.35;
-                let simGravity = heavyBall ? 0.5 : 0.35;
+                let simVx = (cannonPos.x - ball.x) * 0.38;
+                let simVy = (cannonPos.y - ball.y) * 0.38;
+                let simGravity = heavyBall ? 0.48 : 0.36;
 
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-                ctx.lineWidth = 2;
-                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = 'rgba(0, 242, 254, 0.7)';
+                ctx.lineWidth = 2.5;
+                ctx.setLineDash([5, 5]);
                 ctx.beginPath();
                 ctx.moveTo(simX, simY);
-                for (let step = 0; step < 25; step++) {
+                for (let step = 0; step < 30; step++) {
                     simX += simVx;
                     simY += simVy;
                     simVy += simGravity;
@@ -1890,11 +2173,12 @@ function runAngryBirdsGame(modId, subId, key) {
             }
 
             targets.forEach((t, i) => {
-                ctx.fillStyle = '#854d0e';
+                ctx.fillStyle = '#b45309';
                 ctx.fillRect(t.x, t.y, t.w, t.h);
-                ctx.strokeStyle = '#422006';
+                ctx.strokeStyle = '#78350f';
                 ctx.lineWidth = 3;
                 ctx.strokeRect(t.x, t.y, t.w, t.h);
+                
                 ctx.beginPath();
                 ctx.moveTo(t.x, t.y); ctx.lineTo(t.x + t.w, t.y + t.h);
                 ctx.moveTo(t.x + t.w, t.y); ctx.lineTo(t.x, t.y + t.h);
@@ -1902,23 +2186,23 @@ function runAngryBirdsGame(modId, subId, key) {
 
                 if (ball.x + ball.r > t.x && ball.x - ball.r < t.x + t.w && ball.y + ball.r > t.y && ball.y - ball.r < t.y + t.h) {
                     targets.splice(i, 1);
-                    launcherScore += 50 * scoreMult;
-                    shakeFrames = 12;
+                    launcherScore += 100 * scoreMult;
+                    shakeFrames = 14;
 
-                    for (let p = 0; p < 12; p++) {
+                    for (let p = 0; p < 16; p++) {
                         particles.push({
                             x: t.x + t.w / 2,
                             y: t.y + t.h / 2,
-                            vx: (Math.random() - 0.5) * 8,
-                            vy: (Math.random() - 0.5) * 8,
-                            color: Math.random() > 0.5 ? '#b45309' : '#d97706',
+                            vx: (Math.random() - 0.5) * 9,
+                            vy: (Math.random() - 0.5) * 9,
+                            color: Math.random() > 0.5 ? '#f59e0b' : '#ef4444',
                             alpha: 1.0,
-                            size: 3 + Math.random() * 4
+                            size: 3 + Math.random() * 5
                         });
                     }
 
                     floatingTexts.push({
-                        text: `+${50 * scoreMult} PTS!`,
+                        text: `+${100 * scoreMult} PTS!`,
                         x: t.x,
                         y: t.y,
                         alpha: 1.0
@@ -1928,7 +2212,7 @@ function runAngryBirdsGame(modId, subId, key) {
                     if (scoreEl) scoreEl.textContent = `Score: ${launcherScore}`;
 
                     if (bombBall) {
-                        targets = targets.filter(other => Math.hypot(other.x - t.x, other.y - t.y) > 75);
+                        targets = targets.filter(other => Math.hypot(other.x - t.x, other.y - t.y) > 85);
                     }
                 }
             });
@@ -1937,7 +2221,7 @@ function runAngryBirdsGame(modId, subId, key) {
                 let pt = particles[i];
                 pt.x += pt.vx;
                 pt.y += pt.vy;
-                pt.alpha -= 0.03;
+                pt.alpha -= 0.035;
                 ctx.fillStyle = pt.color;
                 ctx.globalAlpha = Math.max(0, pt.alpha);
                 ctx.fillRect(pt.x, pt.y, pt.size, pt.size);
@@ -1947,10 +2231,10 @@ function runAngryBirdsGame(modId, subId, key) {
 
             for (let i = floatingTexts.length - 1; i >= 0; i--) {
                 let ft = floatingTexts[i];
-                ft.y -= 1.2;
+                ft.y -= 1.25;
                 ft.alpha -= 0.025;
                 ctx.fillStyle = '#2ed573';
-                ctx.font = 'bold 16px Orbitron, sans-serif';
+                ctx.font = 'bold 16px Inter, sans-serif';
                 ctx.globalAlpha = Math.max(0, ft.alpha);
                 ctx.fillText(ft.text, ft.x, ft.y);
                 ctx.globalAlpha = 1.0;
@@ -1959,7 +2243,7 @@ function runAngryBirdsGame(modId, subId, key) {
 
             if (dragging) {
                 ctx.strokeStyle = '#ef4444';
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 3.5;
                 ctx.beginPath();
                 ctx.moveTo(cannonPos.x, cannonPos.y);
                 ctx.lineTo(ball.x, ball.y);
@@ -1972,24 +2256,42 @@ function runAngryBirdsGame(modId, subId, key) {
             ctx.fill();
             ctx.fillStyle = '#94a3b8';
             ctx.beginPath();
-            ctx.arc(ball.x - 4, ball.y - 4, 3, 0, Math.PI * 2);
+            ctx.arc(ball.x - 4, ball.y - 4, 3.5, 0, Math.PI * 2);
             ctx.fill();
 
-            if (ball.launched) {
+            // Physics step with floor bounce and rolling friction
+            if (ball.launched && !roundEnded) {
                 ball.x += ball.vx;
                 ball.y += ball.vy;
-                ball.vy += heavyBall ? 0.5 : 0.35;
+                ball.vy += heavyBall ? 0.48 : 0.36;
 
-                if (targets.length === 0) {
-                    cancelAnimationFrame(animId);
-                    currentLevel++;
-                    setTimeout(openBirdsShop, 500);
-                    return;
+                // Floor collision
+                if (ball.y + ball.r >= groundY) {
+                    ball.y = groundY - ball.r;
+                    ball.vy = -ball.vy * 0.35;
+                    ball.vx *= 0.82;
+
+                    if (Math.abs(ball.vy) < 0.5) {
+                        ball.vy = 0;
+                    }
                 }
 
-                if (ball.y > 290 || ball.x > canvas.width || ball.x < 0) {
-                    cancelAnimationFrame(animId);
-                    setTimeout(openBirdsShop, 500);
+                const isSettled = (ball.vy === 0 && Math.abs(ball.vx) < 0.2) || ball.x > canvas.width || ball.x < 0;
+
+                if (targets.length === 0 || isSettled) {
+                    roundEnded = true;
+                    window.removeEventListener('mousemove', onMouseMoveHandler);
+                    window.removeEventListener('mouseup', onMouseUpHandler);
+
+                    setTimeout(() => {
+                        const feedbackEl = document.getElementById('shot-feedback');
+                        if (feedbackEl) feedbackEl.style.display = 'block';
+
+                        setTimeout(() => {
+                            cancelAnimationFrame(animId);
+                            openBirdsShop();
+                        }, 1200);
+                    }, 400);
                     return;
                 }
             }
@@ -1998,80 +2300,84 @@ function runAngryBirdsGame(modId, subId, key) {
             animId = requestAnimationFrame(loop);
         }
 
-        loop(0);
+        animId = requestAnimationFrame(loop);
     }
 
     function openBirdsShop() {
+        if (!document.body.contains(modal)) return;
         modal.innerHTML = `
-            <div style="background: #121224; border: 2px solid #ff4757; border-radius: 12px; padding: 25px; max-width: 600px; width: 100%; color: #fff; text-align: center;">
-                <h2 style="color: #ff4757; margin-top: 0; font-family: 'Orbitron', sans-serif;">🏹 Launcher Power-Up Shop</h2>
-                <p>Credits: <strong style="color: #00f2fe;">${credits} 💰</strong></p>
+            <div style="background: linear-gradient(135deg, #121224 0%, #1a1a2e 100%); border: 2px solid #ff4757; border-radius: 16px; padding: 30px; max-width: 580px; width: 100%; color: #fff; text-align: center; box-shadow: 0 10px 40px rgba(255, 71, 87, 0.25);">
+                <h2 style="color: #ff4757; margin-top: 0; font-family: 'Inter', sans-serif;">🏹 CANNON SHOP & UPGRADES</h2>
+                <p>Available Credits: <strong style="color: #00f2fe;">${credits} 💰</strong></p>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0;">
-                    <button id="buy-heavy" style="padding: 10px; background: #1e1e2e; border: 1px solid #ff4757; color: #fff; border-radius: 6px; cursor: pointer;">
-                        💣 Heavy Iron Ball (50 💰) ${heavyBall ? '✅' : ''}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 25px 0;">
+                    <button id="buy-heavy" style="padding: 14px; background: rgba(30,30,46,0.9); border: 1px solid #ff4757; color: #fff; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                        💣 Heavy Iron Ball (40 💰)<br><span style="font-size: 0.8rem; color: #94a3b8;">${heavyBall ? '✅ Owned' : 'Flat trajectory'}</span>
                     </button>
-                    <button id="buy-bomb" style="padding: 10px; background: #1e1e2e; border: 1px solid #ff4757; color: #fff; border-radius: 6px; cursor: pointer;">
-                        💥 Explosive Bomb (100 💰) ${bombBall ? '✅' : ''}
+                    <button id="buy-bomb" style="padding: 14px; background: rgba(30,30,46,0.9); border: 1px solid #ff4757; color: #fff; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                        💥 Explosive Shot (80 💰)<br><span style="font-size: 0.8rem; color: #94a3b8;">${bombBall ? '✅ Owned' : 'Area splash damage'}</span>
                     </button>
-                    <button id="buy-mult" style="grid-column: span 2; padding: 10px; background: #1e1e2e; border: 1px solid #ff4757; color: #fff; border-radius: 6px; cursor: pointer;">
-                        🌟 2x Multiplier (75 💰) ${scoreMult > 1 ? '✅' : ''}
+                    <button id="buy-mult" style="grid-column: span 2; padding: 14px; background: rgba(30,30,46,0.9); border: 1px solid #ff4757; color: #fff; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                        🌟 2x Multiplier (60 💰)<br><span style="font-size: 0.8rem; color: #94a3b8;">${scoreMult > 1 ? '✅ Active' : 'Double points'}</span>
                     </button>
                 </div>
-                <button id="skip-shop" style="width: 100%; padding: 12px; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
-                    Skip Shop & Next Question →
+                <button id="skip-shop" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #0a0a14; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 1rem;">
+                    Continue to Next Question →
                 </button>
             </div>
         `;
 
         modal.querySelector('#buy-heavy').onclick = () => {
-            if (credits >= 50 && !heavyBall) { credits -= 50; heavyBall = true; openBirdsShop(); }
-            else alert("Cannot purchase!");
+            if (credits >= 40 && !heavyBall) { credits -= 40; heavyBall = true; openBirdsShop(); }
+            else alert("Not enough credits or already owned!");
         };
         modal.querySelector('#buy-bomb').onclick = () => {
-            if (credits >= 100 && !bombBall) { credits -= 100; bombBall = true; openBirdsShop(); }
-            else alert("Cannot purchase!");
+            if (credits >= 80 && !bombBall) { credits -= 80; bombBall = true; openBirdsShop(); }
+            else alert("Not enough credits or already owned!");
         };
         modal.querySelector('#buy-mult').onclick = () => {
-            if (credits >= 75 && scoreMult === 1) { credits -= 75; scoreMult = 2; openBirdsShop(); }
-            else alert("Cannot purchase!");
+            if (credits >= 60 && scoreMult === 1) { credits -= 60; scoreMult = 2; openBirdsShop(); }
+            else alert("Not enough credits or already active!");
         };
         modal.querySelector('#skip-shop').onclick = () => {
             currentQ++;
+            currentLevel++;
             renderQuestionStep();
         };
     }
 
     function renderFinalSummary() {
-        const totalPoints = (quizScore * 100) + launcherScore;
-        const passed = quizScore >= 4;
-        if (passed && modId >= maxUnlockedModule && maxUnlockedModule < 6) {
-            maxUnlockedModule = parseInt(modId) + 1;
-            localStorage.setItem('maxUnlockedModule', maxUnlockedModule);
-            updateModuleLockUI();
+        const totalPoints = (quizScore * 150) + launcherScore;
+        
+        if (typeof window.recordArcadeScore === 'function') {
+            window.recordArcadeScore('pirate', totalPoints);
         }
+
         modal.innerHTML = `
-            <div style="background: #12121e; border: 2px solid #ff4757; border-radius: 12px; padding: 30px; max-width: 550px; width: 100%; color: #fff; text-align: center;">
-                <h1 style="color: #ff4757; margin-top: 0; font-family: 'Orbitron', sans-serif;">🏹 Launcher Challenge Complete!</h1>
-                <h3>Quiz Score: ${quizScore} / ${questions.length}</h3>
-                <p style="color: #2ed573;">Launcher Score: ${launcherScore} pts</p>
-                <p style="font-weight: bold; color: #eccc68;">Total Score: ${totalPoints} PTS</p>
-                <button id="close-final" style="width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin-top: 15px;">Continue</button>
+            <div style="background: linear-gradient(135deg, #121224 0%, #1a1a2e 100%); border: 2px solid #ff4757; border-radius: 16px; padding: 35px; max-width: 520px; width: 100%; color: #fff; text-align: center; box-shadow: 0 10px 40px rgba(255, 71, 87, 0.25);">
+                <h1 style="color: #ff4757; margin-top: 0; font-size: 1.6rem;">🏴‍☠️ BATTLE COMPLETE!</h1>
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; margin: 20px 0; text-align: left; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; justify-content: space-between;"><span>Quiz Accuracy:</span><strong style="color: #00f2fe;">${quizScore} / ${questions.length}</strong></div>
+                    <div style="display: flex; justify-content: space-between;"><span>Launcher Score:</span><strong style="color: #2ed573;">${launcherScore} PTS</strong></div>
+                    <div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 4px; font-size: 1.1rem;"><span>Total Arcade Score:</span><strong style="color: #ffd700;">${totalPoints} PTS</strong></div>
+                </div>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">Score and XP have been synced to the global Firebase Leaderboard under the Pirate category!</p>
+                <button id="close-final" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #0a0a14; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 1rem;">Return to Portal</button>
             </div>
         `;
+
         if (typeof window.updateProgress === 'function') {
-            window.updateProgress(20);
-            checkBadges();
+            window.updateProgress(25);
         }
+
         modal.querySelector('#close-final').onclick = () => {
             modal.remove();
-            showPage('modules-grid');
+            if (typeof showPage === 'function') showPage('modules-grid');
         };
     }
 
     renderQuestionStep();
 }
-
 function initProgressTracking() {
     window.updateProgress = function(points) {
         const fill = document.querySelector('.progress-fill');
@@ -2246,48 +2552,89 @@ function navigateToModule(moduleNumber) {
     window.scrollTo(0, 0);
 }
 
-
 // ============================================================================
-// BROWSER PROFILE SYSTEM, ACCOUNT CREATOR & GLOBAL SEARCHER
+// CLOUD-SYNCED PROFILE SYSTEM & GLOBAL LEADERBOARD (FIREBASE FIRESTORE)
 // ============================================================================
 (function initProfileSystem() {
     const STORAGE_CURRENT_ID = 'ai_portal_active_user_id';
-    const STORAGE_DIRECTORY = 'ai_portal_directory';
+    
+    // In-memory cache for fast UI rendering while waiting for cloud updates
+    let cachedDirectory = [];
+    let currentLeaderboardCategory = 'xp'; // Default active tab
 
-    function getDirectory() {
-        let dir = JSON.parse(localStorage.getItem(STORAGE_DIRECTORY) || 'null');
-        if (!dir) {
-            dir = [
-                {
-                    id: 'seed_1',
-                    username: 'NovaPrime',
-                    bio: 'Neural network architect & laser ace',
-                    avatar: '👾',
-                    xp: 650,
-                    scores: { rocket: 1420, blockblast: 980, angrybirds: 1100 }
-                },
-                {
-                    id: 'seed_2',
-                    username: 'ByteRunner',
-                    bio: 'Prompt engineering speedrunner',
-                    avatar: '🤖',
-                    xp: 480,
-                    scores: { rocket: 1150, blockblast: 1240, angrybirds: 890 }
-                }
-            ];
-            localStorage.setItem(STORAGE_DIRECTORY, JSON.stringify(dir));
-        }
-        return dir;
+    // ============================================================================
+    // ITEM MAPPING & CONFIGURATION
+    // ============================================================================
+    const avatarMap = {
+        'avatar_pixel_orange': 'images/Designer (4).png',
+        'avatar_realistic_scrappy': 'images/Neon Cyan Floating Robot Mascot.png',
+        'avatar_true_gold_scrappy': 'images/Radiant Golden Robot Mascot Portrait.png',
+        'avatar_error_hand': 'images/Glitch Eye Cybernetic Hand.png',
+        'avatar_yellow_robot': 'images/Glossy Yellow Robot Mascot Avatar.png',
+        'avatar_bagel_robot': 'images/generate_image_01.png',
+        'avatar_true_god_scrappy': 'images/generate_image_01 (1).png'
+    };
+
+    const backgroundMap = {
+        'bg_default': '',
+        'bg_electric_blue': 'images/Designer (5).png',
+        'bg_true_gold': 'images/generate_image_02.png',
+        'bg_deep_space': 'images/generate_a_flat_front-facing_full-bleed_deep_space_cosmic_ba.jpg',
+        'bg_scrappy_console': 'images/b649ac97-d785-4643-951c-191279da5b6b.jpg',
+        'bg_robot_painting': 'images/Untitled Design (2).png',
+    };
+
+    // Words/terms blocked in usernames and bios
+    const profanityList = ['badword1', 'badword2', 'gay'];
+
+    // ============================================================================
+    // SECURITY & STORAGE HELPERS
+    // ============================================================================
+    function escapeHTML(str) {
+        if (!str) return '';
+        return str.replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag]));
     }
 
-    function saveDirectory(dir) {
-        localStorage.setItem(STORAGE_DIRECTORY, JSON.stringify(dir));
+    function containsProfanity(text) {
+        if (!text) return false;
+        const normalized = text.toLowerCase()
+            .replace(/[^a-z]/g, '')
+            .replace(/0/g, 'o')
+            .replace(/1/g, 'i')
+            .replace(/3/g, 'e')
+            .replace(/4/g, 'a')
+            .replace(/5/g, 's')
+            .replace(/@/g, 'a');
+
+        return profanityList.some(word => normalized.includes(word));
+    }
+
+    function getDirectory() {
+        return cachedDirectory;
+    }
+
+    async function saveUserToCloud(user) {
+        if (typeof db === 'undefined') {
+            console.error("Firebase 'db' is not initialized.");
+            return;
+        }
+        try {
+            await db.collection('cadets').doc(user.id).set(user, { merge: true });
+        } catch (error) {
+            console.error("Error saving user to cloud:", error);
+        }
     }
 
     function getActiveUser() {
         const activeId = localStorage.getItem(STORAGE_CURRENT_ID);
         if (!activeId) return null;
-        return getDirectory().find(u => u.id === activeId) || null;
+        return cachedDirectory.find(u => u.id === activeId) || null;
     }
 
     function getRankTitle(xp) {
@@ -2297,24 +2644,130 @@ function navigateToModule(moduleNumber) {
         return 'Rookie AI Explorer';
     }
 
+    // ============================================================================
+    // REAL-TIME CLOUD LISTENER (FIREBASE ON-SNAPSHOT)
+    // ============================================================================
+    function initRealtimeSync() {
+        if (typeof db === 'undefined') {
+            console.warn("Firebase not detected. Falling back to local state.");
+            return;
+        }
+
+        db.collection('cadets').onSnapshot(snapshot => {
+            let cloudDirectory = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                cloudDirectory.push({ id: doc.id, ...data });
+            });
+
+            if (cloudDirectory.length === 0) {
+                const seed1 = {
+                    id: 'seed_1',
+                    username: 'NovaPrime',
+                    bio: 'Neural network architect & laser ace',
+                    avatar: 'images/Designer (1).png',
+                    background: 'bg_default',
+                    xp: 650,
+                    scores: { rocket: 1420, blockblast: 980, pirate: 1100 },
+                    unlocks: ['bg_default']
+                };
+                const seed2 = {
+                    id: 'seed_2',
+                    username: 'ByteRunner',
+                    bio: 'Prompt engineering speedrunner',
+                    avatar: 'images/Designer (2).png',
+                    background: 'bg_default',
+                    xp: 480,
+                    scores: { rocket: 1150, blockblast: 1240, pirate: 890 },
+                    unlocks: ['bg_default']
+                };
+                saveUserToCloud(seed1);
+                saveUserToCloud(seed2);
+                return;
+            }
+
+            cachedDirectory = cloudDirectory;
+            refreshProfileUI();
+        }, error => {
+            console.error("Firestore sync error:", error);
+        });
+    }
+
+    // ============================================================================
+    // XP SHOP & ARCADE RECORDERS
+    // ============================================================================
+    window.buyShopItem = function(itemKey, cost) {
+        const user = getActiveUser();
+        if (!user) {
+            alert("Please create or log into a profile first!");
+            return;
+        }
+
+        if (!user.unlocks) user.unlocks = ['bg_default'];
+        if (user.unlocks.includes(itemKey)) {
+            alert("You already unlocked this item!");
+            return;
+        }
+
+        if ((user.xp || 0) < cost) {
+            alert(`Not enough XP! You need ${cost} XP, but you have ${user.xp || 0} XP.`);
+            return;
+        }
+
+        user.xp -= cost;
+        user.unlocks.push(itemKey);
+
+        saveUserToCloud(user);
+        refreshProfileUI();
+        alert(`Success! Unlocked ${itemKey.replace(/_/g, ' ').toUpperCase()}.`);
+    };
+
     window.recordArcadeScore = function(gameKey, points) {
+        if (typeof points !== 'number' || points < 0 || points > 50000) {
+            console.warn("Invalid score detected.");
+            return;
+        }
+
         const user = getActiveUser();
         if (!user) return;
 
-        const dir = getDirectory();
-        const idx = dir.findIndex(u => u.id === user.id);
-        if (idx === -1) return;
+        // Ensure scores object and all keys exist so properties never evaluate to undefined
+        if (!user.scores || typeof user.scores !== 'object') {
+            user.scores = { rocket: 0, blockblast: 0, pirate: 0 };
+        }
+        if (user.scores.rocket === undefined) user.scores.rocket = 0;
+        if (user.scores.blockblast === undefined) user.scores.blockblast = 0;
+        if (user.scores.pirate === undefined) user.scores.pirate = 0;
 
-        dir[idx].xp = (dir[idx].xp || 0) + 50;
-        if (!dir[idx].scores) dir[idx].scores = { rocket: 0, blockblast: 0, angrybirds: 0 };
-        if (points > (dir[idx].scores[gameKey] || 0)) {
-            dir[idx].scores[gameKey] = points;
+        // Increment XP properly and update high score
+        user.xp = (Number(user.xp) || 0) + 50;
+        if (points > user.scores[gameKey]) {
+            user.scores[gameKey] = points;
         }
 
-        saveDirectory(dir);
+        saveUserToCloud(user);
         refreshProfileUI();
     };
 
+    window.equipInventoryItem = function(itemKey) {
+        const user = getActiveUser();
+        if (!user) return;
+
+        if (avatarMap[itemKey]) {
+            user.avatar = avatarMap[itemKey];
+            alert(`Equipped avatar: ${itemKey.replace(/_/g, ' ')}`);
+        } else if (backgroundMap.hasOwnProperty(itemKey)) {
+            user.background = itemKey;
+            alert(`Equipped background theme: ${itemKey.replace(/_/g, ' ')}`);
+        }
+
+        saveUserToCloud(user);
+        refreshProfileUI();
+    };
+
+    // ============================================================================
+    // RENDER GLOBAL DIRECTORY & CATEGORY LEADERBOARDS
+    // ============================================================================
     function renderDirectoryList(filterText = '') {
         const listEl = document.getElementById('global-directory-list');
         if (!listEl) return;
@@ -2322,46 +2775,103 @@ function navigateToModule(moduleNumber) {
         const activeUser = getActiveUser();
         const query = filterText.toLowerCase().trim();
 
-        const sorted = getDirectory()
-            .filter(u => u.username.toLowerCase().includes(query) || (u.bio && u.bio.toLowerCase().includes(query)))
-            .sort((a, b) => {
-                const totalA = a.xp + (a.scores.rocket || 0) + (a.scores.blockblast || 0) + (a.scores.angrybirds || 0);
-                const totalB = b.xp + (b.scores.rocket || 0) + (b.scores.blockblast || 0) + (b.scores.angrybirds || 0);
-                return totalB - totalA;
-            });
+        const filtered = [...cachedDirectory].filter(u => 
+            u.username.toLowerCase().includes(query) || (u.bio && u.bio.toLowerCase().includes(query))
+        );
 
-        if (sorted.length === 0) {
-            listEl.innerHTML = `<p style="color:#94a3b8; text-align:center; padding:16px;">No cadets found matching "${filterText}".</p>`;
+        filtered.sort((a, b) => {
+            if (currentLeaderboardCategory === 'xp') {
+                return (b.xp || 0) - (a.xp || 0);
+            } else if (currentLeaderboardCategory === 'rocket') {
+                return ((b.scores && b.scores.rocket) || 0) - ((a.scores && a.scores.rocket) || 0);
+            } else if (currentLeaderboardCategory === 'blockblast') {
+                return ((b.scores && b.scores.blockblast) || 0) - ((a.scores && a.scores.blockblast) || 0);
+            } else if (currentLeaderboardCategory === 'pirate') {
+                return ((b.scores && b.scores.pirate) || 0) - ((a.scores && a.scores.pirate) || 0);
+            }
+            return 0;
+        });
+
+        if (filtered.length === 0) {
+            listEl.innerHTML = `<p style="color:#94a3b8; text-align:center; padding:16px;">No cadets found matching "${escapeHTML(filterText)}".</p>`;
             return;
         }
 
-        listEl.innerHTML = sorted.map((u, index) => {
+        listEl.innerHTML = filtered.map((u, index) => {
             const isMe = activeUser && u.id === activeUser.id;
-            const bestScore = Math.max(u.scores.rocket || 0, u.scores.blockblast || 0, u.scores.angrybirds || 0);
+            let displayScoreMetric = '';
+
+            if (currentLeaderboardCategory === 'xp') {
+                displayScoreMetric = `<span class="dir-xp">${u.xp || 0} XP</span>`;
+            } else if (currentLeaderboardCategory === 'rocket') {
+                displayScoreMetric = `<span class="dir-best">Rocket Score: ${(u.scores && u.scores.rocket) || 0} pts</span>`;
+            } else if (currentLeaderboardCategory === 'blockblast') {
+                displayScoreMetric = `<span class="dir-best">Block Blast: ${(u.scores && u.scores.blockblast) || 0} pts</span>`;
+            } else if (currentLeaderboardCategory === 'pirate') {
+                displayScoreMetric = `<span class="dir-best">Pirate Score: ${(u.scores && u.scores.pirate) || 0} pts</span>`;
+            }
+
             return `
                 <div class="directory-row ${isMe ? 'is-me' : ''}">
                     <div class="dir-user-info">
                         <span class="dir-rank">#${index + 1}</span>
-                        <span class="dir-avatar">${u.avatar}</span>
+                        <div class="dir-avatar" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 1px solid #00f2fe;">
+                            <img src="${escapeHTML(u.avatar)}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
                         <div>
-                            <span class="dir-name">${u.username} ${isMe ? '(You)' : ''}</span>
-                            <span class="dir-bio">${u.bio || 'AI Learning Cadet'}</span>
+                            <span class="dir-name">${escapeHTML(u.username)} ${isMe ? '(You)' : ''}</span>
+                            <span class="dir-bio">${escapeHTML(u.bio || 'AI Learning Cadet')}</span>
                         </div>
                     </div>
                     <div class="dir-scores">
-                        <span class="dir-xp">${u.xp} XP</span>
-                        <span class="dir-best">Top Arcade: ${bestScore} pts</span>
+                        ${displayScoreMetric}
                     </div>
                 </div>
             `;
         }).join('');
     }
 
+    document.querySelectorAll('.lb-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            document.querySelectorAll('.lb-tab').forEach(t => {
+                t.classList.remove('active');
+                t.style.background = 'rgba(255,255,255,0.05)';
+                t.style.color = '#fff';
+            });
+            const clickedTab = e.currentTarget;
+            clickedTab.classList.add('active');
+            clickedTab.style.background = '#00f2fe';
+            clickedTab.style.color = '#0a0a14';
+
+            currentLeaderboardCategory = clickedTab.getAttribute('data-cat');
+            renderDirectoryList(document.getElementById('global-profile-search')?.value || '');
+        });
+    });
+
+    // ============================================================================
+    // REFRESH PROFILE DASHBOARD & INVENTORY
+    // ============================================================================
     function refreshProfileUI() {
         const user = getActiveUser();
         const navLabel = document.getElementById('nav-username-label');
         const createView = document.getElementById('create-account-view');
         const activeView = document.getElementById('active-profile-view');
+
+        if (activeView) {
+            const classListArray = Array.from(activeView.classList).filter(cls => !cls.startsWith('theme-'));
+            activeView.className = classListArray.join(' ');
+            
+            const activeTheme = (user && user.background) ? user.background : 'bg_default';
+            activeView.classList.add(`theme-${activeTheme}`);
+
+            activeView.style.backgroundImage = '';
+            activeView.style.backgroundSize = 'cover';
+            activeView.style.backgroundPosition = 'center';
+
+            if (user && user.background && backgroundMap[user.background]) {
+                activeView.style.backgroundImage = `linear-gradient(rgba(10, 10, 20, 0.85), rgba(10, 10, 20, 0.95)), url('${backgroundMap[user.background]}')`;
+            }
+        }
 
         if (!user) {
             if (navLabel) navLabel.textContent = 'Create Profile';
@@ -2374,87 +2884,71 @@ function navigateToModule(moduleNumber) {
         if (createView) createView.style.display = 'none';
         if (activeView) activeView.style.display = 'block';
 
-        document.getElementById('dash-avatar').textContent = user.avatar;
-        document.getElementById('dash-username').textContent = user.username;
-        document.getElementById('dash-rank').textContent = getRankTitle(user.xp);
-        document.getElementById('dash-bio').textContent = user.bio || 'Ready to conquer the AI modules.';
-        document.getElementById('dash-xp').textContent = user.xp;
-        document.getElementById('dash-score-rocket').textContent = user.scores.rocket || 0;
-        document.getElementById('dash-score-blockblast').textContent = user.scores.blockblast || 0;
-        document.getElementById('dash-score-angrybirds').textContent = user.scores.angrybirds || 0;
+        const avatarRing = document.getElementById('dash-avatar');
+        if (avatarRing) {
+            avatarRing.innerHTML = `<img src="${escapeHTML(user.avatar)}" alt="Active Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+        }
 
-        document.getElementById('edit-username-input').value = user.username;
-        document.getElementById('edit-bio-input').value = user.bio || '';
+        const elUsername = document.getElementById('dash-username');
+        const elRank = document.getElementById('dash-rank');
+        const elBio = document.getElementById('dash-bio');
+        const elXp = document.getElementById('dash-xp');
+        const elRocket = document.getElementById('dash-score-rocket');
+        const elBlock = document.getElementById('dash-score-blockblast');
+        const elPirate = document.getElementById('dash-score-pirate');
+
+        if (elUsername) elUsername.textContent = user.username;
+        if (elRank) elRank.textContent = getRankTitle(user.xp || 0);
+        if (elBio) elBio.textContent = user.bio || 'Ready to conquer the AI modules.';
+        if (elXp) elXp.textContent = user.xp || 0;
+        if (elRocket) elRocket.textContent = (user.scores && user.scores.rocket) || 0;
+        if (elBlock) elBlock.textContent = (user.scores && user.scores.blockblast) || 0;
+        if (elPirate) elPirate.textContent = (user.scores && user.scores.pirate) || 0;
+
+        const inventoryEl = document.getElementById('user-inventory-list');
+        if (inventoryEl) {
+            if (!user.unlocks || user.unlocks.length === 0) {
+                inventoryEl.innerHTML = `<span style="font-size: 0.9rem;">No items unlocked yet. Buy something from the vault below!</span>`;
+            } else {
+                inventoryEl.innerHTML = user.unlocks.map(itemKey => {
+                    return `
+                        <div class="inventory-item" style="background: rgba(0,242,254,0.1); border: 1px solid #00f2fe; border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                            <span>✅ ${escapeHTML(itemKey.replace(/_/g, ' ').toUpperCase())}</span>
+                            <button onclick="equipInventoryItem('${escapeHTML(itemKey)}')" class="btn-cyan-secondary" style="background: rgba(0,242,254,0.15); border: 1px solid #00f2fe; color: #00f2fe; padding: 4px 10px; font-size: 0.75rem; cursor: pointer;">Equip</button>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
 
         renderDirectoryList(document.getElementById('global-profile-search')?.value || '');
     }
 
-    let selectedCreateAvatar = '🚀';
-    document.querySelectorAll('#create-avatar-picker .avatar-pick').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('#create-avatar-picker .avatar-pick').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            selectedCreateAvatar = btn.getAttribute('data-avatar');
-        });
-    });
-
+    // Form submission & search bindings
     const createForm = document.getElementById('create-account-form');
     if (createForm) {
         createForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('new-username').value.trim();
-            const bio = document.getElementById('new-bio').value.trim();
+            const bio = document.getElementById('new-bio').value.increment ? '' : document.getElementById('new-bio').value.trim();
             if (!username) return;
 
             const newUser = {
                 id: 'cadet_' + Date.now(),
                 username: username,
                 bio: bio || 'AI Explorer',
-                avatar: selectedCreateAvatar,
+                avatar: 'images/Designer (1).png',
+                background: 'bg_default',
                 xp: 100,
-                scores: { rocket: 0, blockblast: 0, angrybirds: 0 }
+                scores: { rocket: 0, blockblast: 0, pirate: 0 },
+                unlocks: ['bg_default']
             };
 
-            const dir = getDirectory();
-            dir.push(newUser);
-            saveDirectory(dir);
+            saveUserToCloud(newUser);
             localStorage.setItem(STORAGE_CURRENT_ID, newUser.id);
             refreshProfileUI();
         });
     }
-
-    const saveEditsBtn = document.getElementById('btn-save-profile-edits');
-    if (saveEditsBtn) {
-        saveEditsBtn.addEventListener('click', () => {
-            const user = getActiveUser();
-            if (!user) return;
-            const newName = document.getElementById('edit-username-input').value.trim();
-            const newBio = document.getElementById('edit-bio-input').value.trim();
-
-            const dir = getDirectory();
-            const idx = dir.findIndex(u => u.id === user.id);
-            if (idx !== -1 && newName) {
-                dir[idx].username = newName;
-                dir[idx].bio = newBio;
-                saveDirectory(dir);
-                refreshProfileUI();
-            }
-        });
-    }
-
-    document.querySelectorAll('#edit-avatar-picker .avatar-pick').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const user = getActiveUser();
-            if (!user) return;
-            const dir = getDirectory();
-            const idx = dir.findIndex(u => u.id === user.id);
-            if (idx !== -1) {
-                dir[idx].avatar = btn.getAttribute('data-avatar');
-                saveDirectory(dir);
-                refreshProfileUI();
-            }
-        });
-    });
 
     const searchInput = document.getElementById('global-profile-search');
     if (searchInput) {
@@ -2463,6 +2957,79 @@ function navigateToModule(moduleNumber) {
         });
     }
 
-    document.addEventListener('DOMContentLoaded', refreshProfileUI);
-    refreshProfileUI();
+    document.addEventListener('DOMContentLoaded', initRealtimeSync);
+    initRealtimeSync();
+})();
+
+// ============================================================================
+// SECURITY & ANTI-CHEAT DEFENSE SYSTEM
+// ============================================================================
+const PortalSecurity = (() => {
+
+    // 1. Input Sanitization (Prevents XSS / HTML Injection in Usernames & Bios)
+    function escapeHTML(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag]));
+    }
+
+    // 2. Profanity & Restricted Word Filter
+    const blockedWords = ['shit', 'fuck', 'gay', 'bitch', 'asshole','slut','dick','nigger','cunt','nigga','faggot']; // Add restricted terms here
+    function containsProfanity(text) {
+        if (!text) return false;
+        const lowerText = text.toLowerCase();
+        return blockedWords.some(word => lowerText.includes(word.toLowerCase()));
+    }
+
+    // 3. Score & XP Integrity Validator (Prevents LocalStorage Tampering)
+    function validateUserMetrics(user) {
+        if (!user) return user;
+
+        // Cap XP to valid bounds (e.g., between 0 and 100,000)
+        if (typeof user.xp !== 'number' || isNaN(user.xp) || user.xp < 0) {
+            user.xp = 0;
+        } else if (user.xp > 100000) {
+            user.xp = 100000; // Hard cap
+        }
+
+        // Validate arcade scores for each game
+        if (!user.scores || typeof user.scores !== 'object') {
+            user.scores = { rocket: 0, blockblast: 0, angrybirds: 0 };
+        } else {
+            const maxScoreLimit = 50000; // Max realistic score per session
+            ['rocket', 'blockblast', 'angrybirds'].forEach(game => {
+                if (typeof user.scores[game] !== 'number' || isNaN(user.scores[game]) || user.scores[game] < 0) {
+                    user.scores[game] = 0;
+                } else if (user.scores[game] > maxScoreLimit) {
+                    user.scores[game] = maxScoreLimit; // Cap impossible scores
+                }
+            });
+        }
+
+        return user;
+    }
+
+    // 4. Rate Limiting / Action Cooldown (Prevents Auto-Clicker / Spam Exploits)
+    let lastActionTimestamp = 0;
+    function checkRateLimit(cooldownMs = 1000) {
+        const now = Date.now();
+        if (now - lastActionTimestamp < cooldownMs) {
+            console.warn("Rate limit exceeded. Slow down.");
+            return false; // Action blocked
+        }
+        lastActionTimestamp = now;
+        return true; // Action allowed
+    }
+
+    return {
+        escapeHTML,
+        containsProfanity,
+        validateUserMetrics,
+        checkRateLimit
+    };
 })();

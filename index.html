@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Learning Portal - TSA Webmaster Competition</title>
     <link rel="stylesheet" href="style.css?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&family=Oxanium:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Archivo:wght@500;600;700;800&family=Boldonse&display=swap" rel="stylesheet">
+   <!-- Firebase App (Compat SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<!-- Firebase Firestore (Compat SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body style="background: #0a0a14; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0;">
     
@@ -292,113 +299,259 @@
             </main>
         </div>
 
-        <!-- 6. PROFILE PAGE VIEW -->
-        <section id="profile-page" class="page-section" style="display: none; padding-top: 100px;">
-            <!-- VIEW 1: CREATE ACCOUNT SCREEN -->
-            <div id="create-account-view" class="profile-card-container">
-                <div class="profile-header-center">
-                    <span class="profile-badge-tag">AI LEARNING PORTAL ID</span>
-                    <h1 class="profile-main-title">Create Your Cadet Profile</h1>
-                    <p class="profile-subtext">Your profile, avatar, XP, and arcade high scores are saved directly to this browser and searchable in the directory.</p>
-                </div>
+<!-- 6. PROFILE PAGE VIEW -->
+<section id="profile-page" class="page-section" style="display: none; padding-top: 100px;">
+    
+    <!-- VIEW 1: CREATE ACCOUNT SCREEN -->
+    <div id="create-account-view" class="profile-card-container">
+        <div class="profile-header-center">
+            <span class="profile-badge-tag">AI LEARNING PORTAL ID</span>
+            <h1 class="profile-main-title">Create Your Cadet Profile</h1>
+            <p class="profile-subtext">Your profile, avatar, XP, and arcade high scores are saved directly to this browser and searchable in the directory.</p>
+        </div>
 
-                <form id="create-account-form" class="profile-form-stack">
-                    <div class="form-group">
-                        <label for="new-username">Choose a Callsign (Username)</label>
-                        <input type="text" id="new-username" placeholder="e.g., CyberNinja99" maxlength="18" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="new-bio">Player Bio / Tagline</label>
-                        <input type="text" id="new-bio" placeholder="e.g., Mastering Prompt Engineering & Space Defense" maxlength="60">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Select Starting Avatar</label>
-                        <div class="avatar-picker-grid" id="create-avatar-picker">
-                            <button type="button" class="avatar-pick selected" data-avatar="🚀">🚀</button>
-                            <button type="button" class="avatar-pick" data-avatar="🤖">🤖</button>
-                            <button type="button" class="avatar-pick" data-avatar="👾">👾</button>
-                            <button type="button" class="avatar-pick" data-avatar="⚡">⚡</button>
-                            <button type="button" class="avatar-pick" data-avatar="🧠">🧠</button>
-                            <button type="button" class="avatar-pick" data-avatar="🔥">🔥</button>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-cyan-primary">⚡ Initialize Profile</button>
-                </form>
+        <form id="create-account-form" class="profile-form-stack">
+            <div class="form-group">
+                <label for="new-username">Choose a Callsign (Username)</label>
+                <input type="text" id="new-username" placeholder="e.g., CyberNinja99" maxlength="18" required>
             </div>
 
-            <!-- VIEW 2: ACTIVE PROFILE DASHBOARD + GLOBAL SEARCHER -->
-            <div id="active-profile-view" style="display: none;">
-                <div class="profile-card-container">
-                    <div class="profile-top-banner">
-                        <div class="profile-avatar-ring" id="dash-avatar">🚀</div>
-                        <div class="profile-identity">
-                            <div class="profile-name-row">
-                                <h1 id="dash-username">Cadet</h1>
-                                <span class="profile-rank-pill" id="dash-rank">Rookie AI Explorer</span>
-                            </div>
-                            <p id="dash-bio" class="profile-bio-text">Ready to conquer the AI modules.</p>
-                            <span class="profile-joined-date" id="dash-joined">Browser ID Active</span>
-                        </div>
-                    </div>
+            <div class="form-group">
+                <label for="new-bio">Player Bio / Tagline</label>
+                <input type="text" id="new-bio" placeholder="e.g., Mastering Prompt Engineering & Space Defense" maxlength="60">
+            </div>
 
-                    <div class="profile-stats-row">
-                        <div class="p-stat-box">
-                            <span class="p-stat-label">TOTAL XP</span>
-                            <span class="p-stat-num" id="dash-xp">0</span>
-                        </div>
-                        <div class="p-stat-box">
-                            <span class="p-stat-label">ROCKET DEFENDER</span>
-                            <span class="p-stat-num" id="dash-score-rocket">0</span>
-                        </div>
-                        <div class="p-stat-box">
-                            <span class="p-stat-label">BLOCK BLAST AI</span>
-                            <span class="p-stat-num" id="dash-score-blockblast">0</span>
-                        </div>
-                        <div class="p-stat-box">
-                            <span class="p-stat-label">CANNON LAUNCHER</span>
-                            <span class="p-stat-num" id="dash-score-angrybirds">0</span>
-                        </div>
-                    </div>
-
-                    <div class="profile-edit-section">
-                        <h3>Customize Profile</h3>
-                        <div class="edit-controls-row">
-                            <input type="text" id="edit-username-input" placeholder="New Callsign..." maxlength="18">
-                            <input type="text" id="edit-bio-input" placeholder="Update Bio..." maxlength="60">
-                            <button type="button" id="btn-save-profile-edits" class="btn-cyan-secondary">Update Info</button>
-                        </div>
-                        <!-- Create Account Avatar Picker -->
-<div class="avatar-picker-grid" id="create-avatar-picker">
-    <button type="button" class="avatar-pick selected" data-avatar="images/avatar-cyber-rocket.png">
-        <img src="images/avatar-cyber-rocket.png" alt="Cyber Rocket" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-    </button>
-    <button type="button" class="avatar-pick" data-avatar="images/avatar-ai-bot.png">
-        <img src="images/avatar-ai-bot.png" alt="AI Bot" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-    </button>
-    <button type="button" class="avatar-pick" data-avatar="images/avatar-neural-glitch.png">
-        <img src="images/avatar-neural-glitch.png" alt="Neural Glitch" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-    </button>
-</div>
-
-                <div class="profile-card-container" style="margin-top: 24px;">
-                    <div class="directory-header">
-                        <div>
-                            <h2 class="directory-title">🌐 Global Cadet Directory & Leaderboard</h2>
-                            <p class="profile-subtext">Search profiles recorded on this browser or compare top arcade scores.</p>
-                        </div>
-                        <input type="text" id="global-profile-search" class="directory-search-input" placeholder="🔍 Search callsign...">
-                    </div>
-
-                    <div id="global-directory-list" class="directory-list">
-                        <!-- Populated dynamically by JS -->
-                    </div>
+            <div class="form-group">
+                <label>Select Starting Avatar</label>
+                <div class="avatar-picker-grid" id="create-avatar-picker">
+                    <button type="button" class="avatar-pick selected" data-avatar="images/Designer (1).png">
+                        <img src="images/Designer (1).png" alt="Designer Avatar 1" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                    </button>
+                    <button type="button" class="avatar-pick" data-avatar="images/Designer (2).png">
+                        <img src="images/Designer (2).png" alt="Designer Avatar 2" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                    </button>
+                    <button type="button" class="avatar-pick" data-avatar="images/Designer (3).png">
+                        <img src="images/Designer (3).png" alt="Designer Avatar 3" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                    </button>
                 </div>
             </div>
-        </section>
-    </main>
+
+            <button type="submit" class="btn-cyan-primary">⚡ Initialize Profile</button>
+        </form>
+    </div>
+
+    <!-- VIEW 2: ACTIVE PROFILE DASHBOARD -->
+    <div id="active-profile-view" style="display: none;">
+        <div class="profile-card-container">
+            <div class="profile-top-banner">
+                <div class="profile-avatar-ring" id="dash-avatar">
+                    <img src="images/Designer (1).png" alt="Active Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                </div>
+                <div class="profile-identity">
+                    <div class="profile-name-row">
+                        <h1 id="dash-username">Cadet</h1>
+                        <span class="profile-rank-pill" id="dash-rank">Rookie AI Explorer</span>
+                    </div>
+                    <p id="dash-bio" class="profile-bio-text">Ready to conquer the AI modules.</p>
+                    <span class="profile-joined-date" id="dash-joined">Browser ID Active</span>
+                </div>
+            </div>
+
+            <div class="profile-stats-row">
+                <div class="p-stat-box">
+                    <span class="p-stat-label">TOTAL XP</span>
+                    <span class="p-stat-num" id="dash-xp">0</span>
+                </div>
+                <div class="p-stat-box">
+                    <span class="p-stat-label">ROCKET DEFENDER</span>
+                    <span class="p-stat-num" id="dash-score-rocket">0</span>
+                </div>
+                <div class="p-stat-box">
+                    <span class="p-stat-label">BLOCK BLAST AI</span>
+                    <span class="p-stat-num" id="dash-score-blockblast">0</span>
+                </div>
+                <div class="p-stat-box">
+                    <span class="p-stat-label">CANNON LAUNCHER</span>
+                    <span class="p-stat-num" id="dash-score-angrybirds">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- XP SHOP & CUSTOMIZATION VAULT -->
+        <div class="profile-card-container" style="margin-top: 24px;">
+            <h2 class="directory-title">🛒 Cadet Customization Vault</h2>
+            <p class="profile-subtext">Spend your hard-earned XP to unlock exclusive profile backgrounds and rare avatars!</p>
+            
+            <div class="shop-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 20px;">
+                
+                <!-- 1. Electric Blue Profile Background (50 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 100%; height: 90px; margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1px dashed rgba(0,242,254,0.4); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/Designer (5).png" alt="Electric Blue Background" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #fff; margin: 0 0 5px 0;">Electric Blue Background</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">Sleek electric blue theme.</p>
+                    <button onclick="buyShopItem('bg_electric_blue', 50)" class="btn-cyan-secondary" style="width: 100%;">Unlock (50 XP)</button>
+                </div>
+
+                <!-- 2. Orange Robot Pixelated (250 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 1px dashed rgba(0,242,254,0.4); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/Designer (4).png" alt="Orange Robot Pixelated" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #fff; margin: 0 0 5px 0;">Orange Robot Pixelated</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">Retro 8-bit bot avatar.</p>
+                    <button onclick="buyShopItem('avatar_pixel_orange', 250)" class="btn-cyan-secondary" style="width: 100%;">Unlock (250 XP)</button>
+                </div>
+
+                <!-- 3. Realistic Scrappy (300 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 1px dashed rgba(0,242,254,0.4); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/Neon Cyan Floating Robot Mascot.png" alt="Realistic Scrappy" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #fff; margin: 0 0 5px 0;">Realistic Scrappy</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">High-res mascot avatar.</p>
+                    <button onclick="buyShopItem('avatar_realistic_scrappy', 300)" class="btn-cyan-secondary" style="width: 100%;">Unlock (300 XP)</button>
+                </div>
+
+                <!-- 4. True Gold Scrappy (9999 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,215,0,0.4); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 1px dashed rgba(255,215,0,0.6); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/Radiant Golden Robot Mascot Portrait.png" alt="True Gold Scrappy" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #ffd700; margin: 0 0 5px 0;">True Gold Scrappy</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">The ultimate status flex avatar.</p>
+                    <button onclick="buyShopItem('avatar_true_gold_scrappy', 9999)" class="btn-cyan-secondary" style="width: 100%;">Unlock (9999 XP)</button>
+                </div>
+
+                <!-- 5. Error Hand Profile Pic (150 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 1px dashed rgba(0,242,254,0.4); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/Glitch Eye Cybernetic Hand.png" alt="Error Hand Profile Pic" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #fff; margin: 0 0 5px 0;">Error Hand Avatar</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">System glitch aesthetic.</p>
+                    <button onclick="buyShopItem('avatar_error_hand', 150)" class="btn-cyan-secondary" style="width: 100%;">Unlock (150 XP)</button>
+                </div>
+
+                <!-- 6. Yellow Robot (50 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 1px dashed rgba(0,242,254,0.4); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/Glossy Yellow Robot Mascot Avatar.png" alt="Yellow Robot" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #fff; margin: 0 0 5px 0;">Yellow Robot</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">Classic designer bot avatar.</p>
+                    <button onclick="buyShopItem('avatar_yellow_robot', 50)" class="btn-cyan-secondary" style="width: 100%;">Unlock (50 XP)</button>
+                </div>
+
+                <!-- 7. Bagel Robot (250 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 1px dashed rgba(0,242,254,0.4); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/generate_image_01.png" alt="Bagel Robot" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #fff; margin: 0 0 5px 0;">Bagel Robot</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">Carb-powered mechanical unit.</p>
+                    <button onclick="buyShopItem('avatar_bagel_robot', 250)" class="btn-cyan-secondary" style="width: 100%;">Unlock (250 XP)</button>
+                </div>
+
+                <!-- 8. Robot Painting Profile Background (250 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 100%; height: 90px; margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1px dashed rgba(0,242,254,0.4); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/Untitled Design (2).png" alt="Robot Painting Profile Background" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #fff; margin: 0 0 5px 0;">Robot Painting BG</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">Artistic mechanical backdrop.</p>
+                    <button onclick="buyShopItem('bg_robot_painting', 250)" class="btn-cyan-secondary" style="width: 100%;">Unlock (250 XP)</button>
+                </div>
+
+                <!-- 9. True Gold Profile Background (1000 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,215,0,0.4); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 100%; height: 90px; margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1px dashed rgba(255,215,0,0.6); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/generate_image_02.png" alt="True Gold Profile Background" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #ffd700; margin: 0 0 5px 0;">True Gold Background</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">Pure luxury profile aesthetic.</p>
+                    <button onclick="buyShopItem('bg_true_gold', 1000)" class="btn-cyan-secondary" style="width: 100%;">Unlock (1000 XP)</button>
+                </div>
+
+                <!-- 10. Deep Space Profile Background (100 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 100%; height: 90px; margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1px dashed rgba(0,242,254,0.4); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/generate_a_flat_front-facing_full-bleed_deep_space_cosmic_ba.jpg" alt="Deep Space Profile Background" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #fff; margin: 0 0 5px 0;">Deep Space Background</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">Cosmic starfield theme.</p>
+                    <button onclick="buyShopItem('bg_deep_space', 100)" class="btn-cyan-secondary" style="width: 100%;">Unlock (100 XP)</button>
+                </div>
+
+                <!-- 11. Scrappy on the Console Profile Background (150 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 100%; height: 90px; margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1px dashed rgba(0,242,254,0.4); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/b649ac97-d785-4643-951c-191279da5b6b.jpg" alt="Scrappy on the Console Profile Background" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #fff; margin: 0 0 5px 0;">Scrappy on Console BG</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">Arcade workstation setup.</p>
+                    <button onclick="buyShopItem('bg_scrappy_console', 150)" class="btn-cyan-secondary" style="width: 100%;">Unlock (150 XP)</button>
+                </div>
+                
+
+                <!-- 12. True God Scrappy (350 XP) -->
+                <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(168,85,247,0.4); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 1px dashed rgba(168,85,247,0.6); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
+                        <img src="images/generate_image_01 (1).png" alt="True God Scrappy" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: #a855f7; margin: 0 0 5px 0;">True God Scrappy</h4>
+                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 15px 0;">Ascended mascot form.</p>
+                    <button onclick="buyShopItem('avatar_true_god_scrappy', 350)" class="btn-cyan-secondary" style="width: 100%;">Unlock (350 XP)</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- UNLOCKED ITEMS INVENTORY VAULT -->
+        <div class="profile-card-container" style="margin-top: 24px;">
+            <h3 style="color: #38bdf8; font-family: 'Outfit', sans-serif; margin-bottom: 12px;">🎒 Your Unlocked Inventory</h3>
+            <div id="user-inventory-list" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <span style="color: #94a3b8; font-size: 0.9rem;">No items unlocked yet. Buy something from the vault below!</span>
+            </div>
+        </div>
+
+        <!-- CUSTOMIZE PROFILE SECTION -->
+        <div class="profile-card-container" style="margin-top: 24px;">
+            <h3 style="color: #38bdf8; font-family: 'Outfit', sans-serif; margin-bottom: 12px;">Customize Profile</h3>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="edit-username-input" placeholder="New Callsign..." class="profile-input" style="flex: 1; padding: 10px; border-radius: 8px; background: #0a0a14; border: 1px solid rgba(255,255,255,0.1); color: #fff;" maxlength="18">
+                <input type="text" id="edit-bio-input" placeholder="Update Bio..." class="profile-input" style="flex: 2; padding: 10px; border-radius: 8px; background: #0a0a14; border: 1px solid rgba(255,255,255,0.1); color: #fff;" maxlength="60">
+                <button type="button" id="btn-save-profile-edits" class="btn-cyan-secondary">Update Info</button>
+            </div>
+
+            <label style="color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 8px;">Select Active Avatar:</label>
+            <div id="edit-avatar-picker" style="display: flex; gap: 12px; flex-wrap: wrap;"></div>
+        </div>
+
+<!-- GLOBAL CADET DIRECTORY & LEADERBOARD -->
+        <div class="profile-card-container" style="margin-top: 24px;">
+            <div class="directory-header">
+                <div>
+                    <h2 class="directory-title">🌐 Global Cadet Directory & Leaderboard</h2>
+                    <p class="profile-subtext">Search profiles recorded on this browser or compare top arcade scores.</p>
+                </div>
+                <input type="text" id="global-profile-search" class="directory-search-input" placeholder="🔍 Search callsign...">
+            </div>
+
+            <!-- Leaderboard Category Subtabs -->
+            <div class="leaderboard-tabs" style="display: flex; gap: 8px; margin: 16px 0 8px 0; flex-wrap: wrap;">
+                <button class="lb-tab active" data-cat="xp" style="padding: 6px 14px; background: #00f2fe; color: #0a0a14; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;">🌟 Top XP</button>
+                <button class="lb-tab" data-cat="rocket" style="padding: 6px 14px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;">🚀 Rocket</button>
+                <button class="lb-tab" data-cat="blockblast" style="padding: 6px 14px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;">🧱 Block Blast</button>
+                <button class="lb-tab" data-cat="pirate" style="padding: 6px 14px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;">🏴‍☠️ Pirate</button>
+            </div>
+
+            <div id="global-directory-list" class="directory-list"></div>
+        </div>
+    </div>
+</section>
 
     <script src="app.js"></script>
 </body>
