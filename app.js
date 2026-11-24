@@ -1905,7 +1905,7 @@ function runAngryBirdsGame(modId, subId, key) {
     let currentQ = 0;
     let launcherScore = 0;
     let quizScore = 0;
-    let credits = 50; // Lower initial starting cash
+    let credits = 50; 
     let currentLevel = 1;
 
     let heavyBall = false;
@@ -1957,7 +1957,7 @@ function runAngryBirdsGame(modId, subId, key) {
                     btn.style.background = 'rgba(46, 213, 115, 0.2)';
                     btn.style.borderColor = '#2ed573';
                     btn.innerHTML += ' ✓';
-                    credits += 100; // Exactly 100 credits awarded per correct round
+                    credits += 100; 
                     quizScore++;
                 } else {
                     btn.style.background = 'rgba(255, 71, 87, 0.2)';
@@ -1977,7 +1977,6 @@ function runAngryBirdsGame(modId, subId, key) {
     function launchPhysicsCanvas() {
         let targets = [];
         
-        // Unique box layouts on the lower shore looking down from the hill
         if (currentLevel === 1) {
             targets = [
                 { x: 500, y: 235, w: 38, h: 38 },
@@ -2028,7 +2027,6 @@ function runAngryBirdsGame(modId, subId, key) {
         }
         const ctx = canvas.getContext('2d');
 
-        // Hilltop coordinates (Cannon is elevated on the left hill looking down)
         let cannonPos = { x: 110, y: 155 };
         let ball = { x: 110, y: 155, r: 14, vx: 0, vy: 0, launched: false };
         let dragging = false;
@@ -2037,7 +2035,7 @@ function runAngryBirdsGame(modId, subId, key) {
         let shakeFrames = 0;
         let muzzleFlashFrames = 0;
         let roundEnded = false;
-        const groundY = 275; // Lower shore ground level
+        const groundY = 275;
 
         canvas.onmousedown = (e) => {
             if (ball.launched || roundEnded) return;
@@ -2096,14 +2094,12 @@ function runAngryBirdsGame(modId, subId, key) {
                 ctx.translate((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8);
             }
 
-            // Sky gradient
             let grad = ctx.createLinearGradient(0, 0, 0, groundY);
             grad.addColorStop(0, '#0f172a');
             grad.addColorStop(1, '#1e3a8a');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, groundY);
 
-            // Lower Ground / Shore surface where targets sit
             ctx.fillStyle = '#78350f';
             ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
             ctx.strokeStyle = '#451a03';
@@ -2112,7 +2108,6 @@ function runAngryBirdsGame(modId, subId, key) {
             ctx.moveTo(0, groundY); ctx.lineTo(canvas.width, groundY);
             ctx.stroke();
 
-            // Hilltop Structure on the left (elevated platform for the cannon)
             ctx.fillStyle = '#1e293b';
             ctx.beginPath();
             ctx.moveTo(0, groundY);
@@ -2124,10 +2119,9 @@ function runAngryBirdsGame(modId, subId, key) {
             ctx.lineWidth = 3;
             ctx.stroke();
 
-            // Cannon Mount & Barrel on the Hilltop
             ctx.save();
             ctx.translate(cannonPos.x, cannonPos.y);
-            let angle = dragging ? Math.atan2(ball.y - cannonPos.y, ball.x - cannonPos.x) : 0.2; // Pointing downward toward targets
+            let angle = dragging ? Math.atan2(ball.y - cannonPos.y, ball.x - cannonPos.x) : 0.2;
             ctx.rotate(angle);
             ctx.fillStyle = '#334155';
             ctx.fillRect(0, -14, 52, 28);
@@ -2135,7 +2129,6 @@ function runAngryBirdsGame(modId, subId, key) {
             ctx.fillRect(44, -16, 8, 32);
             ctx.restore();
 
-            // Cannon Wheels
             ctx.fillStyle = '#0f172a';
             ctx.beginPath();
             ctx.arc(cannonPos.x - 12, cannonPos.y + 11, 10, 0, Math.PI * 2);
@@ -2259,13 +2252,11 @@ function runAngryBirdsGame(modId, subId, key) {
             ctx.arc(ball.x - 4, ball.y - 4, 3.5, 0, Math.PI * 2);
             ctx.fill();
 
-            // Physics step with floor bounce and rolling friction
             if (ball.launched && !roundEnded) {
                 ball.x += ball.vx;
                 ball.y += ball.vy;
                 ball.vy += heavyBall ? 0.48 : 0.36;
 
-                // Floor collision
                 if (ball.y + ball.r >= groundY) {
                     ball.y = groundY - ball.r;
                     ball.vy = -ball.vy * 0.35;
@@ -2349,8 +2340,25 @@ function runAngryBirdsGame(modId, subId, key) {
     function renderFinalSummary() {
         const totalPoints = (quizScore * 150) + launcherScore;
         
+        // Ensure recordArcadeScore correctly passes the pirate score to Firebase
         if (typeof window.recordArcadeScore === 'function') {
             window.recordArcadeScore('pirate', totalPoints);
+        } else {
+            // Fallback direct update if recordArcadeScore isn't scoped globally
+            const activeId = localStorage.getItem('ai_portal_active_user_id');
+            if (activeId && typeof db !== 'undefined') {
+                db.collection('cadets').doc(activeId).get().then(doc => {
+                    if (doc.exists) {
+                        let data = doc.data();
+                        if (!data.scores) data.scores = { rocket: 0, blockblast: 0, pirate: 0 };
+                        if (totalPoints > (data.scores.pirate || 0)) {
+                            data.scores.pirate = totalPoints;
+                        }
+                        data.xp = (Number(data.xp) || 0) + 50;
+                        db.collection('cadets').doc(activeId).set(data, { merge: true });
+                    }
+                });
+            }
         }
 
         modal.innerHTML = `
@@ -2470,7 +2478,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'Modules': 'modules-page-view',
         'Dashboard': 'dashboard-page-view',
         'Chatbot': 'chatbot-page-view',
-        'References': 'references-page-view'
+        'References': 'references-page-view',
+        'Profile': 'profile-page-view' // Added Profile view mapping
     };
 
     document.querySelectorAll('.nav-links a').forEach(link => {
@@ -2483,8 +2492,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
                 link.classList.add('active');
 
-                // Switch to the respective view
-                switchView(navMapping[linkText]);
+                // Switch to the respective view (using switchView or showPage based on your setup)
+                if (typeof switchView === 'function') {
+                    switchView(navMapping[linkText]);
+                } else if (typeof showPage === 'function') {
+                    showPage(navMapping[linkText]);
+                }
             }
         });
     });
@@ -2495,13 +2508,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 
 function showPage(pageId) {
-    // 1. Hide all main portal views
+    // 1. Hide all main portal views (including profile and references)
     const views = [
         'home-page-view', 
         'modules-grid', 
         'modules-page-view', 
         'dashboard-page-view', 
-        'chatbot-page-view'
+        'chatbot-page-view',
+        'profile-page-view',      // Added profile view
+        'references-page-view'    // Added references view
     ];
     
     views.forEach(id => {
@@ -2517,12 +2532,16 @@ function showPage(pageId) {
     if (pageId === 'modules') targetId = 'modules-grid';
     if (pageId === 'dashboard') targetId = 'dashboard-page-view';
     if (pageId === 'chatbot') targetId = 'chatbot-page-view';
+    if (pageId === 'profile') targetId = 'profile-page-view';       // Shortcut for profile
+    if (pageId === 'references') targetId = 'references-page-view'; // Shortcut for references
 
     // 3. Show the target view container
     const targetView = document.getElementById(targetId);
     if (targetView) {
         targetView.style.display = 'block';
         window.scrollTo(0, 0); // Smooth jump back to the top of the page
+    } else {
+        console.warn(`Target view element with ID '${targetId}' was not found in the DOM.`);
     }
 }
 
@@ -2657,6 +2676,13 @@ function navigateToModule(moduleNumber) {
             let cloudDirectory = [];
             snapshot.forEach(doc => {
                 const data = doc.data();
+                if (!data.scores || typeof data.scores !== 'object') {
+                    data.scores = { rocket: 0, blockblast: 0, pirate: 0 };
+                }
+                if (data.scores.rocket === undefined) data.scores.rocket = 0;
+                if (data.scores.blockblast === undefined) data.scores.blockblast = 0;
+                if (data.scores.pirate === undefined) data.scores.pirate = data.pirateScore || 0;
+
                 cloudDirectory.push({ id: doc.id, ...data });
             });
 
@@ -2731,18 +2757,22 @@ function navigateToModule(moduleNumber) {
         const user = getActiveUser();
         if (!user) return;
 
-        // Ensure scores object and all keys exist so properties never evaluate to undefined
         if (!user.scores || typeof user.scores !== 'object') {
             user.scores = { rocket: 0, blockblast: 0, pirate: 0 };
         }
         if (user.scores.rocket === undefined) user.scores.rocket = 0;
         if (user.scores.blockblast === undefined) user.scores.blockblast = 0;
-        if (user.scores.pirate === undefined) user.scores.pirate = 0;
+        if (user.scores.pirate === undefined) user.scores.pirate = data.pirateScore || 0;
 
-        // Increment XP properly and update high score
         user.xp = (Number(user.xp) || 0) + 50;
-        if (points > user.scores[gameKey]) {
-            user.scores[gameKey] = points;
+        
+        let targetKey = gameKey.toLowerCase().trim();
+        if (targetKey === 'pirate' || targetKey === 'angrybirds') targetKey = 'pirate';
+        if (targetKey === 'rocket') targetKey = 'rocket';
+        if (targetKey === 'blockblast' || targetKey === 'block_blast') targetKey = 'blockblast';
+
+        if (points > (user.scores[targetKey] || 0)) {
+            user.scores[targetKey] = points;
         }
 
         saveUserToCloud(user);
@@ -2758,6 +2788,7 @@ function navigateToModule(moduleNumber) {
             alert(`Equipped avatar: ${itemKey.replace(/_/g, ' ')}`);
         } else if (backgroundMap.hasOwnProperty(itemKey)) {
             user.background = itemKey;
+            localStorage.setItem('ai_portal_active_theme', itemKey);
             alert(`Equipped background theme: ${itemKey.replace(/_/g, ' ')}`);
         }
 
@@ -2780,14 +2811,16 @@ function navigateToModule(moduleNumber) {
         );
 
         filtered.sort((a, b) => {
+            const aScores = a.scores || {};
+            const bScores = b.scores || {};
             if (currentLeaderboardCategory === 'xp') {
                 return (b.xp || 0) - (a.xp || 0);
             } else if (currentLeaderboardCategory === 'rocket') {
-                return ((b.scores && b.scores.rocket) || 0) - ((a.scores && a.scores.rocket) || 0);
+                return (bScores.rocket || 0) - (aScores.rocket || 0);
             } else if (currentLeaderboardCategory === 'blockblast') {
-                return ((b.scores && b.scores.blockblast) || 0) - ((a.scores && a.scores.blockblast) || 0);
+                return (bScores.blockblast || 0) - (aScores.blockblast || 0);
             } else if (currentLeaderboardCategory === 'pirate') {
-                return ((b.scores && b.scores.pirate) || 0) - ((a.scores && a.scores.pirate) || 0);
+                return (bScores.pirate || 0) - (aScores.pirate || 0);
             }
             return 0;
         });
@@ -2799,16 +2832,17 @@ function navigateToModule(moduleNumber) {
 
         listEl.innerHTML = filtered.map((u, index) => {
             const isMe = activeUser && u.id === activeUser.id;
+            const uScores = u.scores || {};
             let displayScoreMetric = '';
 
             if (currentLeaderboardCategory === 'xp') {
                 displayScoreMetric = `<span class="dir-xp">${u.xp || 0} XP</span>`;
             } else if (currentLeaderboardCategory === 'rocket') {
-                displayScoreMetric = `<span class="dir-best">Rocket Score: ${(u.scores && u.scores.rocket) || 0} pts</span>`;
+                displayScoreMetric = `<span class="dir-best">Rocket Score: ${uScores.rocket || 0} pts</span>`;
             } else if (currentLeaderboardCategory === 'blockblast') {
-                displayScoreMetric = `<span class="dir-best">Block Blast: ${(u.scores && u.scores.blockblast) || 0} pts</span>`;
+                displayScoreMetric = `<span class="dir-best">Block Blast: ${uScores.blockblast || 0} pts</span>`;
             } else if (currentLeaderboardCategory === 'pirate') {
-                displayScoreMetric = `<span class="dir-best">Pirate Score: ${(u.scores && u.scores.pirate) || 0} pts</span>`;
+                displayScoreMetric = `<span class="dir-best">Pirate Score: ${uScores.pirate || 0} pts</span>`;
             }
 
             return `
@@ -2861,15 +2895,15 @@ function navigateToModule(moduleNumber) {
             const classListArray = Array.from(activeView.classList).filter(cls => !cls.startsWith('theme-'));
             activeView.className = classListArray.join(' ');
             
-            const activeTheme = (user && user.background) ? user.background : 'bg_default';
+            const activeTheme = (user && user.background) ? user.background : (localStorage.getItem('ai_portal_active_theme') || 'bg_default');
             activeView.classList.add(`theme-${activeTheme}`);
 
             activeView.style.backgroundImage = '';
             activeView.style.backgroundSize = 'cover';
             activeView.style.backgroundPosition = 'center';
 
-            if (user && user.background && backgroundMap[user.background]) {
-                activeView.style.backgroundImage = `linear-gradient(rgba(10, 10, 20, 0.85), rgba(10, 10, 20, 0.95)), url('${backgroundMap[user.background]}')`;
+            if (backgroundMap[activeTheme]) {
+                activeView.style.backgroundImage = `linear-gradient(rgba(10, 10, 20, 0.85), rgba(10, 10, 20, 0.95)), url('${backgroundMap[activeTheme]}')`;
             }
         }
 
@@ -2897,14 +2931,18 @@ function navigateToModule(moduleNumber) {
         const elBlock = document.getElementById('dash-score-blockblast');
         const elPirate = document.getElementById('dash-score-pirate');
 
+        const uScores = user.scores || {};
+
         if (elUsername) elUsername.textContent = user.username;
         if (elRank) elRank.textContent = getRankTitle(user.xp || 0);
         if (elBio) elBio.textContent = user.bio || 'Ready to conquer the AI modules.';
         if (elXp) elXp.textContent = user.xp || 0;
-        if (elRocket) elRocket.textContent = (user.scores && user.scores.rocket) || 0;
-        if (elBlock) elBlock.textContent = (user.scores && user.scores.blockblast) || 0;
-        if (elPirate) elPirate.textContent = (user.scores && user.scores.pirate) || 0;
+        
+        if (elRocket) elRocket.textContent = uScores.rocket ?? uScores.rocketScore ?? 0;
+        if (elBlock) elBlock.textContent = uScores.blockblast ?? uScores.blockBlast ?? 0;
+        if (elPirate) elPirate.textContent = uScores.pirate ?? uScores.pirateScore ?? 0;
 
+        // Populate Unlocked Inventory Vault
         const inventoryEl = document.getElementById('user-inventory-list');
         if (inventoryEl) {
             if (!user.unlocks || user.unlocks.length === 0) {
@@ -2921,6 +2959,48 @@ function navigateToModule(moduleNumber) {
             }
         }
 
+        // Dynamically populate the Edit Avatar Picker with default options + unlocked shop avatars
+        const editAvatarPicker = document.getElementById('edit-avatar-picker');
+        if (editAvatarPicker) {
+            // Always include the 3 default starting avatars
+            let availableAvatars = [
+                'images/Designer (1).png',
+                'images/Designer (2).png',
+                'images/Designer (3).png'
+            ];
+
+            // Append any additional unlocked avatars from user inventory
+            if (user.unlocks) {
+                user.unlocks.forEach(key => {
+                    if (avatarMap[key]) {
+                        availableAvatars.push(avatarMap[key]);
+                    }
+                });
+            }
+
+            // Remove duplicates just in case
+            availableAvatars = [...new Set(availableAvatars)];
+
+            editAvatarPicker.innerHTML = availableAvatars.map(imgPath => {
+                const isSelected = user.avatar === imgPath;
+                return `
+                    <button type="button" class="avatar-pick ${isSelected ? 'selected' : ''}" data-avatar="${imgPath}" style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: ${isSelected ? '2px solid #00f2fe' : '1px solid rgba(255,255,255,0.2)'}; background: #0a0a14; padding: 0; cursor: pointer; transition: 0.2s;">
+                        <img src="${imgPath}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                    </button>
+                `;
+            }).join('');
+
+            // Bind click events to quickly switch active avatars
+            editAvatarPicker.querySelectorAll('.avatar-pick').forEach(btn => {
+                btn.onclick = (e) => {
+                    const chosenAvatar = e.currentTarget.getAttribute('data-avatar');
+                    user.avatar = chosenAvatar;
+                    saveUserToCloud(user);
+                    refreshProfileUI();
+                };
+            });
+        }
+
         renderDirectoryList(document.getElementById('global-profile-search')?.value || '');
     }
 
@@ -2929,8 +3009,10 @@ function navigateToModule(moduleNumber) {
     if (createForm) {
         createForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const username = document.getElementById('new-username').value.trim();
-            const bio = document.getElementById('new-bio').value.increment ? '' : document.getElementById('new-bio').value.trim();
+            const usernameInput = document.getElementById('new-username');
+            const bioInput = document.getElementById('new-bio');
+            const username = usernameInput ? usernameInput.value.trim() : '';
+            const bio = bioInput ? bioInput.value.trim() : '';
             if (!username) return;
 
             const newUser = {
@@ -2948,6 +3030,32 @@ function navigateToModule(moduleNumber) {
             localStorage.setItem(STORAGE_CURRENT_ID, newUser.id);
             refreshProfileUI();
         });
+    }
+
+    // Profile info edit updater button binding
+    const saveEditsBtn = document.getElementById('btn-save-profile-edits');
+    if (saveEditsBtn) {
+        saveEditsBtn.onclick = () => {
+            const user = getActiveUser();
+            if (!user) {
+                alert("No active profile found!");
+                return;
+            }
+
+            const newUsernameInput = document.getElementById('edit-username-input');
+            const newBioInput = document.getElementById('edit-bio-input');
+
+            if (newUsernameInput && newUsernameInput.value.trim()) {
+                user.username = newUsernameInput.value.trim();
+            }
+            if (newBioInput) {
+                user.bio = newBioInput.value.trim();
+            }
+
+            saveUserToCloud(user);
+            refreshProfileUI();
+            alert("Profile info updated successfully!");
+        };
     }
 
     const searchInput = document.getElementById('global-profile-search');
@@ -3033,3 +3141,52 @@ const PortalSecurity = (() => {
         checkRateLimit
     };
 })();
+
+// Auto-open tab if arriving from another page with a hash (e.g. index.html#profile) - a debugger since it recrrects certain aspects of code in
+document.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+        const targetViewId = hash + '-page-view'; // turns 'profile' into 'profile-page-view'
+        if (typeof switchView === 'function') {
+            switchView(targetViewId);
+        } else if (typeof showPage === 'function') {
+            showPage(targetViewId);
+        }
+    }
+});
+
+window.syncReferencesToProfileTheme = function() {
+    // 1. Get the current active user's background theme choice from localStorage or your user object
+    const activeTheme = localStorage.getItem('ai_portal_active_theme') || 'bg_default';
+
+    // 2. Map of your background image URLs (same as your profile system)
+    const backgroundMap = {
+        'bg_default': '',
+        'bg_electric_blue': 'images/Designer (5).png',
+        'bg_true_gold': 'images/generate_image_02.png',
+        'bg_deep_space': 'images/generate_a_flat_front-facing_full-bleed_deep_space_cosmic_ba.jpg',
+        'bg_scrappy_console': 'images/b649ac97-d785-4643-951c-191279da5b6b.jpg',
+        'bg_robot_painting': 'images/Untitled Design (2).png',
+    };
+
+    // 3. Target your references container element on the page
+    const referencesView = document.getElementById('references-page-view') || document.querySelector('.references-page');
+
+    if (referencesView) {
+        // Clear any old theme classes
+        const classListArray = Array.from(referencesView.classList).filter(cls => !cls.startsWith('theme-'));
+        referencesView.className = classListArray.join(' ');
+        
+        // Apply the profile's active theme class to the references container
+        referencesView.classList.add(`theme-${activeTheme}`);
+
+        // Paint the background image and gradient overlay so it matches the profile look identically
+        referencesView.style.backgroundImage = '';
+        referencesView.style.backgroundSize = 'cover';
+        referencesView.style.backgroundPosition = 'center';
+
+        if (backgroundMap[activeTheme]) {
+            referencesView.style.backgroundImage = `linear-gradient(rgba(10, 10, 20, 0.85), rgba(10, 10, 20, 0.95)), url('${backgroundMap[activeTheme]}')`;
+        }
+    }
+};

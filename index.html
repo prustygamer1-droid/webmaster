@@ -372,7 +372,7 @@
                 </div>
                 <div class="p-stat-box">
                     <span class="p-stat-label">CANNON LAUNCHER</span>
-                    <span class="p-stat-num" id="dash-score-angrybirds">0</span>
+                    <span class="p-stat-num" id="dash-score-pirate">0</span>
                 </div>
             </div>
         </div>
@@ -494,7 +494,6 @@
                     <button onclick="buyShopItem('bg_scrappy_console', 150)" class="btn-cyan-secondary" style="width: 100%;">Unlock (150 XP)</button>
                 </div>
                 
-
                 <!-- 12. True God Scrappy (350 XP) -->
                 <div class="shop-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(168,85,247,0.4); border-radius: 12px; padding: 20px; text-align: center;">
                     <div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 1px dashed rgba(168,85,247,0.6); background: #0a0a14; display: flex; align-items: center; justify-content: center;">
@@ -516,21 +515,32 @@
             </div>
         </div>
 
-        <!-- CUSTOMIZE PROFILE SECTION -->
+        <!-- CUSTOMIZE PROFILE SECTION (RESTORED AVATAR SELECTOR GRID) -->
         <div class="profile-card-container" style="margin-top: 24px;">
             <h3 style="color: #38bdf8; font-family: 'Outfit', sans-serif; margin-bottom: 12px;">Customize Profile</h3>
             
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <input type="text" id="edit-username-input" placeholder="New Callsign..." class="profile-input" style="flex: 1; padding: 10px; border-radius: 8px; background: #0a0a14; border: 1px solid rgba(255,255,255,0.1); color: #fff;" maxlength="18">
                 <input type="text" id="edit-bio-input" placeholder="Update Bio..." class="profile-input" style="flex: 2; padding: 10px; border-radius: 8px; background: #0a0a14; border: 1px solid rgba(255,255,255,0.1); color: #fff;" maxlength="60">
                 <button type="button" id="btn-save-profile-edits" class="btn-cyan-secondary">Update Info</button>
             </div>
 
-            <label style="color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 8px;">Select Active Avatar:</label>
-            <div id="edit-avatar-picker" style="display: flex; gap: 12px; flex-wrap: wrap;"></div>
+            <label style="color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 10px;">Select Active Avatar:</label>
+            <!-- Restored interactive avatar picker grid for custom profile edits -->
+            <div id="edit-avatar-picker" class="avatar-picker-grid" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <button type="button" class="avatar-pick" data-avatar="images/Designer (1).png">
+                    <img src="images/Designer (1).png" alt="Avatar 1" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                </button>
+                <button type="button" class="avatar-pick" data-avatar="images/Designer (2).png">
+                    <img src="images/Designer (2).png" alt="Avatar 2" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                </button>
+                <button type="button" class="avatar-pick" data-avatar="images/Designer (3).png">
+                    <img src="images/Designer (3).png" alt="Avatar 3" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                </button>
+            </div>
         </div>
 
-<!-- GLOBAL CADET DIRECTORY & LEADERBOARD -->
+        <!-- GLOBAL CADET DIRECTORY & LEADERBOARD -->
         <div class="profile-card-container" style="margin-top: 24px;">
             <div class="directory-header">
                 <div>
