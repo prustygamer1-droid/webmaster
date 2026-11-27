@@ -42,13 +42,16 @@ function shuffle(arr) {
     return a;
 }
 
+// Progress is saved per profile (see PortalAccount in theme.js), so each account starts fresh
 const store = {
     get(key, fallback) {
-        try { const v = localStorage.getItem(key); return v === null ? fallback : JSON.parse(v); }
+        try { const v = localStorage.getItem(PortalAccount.key(key)); return v === null ? fallback : JSON.parse(v); }
         catch { return fallback; }
     },
-    set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage full or blocked */ } }
+    set(key, value) { try { localStorage.setItem(PortalAccount.key(key), JSON.stringify(value)); } catch { /* storage full or blocked */ } }
 };
+// Developer Mode: everything unlocked, nothing saved to the profile or the leaderboards
+const devMode = () => PortalAccount.devMode();
 
 function toast(message, type = 'info') {
     const wrap = $('#toast-wrap');
@@ -507,7 +510,7 @@ let completed = store.get('completedLessons', null);
 if (completed === null) {
     // One-time migration from the old "maxUnlockedModule" system
     completed = {};
-    const old = parseInt(localStorage.getItem('maxUnlockedModule'), 10) || 1;
+    const old = parseInt(store.get('maxUnlockedModule', 1), 10) || 1;
     for (let m = 1; m < old; m++) for (let s = 1; s <= 3; s++) completed[`${m}.${s}`] = true;
     store.set('completedLessons', completed);
 }
@@ -533,7 +536,7 @@ function earnedUnlock() {
     while (n < 6 && unitPassed(n)) n++;
     return n;
 }
-const maxUnlocked = () => previewMode() ? 6 : earnedUnlock();
+const maxUnlocked = () => previewMode() || devMode() ? 6 : earnedUnlock();
 const saveMaxUnlocked = () => store.set('maxUnlockedModule', earnedUnlock());
 const lockedMessage = m => `Module ${m} is locked. Pass the Module ${m - 1} Unit Test (80% or higher) to unlock it.`;
 function completeLesson(m, s) {
@@ -578,7 +581,7 @@ function renderModulesGrid() {
     }).join('');
     const banner = $('#final-banner');
     if (banner) {
-        const cert = activeCertificate(), ready = allUnitsPassed();
+        const cert = activeCertificate(), ready = allUnitsPassed() || devMode();
         banner.className = 'final-banner' + (ready || cert ? ' ready' : '');
         banner.innerHTML = `<div><h3>🎓 Course Final Exam</h3><p>${cert ? 'Course completed. Your certificate is ready.' : ready ? 'All Unit Tests passed. The Final Exam is unlocked!' : `🔒 Pass all 6 Module Unit Tests to unlock (${unitsPassedCount()} of 6 passed).`}</p></div>
             <a class="${ready || cert ? 'btn-cyan-primary' : 'btn-ghost'}" href="#final-exam">${cert ? 'View Results' : ready ? 'Take the Final Exam' : 'See Requirements'}</a>`;
@@ -713,7 +716,7 @@ const REWARDS = [
     { id: 'cursor_grandmaster', type: 'cursor', badge: 'graduate', icon: '✨', name: 'Quantum Particle Cursor', ultimate: true }
 ];
 const REWARD_MAP = new Map(REWARDS.map(r => [r.id, r]));
-const rewardUnlocked = r => badgeProgress(BADGE_MAP.get(r.badge)).done;
+const rewardUnlocked = r => devMode() || badgeProgress(BADGE_MAP.get(r.badge)).done;
 const rewardsFor = badgeId => REWARDS.filter(r => r.badge === badgeId);
 const rewardTypeName = r => REWARD_TYPES.find(t => t.key === r.type).single;
 
@@ -1319,7 +1322,7 @@ function finishGame(o) {
                 <div><span>Best Answer Streak</span><strong>🔥 ${bestStreak} in a row</strong></div>
                 <div><span>XP Earned</span><strong style="color:var(--text-accent);">+${xp} XP 🌟</strong></div>
             </div>
-            ${saved ? '' : '<p class="canvas-instructions" style="margin:0 0 6px;">Create a profile to save XP and join the leaderboard.</p>'}
+            ${devMode() ? '<p class="canvas-instructions" style="margin:0 0 6px;">🛠 Developer Mode: this run was not saved to your profile or the leaderboard.</p>' : saved ? '' : '<p class="canvas-instructions" style="margin:0 0 6px;">Create a profile to save XP and join the leaderboard.</p>'}
             <div class="lb-mini"><h4>🏆 Top Players</h4>${rows || '<p class="empty-note">No scores yet. You set the benchmark!</p>'}</div>
             <div class="btn-row">
                 ${passed ? '' : '<button type="button" class="btn-continue-shop secondary" id="g-retry">Try Again</button>'}
@@ -1938,7 +1941,14 @@ const SHOP = [
     { key: 'bg_true_gold', type: 'bg', name: 'True Gold Background', desc: 'Pure luxury profile aesthetic.', cost: 1000, img: 'images/generate_image_02.png', tier: 'gold' },
     { key: 'bg_deep_space', type: 'bg', name: 'Deep Space Background', desc: 'Cosmic starfield theme.', cost: 100, img: 'images/generate_a_flat_front-facing_full-bleed_deep_space_cosmic_ba.jpg' },
     { key: 'bg_scrappy_console', type: 'bg', name: 'Scrappy on Console BG', desc: 'Arcade workstation setup.', cost: 150, img: 'images/b649ac97-d785-4643-951c-191279da5b6b.jpg' },
-    { key: 'avatar_true_god_scrappy', type: 'avatar', name: 'True God Scrappy', desc: 'Ascended mascot form.', cost: 350, img: 'images/generate_image_01 (1).png', tier: 'purple' }
+    { key: 'avatar_true_god_scrappy', type: 'avatar', name: 'True God Scrappy', desc: 'Ascended mascot form.', cost: 350, img: 'images/generate_image_01 (1).png', tier: 'purple' },
+    { key: 'avatar_angry_red_bot', type: 'avatar', name: 'Angry Red Bot', desc: 'Overheated, steaming and furious. Do not poke.', cost: 75, img: 'images/avatar_angry_red_bot.svg' },
+    { key: 'avatar_dj_bot', type: 'avatar', name: 'Neon DJ Bot', desc: 'Drops beats, not packets.', cost: 125, img: 'images/avatar_dj_bot.svg' },
+    { key: 'avatar_icecream_robot', type: 'avatar', name: 'Ice Cream Yellow Robot', desc: 'Brain freeze, but make it cute.', cost: 200, img: 'images/avatar_icecream_robot.svg' },
+    { key: 'avatar_manga_scrappy', type: 'avatar', name: 'Manga Scrappy', desc: 'Hand-inked and screentoned for chapter one.', cost: 300, img: 'images/avatar_manga_scrappy.svg', tier: 'manga' },
+    { key: 'avatar_samurai_scrappy', type: 'avatar', name: 'Samurai Scrappy', desc: 'Kabuto on, blade ready, code sharp.', cost: 450, img: 'images/avatar_samurai_scrappy.svg', tier: 'sakura' },
+    { key: 'bg_manga', type: 'bg', name: 'Manga Panels Background', desc: 'Ink, screentone and speed lines. Comic fonts and hard-shadow borders.', cost: 800, img: 'images/bg_manga.svg', tier: 'manga' },
+    { key: 'bg_fuji', type: 'bg', name: 'Mount Fuji Twilight (Animated)', desc: 'Drifting clouds, falling sakura and a shimmering lake. Elegant serif theme.', cost: 900, img: 'images/bg_fuji.svg', tier: 'sakura' }
 ];
 const AVATAR_MAP = Object.fromEntries(SHOP.filter(i => i.type === 'avatar').map(i => [i.key, i.img]));
 const STARTER_AVATARS = ['images/Designer (1).png', 'images/Designer (2).png', 'images/Designer (3).png'];
@@ -1965,9 +1975,15 @@ const Portal = (() => {
         return d;
     }
 
+    // In Developer Mode you get a throwaway copy of your profile: changes show on screen
+    // but never reach the saved profile, so the leaderboards stay untouched.
+    let devCopy = null;
     const getActiveUser = () => {
         const id = localStorage.getItem(ID_KEY);
-        return id ? dir.find(u => u.id === id) || null : null;
+        const real = id ? dir.find(u => u.id === id) || null : null;
+        if (!real || !devMode()) return real;
+        if (!devCopy || devCopy.id !== real.id) devCopy = JSON.parse(JSON.stringify(real));
+        return devCopy;
     };
 
     // Progress lives in this browser, so a summary is copied onto your profile for others to see
@@ -1989,6 +2005,8 @@ const Portal = (() => {
     }
 
     async function persist(user) {
+        // Developer Mode never saves your own profile (other profiles, like the starter seeds, still save)
+        if (devMode() && user.id === localStorage.getItem(ID_KEY)) { refreshUI(); return; }
         if (user.id === localStorage.getItem(ID_KEY)) {
             Object.assign(user, progressSnapshot());
             const cert = savedCertificates()[user.id];
@@ -2026,6 +2044,25 @@ const Portal = (() => {
         });
     }
 
+    // ---- Passwords: PBKDF2-SHA256 with a random salt per profile; only the hash is saved
+    const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+    const cryptoReady = () => !!(window.crypto && crypto.subtle);
+    async function hashPassword(password, salt) {
+        const enc = new TextEncoder();
+        const key = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+        const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: enc.encode(salt), iterations: 150000 }, key, 256);
+        return hex(bits);
+    }
+    async function makeAuth(password) {
+        const salt = hex(crypto.getRandomValues(new Uint8Array(16)));
+        return { salt, hash: await hashPassword(password, salt) };
+    }
+    // Saves the profile (waiting briefly for the cloud), then reloads into it
+    async function saveThenLogIn(user) {
+        await Promise.race([persist(user), new Promise(r => setTimeout(r, 4000))]);
+        PortalAccount.logIn(user.id);
+    }
+
     function award(game, score, xp) {
         store.set('localXP', store.get('localXP', 0) + xp);
         const u = getActiveUser();
@@ -2041,6 +2078,7 @@ const Portal = (() => {
         const user = getActiveUser(), item = SHOP.find(i => i.key === key);
         if (!user) { toast('Create or select a profile first!', 'warn'); return; }
         if (!item) return;
+        if (devMode()) return equip(key);     // try anything on, free and unsaved
         if (user.unlocks.includes(key)) { toast('You already unlocked this item.', 'warn'); return; }
         if ((user.xp || 0) < item.cost) { toast(`Not enough XP. You need ${item.cost} XP but have ${user.xp || 0}.`, 'warn'); return; }
         user.xp -= item.cost;
@@ -2103,7 +2141,8 @@ const Portal = (() => {
             <h3 class="locker-group-title">${type.label} <small>${regular.filter(r => r.type === type.key && rewardUnlocked(r)).length} / ${regular.filter(r => r.type === type.key).length}</small></h3>
             <div class="reward-grid">${regular.filter(r => r.type === type.key).map(r => {
                 const badge = BADGE_MAP.get(r.badge), p = badgeProgress(badge);
-                const on = p.done && isEquipped(user, r);
+                const open = rewardUnlocked(r);
+                const on = open && isEquipped(user, r);
                 const preview = {
                     title: () => `<span class="title-pill">${esc(r.name)}</span>`,
                     border: () => `<span class="frame-swatch${frameClass(r)}" style="${frameStyle(r)}"><img src="${esc(user.avatar)}" alt=""></span>`,
@@ -2112,11 +2151,11 @@ const Portal = (() => {
                     bg: () => `<span class="bg-swatch" data-bg="${r.bg}"></span>`
                 }[r.type]();
                 return `
-                    <div class="reward-card${p.done ? ' unlocked' : ' locked'}${on ? ' equipped' : ''}">
+                    <div class="reward-card${open ? ' unlocked' : ' locked'}${on ? ' equipped' : ''}">
                         <div class="reward-preview" aria-hidden="true">${preview}</div>
                         <h4>${esc(r.name)}</h4>
-                        ${p.done
-                            ? `<p>Earned with ${badge.icon} ${esc(badge.name)}</p>
+                        ${open
+                            ? `<p>${p.done ? `Earned with ${badge.icon} ${esc(badge.name)}` : '🛠 Unlocked by Developer Mode'}</p>
                                <button type="button" class="btn-cyan-secondary" data-reward="${r.id}" aria-pressed="${on}" aria-label="${on ? 'Unequip' : 'Equip'} ${esc(r.name)}">${on ? '✓ Equipped (Remove)' : 'Equip'}</button>`
                             : `<p>🔒 ${esc(badge.desc)} to earn <strong>${esc(badge.name)}</strong></p>
                                ${meterHTML(p, `${r.name} progress`)}
@@ -2130,7 +2169,7 @@ const Portal = (() => {
         const panel = $('#ultimate-panel');
         if (!panel) return;
         const list = REWARDS.filter(r => r.ultimate);
-        const owned = !!certificateFor(user);
+        const owned = !!certificateFor(user) || devMode();
         const allOn = owned && list.every(r => isEquipped(user, r));
         panel.classList.toggle('unlocked', owned);
         panel.innerHTML = `
@@ -2149,13 +2188,13 @@ const Portal = (() => {
                 </li>`;
             }).join('')}</ul>
             ${owned
-                ? `<div class="exam-actions"><button type="button" class="btn-cyan-primary" data-ultimate-all="${allOn ? 'off' : 'on'}">${allOn ? 'Unequip All' : '⚡ Equip All Three'}</button><button type="button" class="btn-cyan-secondary" data-view-cert>🎓 View Certificate</button></div>`
+                ? `<div class="exam-actions"><button type="button" class="btn-cyan-primary" data-ultimate-all="${allOn ? 'off' : 'on'}">${allOn ? 'Unequip All' : '⚡ Equip All Three'}</button>${certificateFor(user) ? '<button type="button" class="btn-cyan-secondary" data-view-cert>🎓 View Certificate</button>' : ''}</div>`
                 : '<div class="exam-actions"><a class="btn-cyan-secondary" href="#final-exam">See Final Exam Requirements</a></div>'}`;
     }
 
     function setUltimate(on) {
         const user = getActiveUser();
-        if (!user || !certificateFor(user)) return;
+        if (!user || !(certificateFor(user) || devMode())) return;
         user.background = on ? 'bg_grandmaster' : 'bg_default';
         user.equipped = { ...user.equipped, title: on ? 'title_ai_grandmaster' : '', cursor: on ? 'cursor_grandmaster' : '' };
         if (on) store.set('usedBackground', true);
@@ -2364,6 +2403,14 @@ const Portal = (() => {
         if (!user) {
             if (createView) createView.style.display = 'block';
             if (activeView) activeView.style.display = 'none';
+            // Quick picks for profiles that were used on this device
+            const mine = dir.filter(u => PortalAccount.owned().includes(u.id));
+            const picks = $('#device-profiles');
+            if (picks) {
+                picks.hidden = !mine.length;
+                picks.innerHTML = mine.length ? `<span class="device-profiles-label">On this device:</span>` + mine.map(u =>
+                    `<button type="button" class="device-profile" data-login-name="${esc(u.username)}"><img src="${esc(u.avatar)}" alt="">${esc(u.username)}</button>`).join('') : '';
+            }
             renderDirectory();
             return;
         }
@@ -2384,14 +2431,15 @@ const Portal = (() => {
         // shop buttons show owned items
         $$('#shop-grid [data-buy]').forEach(b => {
             const owned = user.unlocks.includes(b.dataset.buy);
-            b.disabled = owned;
-            b.textContent = owned ? '✅ Owned' : `Unlock (${b.dataset.cost} XP)`;
+            b.disabled = owned && !devMode();
+            b.textContent = devMode() ? '🛠 Try On (Dev)' : owned ? '✅ Owned' : `Unlock (${b.dataset.cost} XP)`;
         });
 
-        // inventory
+        // inventory (Developer Mode lists every shop item)
+        const items = devMode() ? [...new Set(['bg_default', ...SHOP.map(i => i.key)])] : user.unlocks;
         const inv = $('#user-inventory-list');
-        inv.innerHTML = user.unlocks.length
-            ? user.unlocks.map(k => {
+        inv.innerHTML = items.length
+            ? items.map(k => {
                 const name = SHOP.find(i => i.key === k)?.name || (PortalTheme.has(k) ? PortalTheme.BACKGROUNDS[k].name + ' Background' : k);
                 const inUse = user.background === k || (AVATAR_MAP[k] && user.avatar === AVATAR_MAP[k]);
                 return `<div class="inventory-item"><span>✅ ${esc(name)}</span><button type="button" class="btn-cyan-secondary" data-equip="${esc(k)}"${inUse ? ' disabled' : ''}>${inUse ? 'In Use' : 'Equip'}</button></div>`;
@@ -2399,7 +2447,7 @@ const Portal = (() => {
             : '<span>No items unlocked yet. Buy something from the vault above!</span>';
 
         // avatar picker
-        const avatars = [...new Set([...STARTER_AVATARS, ...user.unlocks.map(k => AVATAR_MAP[k]).filter(Boolean)])];
+        const avatars = [...new Set([...STARTER_AVATARS, ...items.map(k => AVATAR_MAP[k]).filter(Boolean)])];
         $('#edit-avatar-picker').innerHTML = avatars.map(p => `<button type="button" class="avatar-pick${user.avatar === p ? ' selected' : ''}" data-avatar="${esc(p)}"><img src="${esc(p)}" alt=""></button>`).join('');
 
         renderDirectory();
@@ -2424,18 +2472,49 @@ const Portal = (() => {
             createAvatar = btn.dataset.avatar || createAvatar;
         }));
 
-        $('#create-account-form').addEventListener('submit', e => {
+        $('#create-account-form').addEventListener('submit', async e => {
             e.preventDefault();
-            const username = $('#new-username').value.trim(), bio = $('#new-bio').value.trim();
+            const username = $('#new-username').value.trim(), bio = $('#new-bio').value.trim(), password = $('#new-password').value;
             if (!username) return;
+            if (devMode()) { toast('Exit Developer Mode before creating a profile.', 'warn'); return; }
+            if (password.length < 6) { toast('Choose a password with at least 6 characters.', 'warn'); return; }
+            if (!cryptoReady()) { toast('Passwords need a secure (https) connection. Open the portal from its https address.', 'error'); return; }
             if (PortalSecurity.containsProfanity(username) || PortalSecurity.containsProfanity(bio)) { toast('Please choose an appropriate callsign and bio.', 'warn'); return; }
             if (dir.some(u => u.username.toLowerCase() === username.toLowerCase())) { toast('That callsign is taken. Try another one.', 'warn'); return; }
-            const user = { id: 'cadet_' + Date.now(), username, bio: bio || 'AI Explorer', avatar: createAvatar, background: 'bg_default', xp: 100 + store.get('localXP', 0), scores: { rocket: 0, blockblast: 0, pirate: 0 }, unlocks: ['bg_default'], equipped: {} };
+            // A brand-new profile starts from zero: no progress from earlier visitors carries over
+            const user = { id: 'cadet_' + Date.now(), username, bio: bio || 'AI Explorer', avatar: createAvatar, background: 'bg_default', xp: 100, scores: {}, unlocks: ['bg_default'], equipped: {}, auth: await makeAuth(password) };
             GAME_KEYS.forEach(k => { user.scores[k] = 0; });
-            localStorage.setItem(ID_KEY, user.id);
-            persist(user);
-            e.target.reset();
             toast(`Welcome aboard, ${username}!`, 'success');
+            await saveThenLogIn(user);
+        });
+
+        $('#login-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const name = $('#login-username').value.trim().toLowerCase(), password = $('#login-password').value;
+            const user = dir.find(u => u.username.toLowerCase() === name);
+            const fail = () => toast('That callsign and password do not match.', 'warn');
+            if (!user) return fail();
+            const auth = user.auth;
+            if (auth && typeof auth.salt === 'string' && typeof auth.hash === 'string') {
+                if (!cryptoReady()) { toast('Passwords need a secure (https) connection. Open the portal from its https address.', 'error'); return; }
+                if (await hashPassword(password, auth.salt) !== auth.hash) return fail();
+                return PortalAccount.logIn(user.id);
+            }
+            // Profiles made before passwords existed can only be claimed on the device that made them.
+            // The password typed now becomes the profile's password.
+            if (!PortalAccount.owned().includes(user.id)) { toast('This older profile has no password and was not made on this device, so it cannot be claimed here.', 'warn'); return; }
+            if (password.length < 6) { toast('This profile has no password yet. Type a new one (6+ characters) to set it.', 'warn'); return; }
+            if (!cryptoReady()) { toast('Passwords need a secure (https) connection. Open the portal from its https address.', 'error'); return; }
+            user.auth = await makeAuth(password);
+            toast('Password set for this profile.', 'success');
+            await saveThenLogIn(user);
+        });
+
+        $('#device-profiles').addEventListener('click', e => {
+            const pick = e.target.closest('[data-login-name]');
+            if (!pick) return;
+            $('#login-username').value = pick.dataset.loginName;
+            $('#login-password').focus();
         });
 
         $('#btn-save-profile-edits').addEventListener('click', () => {
@@ -2452,7 +2531,7 @@ const Portal = (() => {
             toast('Profile updated!', 'success');
         });
 
-        $('#btn-switch-profile').addEventListener('click', () => { localStorage.removeItem(ID_KEY); refreshUI(); });
+        $('#btn-switch-profile').addEventListener('click', () => PortalAccount.logOut());
 
         $('#profile-page').addEventListener('click', e => {
             const buyBtn = e.target.closest('[data-buy]'); if (buyBtn) return buy(buyBtn.dataset.buy);
@@ -2629,9 +2708,77 @@ const Chatbot = (() => {
 })();
 
 // ============================================================================
+// 8b. DEVELOPER MODE (password protected)
+//     Unlocks every module, test, exam, reward and shop item for testing.
+//     Progress goes to a throwaway sandbox and your profile is never saved,
+//     so XP, scores and the leaderboards are not affected.
+// ============================================================================
+const DevMode = (() => {
+    // SHA-256 of the developer password. To change it, run this in the browser console:
+    //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('new password')).then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('')))
+    const PASSWORD_SHA256 = '7c9f9baba90bc8aa4b0d937da1b5b888524a8c7af2b13155bc97da55282b5779';
+    const sha256 = async text => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)))].map(b => b.toString(16).padStart(2, '0')).join('');
+
+    function openPrompt() {
+        if (devMode()) { PortalAccount.setDevMode(false); return; }
+        const opener = document.activeElement;
+        const overlay = document.createElement('div');
+        overlay.className = 'inspect-overlay';
+        overlay.innerHTML = `
+            <form class="inspect-card dev-card" role="dialog" aria-modal="true" aria-labelledby="dev-title">
+                <button type="button" class="inspect-close" aria-label="Close">✕</button>
+                <h2 id="dev-title">🛠 Developer Mode</h2>
+                <p>Unlocks every module, test, exam, reward and shop item. Nothing you do while it is on is saved to your profile or the leaderboards.</p>
+                <label for="dev-password">Developer password</label>
+                <input type="password" id="dev-password" autocomplete="off" required>
+                <div class="exam-actions"><button type="submit" class="btn-cyan-primary">Unlock Everything</button></div>
+            </form>`;
+        document.body.appendChild(overlay);
+        document.body.classList.add('modal-open');
+        const close = () => {
+            document.removeEventListener('keydown', onKey);
+            document.body.classList.remove('modal-open');
+            overlay.remove();
+            opener?.focus?.({ preventScroll: true });
+        };
+        const onKey = e => { if (e.key === 'Escape') close(); };
+        document.addEventListener('keydown', onKey);
+        overlay.addEventListener('click', e => { if (e.target === overlay || e.target.closest('.inspect-close')) close(); });
+        $('form', overlay).addEventListener('submit', async e => {
+            e.preventDefault();
+            const input = $('#dev-password', overlay);
+            if (!(window.crypto && crypto.subtle)) { toast('Developer Mode needs a secure (https) connection.', 'error'); return; }
+            if (await sha256(input.value) !== PASSWORD_SHA256) {
+                toast('Incorrect developer password.', 'warn');
+                input.value = '';
+                input.focus();
+                return;
+            }
+            PortalAccount.setDevMode(true);
+        });
+        $('#dev-password', overlay).focus();
+    }
+
+    function bind() {
+        $('#dev-mode-btn')?.addEventListener('click', openPrompt);
+        if (!devMode()) return;
+        const btn = $('#dev-mode-btn');
+        if (btn) btn.textContent = '🛠 Exit Developer Mode';
+        const bar = document.createElement('div');
+        bar.className = 'dev-banner';
+        bar.setAttribute('role', 'status');
+        bar.innerHTML = '<span>🛠 <strong>Developer Mode</strong>: everything unlocked · nothing is saved to your profile or the leaderboards</span><button type="button" class="btn-ghost">Exit</button>';
+        $('button', bar).addEventListener('click', () => PortalAccount.setDevMode(false));
+        document.body.appendChild(bar);
+    }
+    return { bind };
+})();
+
+// ============================================================================
 // 9. INIT
 // ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
+    DevMode.bind();
     renderModulesGrid();
     saveMaxUnlocked();
     syncRewards();   // on first run, records already-earned rewards without announcing them

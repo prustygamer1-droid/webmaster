@@ -165,7 +165,7 @@ const perfectUnitCount = () => [1, 2, 3, 4, 5, 6].filter(m => unitRecord(m).best
 const allUnitsPassed = () => unitsPassedCount() === 6;
 const moduleLessonsComplete = m => [1, 2, 3].every(s => lessonDone(m, s));
 // Preview (judge) mode lets reviewers open a unit test without playing the lessons first
-const unitTestOpen = m => unitPassed(m) || previewMode() || (m <= maxUnlocked() && moduleLessonsComplete(m));
+const unitTestOpen = m => unitPassed(m) || previewMode() || devMode() || (m <= maxUnlocked() && moduleLessonsComplete(m));
 
 function saveAttempt(record, correct, total) {
     const percent = Math.floor((correct * 100) / total);
@@ -344,7 +344,7 @@ function renderFinalExam() {
     const root = $('#final-exam-root');
     if (!root) return;
     const total = MODULES.length * FINAL_PER_MODULE;
-    const cert = activeCertificate(), record = finalRecord(), user = Portal.getActiveUser(), ready = allUnitsPassed();
+    const cert = activeCertificate(), record = finalRecord(), user = Portal.getActiveUser(), ready = allUnitsPassed() || devMode();
     let action;
     if (cert) {
         action = `<div class="summary-banner pass">🏆 Course completed! You passed the Final Exam with ${cert.score}%.</div>
@@ -374,7 +374,7 @@ function renderFinalExam() {
 function startFinalExam() {
     const root = $('#final-exam-root');
     const user = Portal.getActiveUser();
-    if (!root || !allUnitsPassed() || (!user && !activeCertificate())) return;
+    if (!root || !(allUnitsPassed() || devMode()) || (!user && !activeCertificate())) return;
     const takerId = user && user.id;
     renderAssessment(root, buildFinalExam(), {
         submitLabel: 'Submit Final Exam',
@@ -385,7 +385,7 @@ function startFinalExam() {
             store.set('finalExam', next);
             const alreadyCertified = !!activeCertificate();
             let rewards = [];
-            if (passed && taker && !alreadyCertified) {
+            if (passed && taker && !alreadyCertified && !devMode()) {   // Developer Mode never issues a certificate
                 issueCertificate(taker, percent);
                 Portal.addXP(FINAL_XP);
                 rewards = checkRewards();

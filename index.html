@@ -6,15 +6,15 @@
     <meta name="description" content="An interactive AI learning portal for high school students: lessons, simulators, arcade quizzes, badges, and an AI study chatbot.">
     <title>AI Learning Portal - TSA Webmaster Competition</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
-    <link rel="stylesheet" href="style.css?v=6">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@700;800&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=7">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@700;800&family=Fredoka:wght@500;700&family=Bangers&family=Shippori+Mincho:wght@700;800&display=swap" rel="stylesheet">
     <!-- Firebase App + Firestore (Compat SDK) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <!-- Must stay first: applies the equipped background before the page is drawn -->
-    <script src="theme.js?v=6"></script>
+    <script src="theme.js?v=7"></script>
     <div id="read-progress" aria-hidden="true"></div>
 
     <!-- Fixed Navbar -->
@@ -84,7 +84,7 @@
                         <p>Last Updated: October 2026</p>
                     </div>
                 </div>
-                <div class="footer-bottom">© 2026 AI Learning Portal • Technology Student Association • All Rights Reserved</div>
+                <div class="footer-bottom">© 2026 AI Learning Portal • Technology Student Association • All Rights Reserved <button type="button" class="dev-link" id="dev-mode-btn">🛠 Developer Mode</button></div>
             </footer>
         </div>
 
@@ -219,6 +219,11 @@
                         <input type="text" id="new-bio" placeholder="e.g., Mastering Prompt Engineering & Space Defense" maxlength="60">
                     </div>
                     <div class="form-group">
+                        <label for="new-password">Create a Password</label>
+                        <input type="password" id="new-password" minlength="6" maxlength="64" autocomplete="new-password" required>
+                        <p class="form-hint">At least 6 characters. You will need it to log back in to this profile.</p>
+                    </div>
+                    <div class="form-group">
                         <label id="avatar-label">Select Starting Avatar</label>
                         <div class="avatar-picker-grid" id="create-avatar-picker" role="group" aria-labelledby="avatar-label">
                             <button type="button" class="avatar-pick selected" data-avatar="images/Designer (1).png" aria-label="Avatar 1"><img src="images/Designer (1).png" alt=""></button>
@@ -227,6 +232,23 @@
                         </div>
                     </div>
                     <button type="submit" class="btn-cyan-primary">⚡ Initialize Profile</button>
+                </form>
+
+                <div class="profile-header-center login-divider">
+                    <h2 class="profile-main-title">Already Have a Profile?</h2>
+                    <p class="profile-subtext">Log in with your callsign and password. Each profile keeps its own lessons, badges, and rewards.</p>
+                </div>
+                <form id="login-form" class="profile-form-stack">
+                    <div class="device-profiles" id="device-profiles" hidden></div>
+                    <div class="form-group">
+                        <label for="login-username">Callsign</label>
+                        <input type="text" id="login-username" maxlength="18" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" maxlength="64" autocomplete="current-password" required>
+                    </div>
+                    <button type="submit" class="btn-cyan-secondary">🔑 Log In</button>
                 </form>
             </div>
 
@@ -247,7 +269,7 @@
                             <p id="dash-bio" class="profile-bio-text">Ready to conquer the AI modules.</p>
                             <span class="profile-joined-date" id="dash-joined">Profile active</span>
                         </div>
-                        <button type="button" class="btn-cyan-secondary" id="btn-switch-profile">Switch Profile</button>
+                        <button type="button" class="btn-cyan-secondary" id="btn-switch-profile">Log Out / Switch</button>
                     </div>
                     <div class="profile-stats-row" id="profile-stats-row"></div>
                 </div>
@@ -307,9 +329,9 @@
     </main>
 
     <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
-    <script src="app.js?v=6"></script>
-    <script src="games.js?v=6"></script>
-    <script src="layouts.js?v=6"></script>
-    <script src="exams.js?v=6"></script>
+    <script src="app.js?v=7"></script>
+    <script src="games.js?v=7"></script>
+    <script src="layouts.js?v=7"></script>
+    <script src="exams.js?v=7"></script>
 </body>
 </html>

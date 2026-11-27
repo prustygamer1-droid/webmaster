@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Manga Scrappy</title>
+  <defs>
+    <pattern id="ms-tone" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <circle cx="4.5" cy="4.5" r="2.1" fill="#111"/>
+    </pattern>
+    <pattern id="ms-tone-fine" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <circle cx="3" cy="3" r="1.1" fill="#111"/>
+    </pattern>
+    <radialGradient id="ms-fade" cx="50%" cy="48%" r="60%">
+      <stop offset=".45" stop-color="#000"/>
+      <stop offset="1" stop-color="#fff"/>
+    </radialGradient>
+    <mask id="ms-corners"><rect width="512" height="512" fill="url(#ms-fade)"/></mask>
+  </defs>
+
+  <!-- paper, screentone corners and focus lines -->
+  <rect width="512" height="512" fill="#f4f1ea"/>
+  <rect width="512" height="512" fill="url(#ms-tone)" mask="url(#ms-corners)"/>
+  <path fill="#111" d="M459.7 251.1L676.0 248.9L676.0 255.4ZM466.1 266.3L674.9 281.0L674.6 284.0ZM479.9 281.8L672.2 306.1L671.4 312.1ZM487.6 294.0L669.1 325.8L668.1 331.0ZM480.5 307.1L664.3 348.6L661.8 358.4ZM458.0 313.3L657.3 373.9L656.3 377.1ZM476.6 328.7L652.5 388.6L650.7 393.7ZM437.2 334.6L637.3 426.0L635.8 429.3ZM465.1 359.5L629.0 443.1L627.1 446.6ZM464.5 376.0L617.1 464.5L613.9 469.9ZM418.6 364.6L601.1 489.4L597.5 494.5ZM439.3 394.5L587.0 508.5L584.7 511.5ZM401.8 378.3L575.0 523.2L567.6 531.6ZM417.8 398.8L567.4 531.9L562.8 536.9ZM426.3 430.0L548.3 551.6L540.9 558.6ZM387.9 408.5L528.1 570.0L521.2 575.7ZM391.0 437.9L502.9 589.7L499.1 592.5ZM384.4 445.7L488.0 600.1L484.6 602.3ZM357.8 437.4L459.9 617.2L453.1 620.9ZM353.6 456.8L439.4 627.8L431.1 631.8ZM342.0 448.6L428.1 633.1L417.5 637.7ZM327.4 444.8L402.5 643.6L398.7 645.0ZM316.9 453.2L379.7 651.4L373.5 653.2ZM301.0 435.7L360.1 656.9L349.7 659.4ZM292.9 456.5L334.3 662.6L325.6 664.2ZM282.6 463.8L310.5 666.4L305.0 667.1ZM273.8 463.3L296.2 668.1L285.8 668.9ZM251.9 499.4L254.0 670.0L244.1 669.8ZM240.4 491.6L232.4 669.3L225.6 668.9ZM237.7 455.8L224.7 668.8L213.0 667.8ZM225.3 447.0L196.1 665.7L186.7 664.2ZM213.8 440.6L167.4 660.5L163.2 659.6ZM191.1 477.6L144.0 654.8L137.6 653.0ZM176.4 474.4L119.7 647.3L111.5 644.4ZM178.7 426.8L92.7 636.9L82.7 632.6ZM166.2 443.3L82.3 632.4L75.9 629.4ZM160.4 417.7L52.7 617.5L43.2 612.1ZM146.5 418.0L28.3 602.9L25.2 600.9ZM141.5 412.5L18.7 596.5L9.6 590.1ZM103.6 441.0L-2.0 581.4L-9.9 575.1ZM93.1 434.3L-20.3 566.4L-23.9 563.2ZM94.4 410.3L-38.9 549.1L-45.4 542.5ZM92.6 393.9L-56.2 530.9L-62.1 524.2ZM75.0 387.7L-77.1 505.8L-79.4 502.9ZM64.4 382.8L-86.6 492.9L-91.7 485.6ZM62.6 373.3L-96.2 478.8L-100.0 472.8ZM76.2 345.7L-112.0 452.3L-117.4 442.3ZM31.2 351.7L-125.6 425.4L-127.7 420.9ZM37.4 331.0L-135.9 401.0L-139.7 390.8ZM66.7 317.1L-137.9 395.6L-141.8 384.8ZM68.6 303.9L-146.0 371.6L-149.2 360.6ZM37.7 293.1L-155.1 336.1L-157.0 326.5ZM62.6 275.4L-159.8 309.5L-161.0 300.0ZM19.7 275.3L-160.9 300.6L-162.2 289.0ZM34.8 255.2L-163.8 263.6L-164.0 256.3ZM15.0 239.7L-163.7 234.8L-163.5 229.4ZM39.8 230.7L-162.7 217.4L-161.9 207.8ZM51.5 224.5L-160.9 199.4L-160.6 196.6ZM26.5 209.0L-158.4 181.6L-156.5 170.8ZM46.0 192.9L-149.6 141.1L-148.9 138.5ZM63.5 188.4L-144.5 123.4L-143.5 120.4ZM26.7 162.5L-137.6 103.4L-135.2 97.2ZM49.3 158.5L-129.2 82.7L-126.8 77.3ZM82.9 155.3L-114.3 51.9L-110.6 45.0ZM83.0 151.9L-110.1 44.1L-108.6 41.5ZM95.3 145.0L-96.9 22.2L-94.2 18.2ZM83.3 123.7L-86.3 6.6L-79.6 -2.5ZM72.1 94.7L-68.3 -16.9L-61.5 -24.9ZM79.4 77.4L-46.3 -41.5L-42.5 -45.5ZM93.6 75.9L-33.8 -54.0L-27.0 -60.4ZM133.5 100.5L-12.1 -73.3L-8.4 -76.3ZM139.1 95.6L1.3 -84.0L3.7 -85.8ZM152.9 87.9L27.6 -102.4L33.7 -106.3ZM141.1 52.1L42.7 -111.8L47.6 -114.7ZM159.2 50.5L68.0 -125.6L77.2 -130.1ZM167.1 49.8L83.0 -132.7L88.0 -134.9ZM174.0 22.9L112.0 -144.5L114.8 -145.5ZM187.2 28.9L126.8 -149.6L135.5 -152.3ZM207.0 33.7L158.7 -158.6L167.9 -160.7ZM214.9 43.6L169.0 -160.9L179.1 -162.9ZM231.0 31.9L205.5 -167.0L210.9 -167.6ZM240.5 46.3L220.5 -168.5L227.7 -169.0ZM250.4 18.7L241.0 -169.7L250.5 -170.0ZM268.4 53.0L279.4 -169.3L285.3 -169.0ZM284.5 24.8L305.7 -167.1L311.9 -166.3ZM292.8 31.0L323.1 -164.6L328.1 -163.8ZM305.6 30.9L345.8 -160.3L351.5 -159.0ZM314.2 50.6L369.8 -154.3L377.6 -152.0ZM322.2 51.7L387.7 -148.8L390.4 -147.9ZM345.0 40.3L415.6 -138.5L424.6 -134.7ZM358.0 38.1L435.9 -129.5L440.4 -127.3ZM355.1 72.9L457.8 -118.3L464.3 -114.7ZM368.4 78.9L483.6 -103.0L489.7 -99.0ZM378.7 86.1L503.7 -89.2L511.6 -83.3ZM377.6 95.9L514.7 -80.9L517.5 -78.7ZM398.8 91.6L536.2 -62.8L538.2 -61.0ZM425.9 82.3L552.8 -47.1L557.0 -42.9ZM424.8 106.5L573.1 -25.4L578.9 -18.6ZM406.9 131.3L584.3 -12.0L587.8 -7.5ZM450.9 113.0L597.1 4.9L602.0 12.0ZM440.5 133.6L609.5 23.1L612.9 28.7ZM425.2 155.7L621.4 42.9L624.2 48.0ZM449.6 165.0L639.1 77.8L642.0 84.4ZM483.9 160.1L645.5 92.8L647.9 98.9ZM440.0 189.8L653.4 114.0L656.9 124.8ZM478.6 192.4L662.2 143.3L663.0 146.3ZM448.6 207.1L665.0 154.6L666.8 162.6ZM466.3 214.3L669.0 173.9L671.0 185.4ZM499.4 222.4L672.9 199.0L673.7 206.4ZM483.5 246.5L675.8 238.5L676.0 248.5Z"/>
+
+  <!-- waving arm (behind body) -->
+  <g transform="translate(112 330) rotate(-52)">
+    <rect x="-22" y="-96" width="44" height="120" rx="22" fill="#fff" stroke="#111" stroke-width="8"/>
+    <rect x="-22" y="-20" width="44" height="44" rx="14" fill="url(#ms-tone-fine)" stroke="#111" stroke-width="6"/>
+  </g>
+  <g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round">
+    <path d="M14 214 Q8 244 22 270"/><path d="M40 196 Q30 214 36 232"/>
+  </g>
+  <!-- right arm -->
+  <g transform="translate(392 410) rotate(38)">
+    <rect x="-22" y="-60" width="44" height="120" rx="22" fill="#fff" stroke="#111" stroke-width="8"/>
+    <rect x="-22" y="-60" width="44" height="40" rx="14" fill="url(#ms-tone-fine)" stroke="#111" stroke-width="6"/>
+  </g>
+
+  <!-- body -->
+  <path d="M164 352 Q256 318 348 352 L360 470 Q256 532 152 470 Z" fill="#fff" stroke="#111" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M168 356 Q256 326 344 356 L348 398 Q300 386 274 396 L268 452 Q256 466 244 452 L238 396 Q212 386 164 398 Z" fill="url(#ms-tone-fine)" stroke="#111" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="256" cy="384" r="18" fill="#fff" stroke="#111" stroke-width="6"/>
+  <circle cx="256" cy="384" r="8" fill="#67e8f9"/>
+
+  <g transform="rotate(-7 256 230)">
+    <!-- antennae -->
+    <ellipse cx="168" cy="96" rx="15" ry="46" fill="url(#ms-tone-fine)" stroke="#111" stroke-width="7" transform="rotate(-14 168 96)"/>
+    <ellipse cx="350" cy="104" rx="15" ry="46" fill="url(#ms-tone-fine)" stroke="#111" stroke-width="7" transform="rotate(18 350 104)"/>
+    <path d="M160 70 Q158 90 162 110" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+    <!-- ear pods -->
+    <rect x="96" y="186" width="48" height="76" rx="22" fill="url(#ms-tone-fine)" stroke="#111" stroke-width="7"/>
+    <rect x="368" y="186" width="48" height="76" rx="22" fill="url(#ms-tone-fine)" stroke="#111" stroke-width="7"/>
+    <!-- head -->
+    <rect x="124" y="128" width="264" height="198" rx="58" fill="#fff" stroke="#111" stroke-width="10"/>
+    <path d="M140 290 Q150 312 180 314" fill="none" stroke="#111" stroke-width="3"/>
+    <g stroke="#111" stroke-width="2.5"><line x1="360" y1="270" x2="374" y2="256"/><line x1="356" y1="284" x2="376" y2="264"/><line x1="358" y1="296" x2="378" y2="276"/></g>
+    <!-- visor -->
+    <rect x="156" y="158" width="200" height="136" rx="36" fill="#0b0b0b" stroke="#111" stroke-width="6"/>
+    <path d="M318 172 L340 172 L304 214 L290 214 Z" fill="#fff" opacity=".85"/>
+    <circle cx="336" cy="200" r="5" fill="#fff"/>
+    <!-- ^^ eyes in the one spot colour -->
+    <g fill="none" stroke-linecap="round">
+      <path d="M190 246 Q216 200 242 246" stroke="#fff" stroke-width="22"/>
+      <path d="M270 246 Q296 200 322 246" stroke="#fff" stroke-width="22"/>
+      <path d="M190 246 Q216 200 242 246" stroke="#67e8f9" stroke-width="13"/>
+      <path d="M270 246 Q296 200 322 246" stroke="#67e8f9" stroke-width="13"/>
+    </g>
+    <!-- blush hatching -->
+    <g stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".9">
+      <line x1="180" y1="276" x2="190" y2="262"/><line x1="192" y1="278" x2="202" y2="264"/><line x1="204" y1="280" x2="214" y2="266"/>
+      <line x1="298" y1="280" x2="308" y2="266"/><line x1="310" y1="278" x2="320" y2="264"/><line x1="322" y1="276" x2="332" y2="262"/>
+    </g>
+  </g>
+
+  <!-- sparkles and sweat drop -->
+  <g fill="#fff" stroke="#111" stroke-width="5" stroke-linejoin="round">
+    <path d="M430 72 Q436 104 466 110 Q436 116 430 148 Q424 116 394 110 Q424 104 430 72 Z"/>
+    <path d="M462 168 Q465 184 480 187 Q465 190 462 206 Q459 190 444 187 Q459 184 462 168 Z"/>
+    <path d="M448 246 Q464 272 450 286 Q434 290 432 274 Q432 262 448 246 Z"/>
+  </g>
+  <path d="M440 274 Q440 266 446 260" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+</svg>

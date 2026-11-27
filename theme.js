@@ -8,6 +8,63 @@
    records which pages have been visited (for the Explorer badge).
    Load this as the first thing inside <body> so the background never flashes.
    ============================================================================ */
+
+// ---- Accounts: every profile keeps its own progress on this device ---------
+// Progress keys are stored as "acct:<profile id>:<key>" ("guest" when nobody is
+// logged in). Developer Mode uses a separate throwaway sandbox ("acct:dev:<id>:").
+const PortalAccount = (() => {
+    const ID_KEY = 'ai_portal_active_user_id';
+    const DEV_KEY = 'ai_portal_dev';
+    const OWNED_KEY = 'ai_portal_owned_profiles';
+    // Saved for the whole device, not per profile
+    const DEVICE_KEYS = new Set(['ai_portal_local_directory', 'ai_portal_owned_profiles', 'sfxMuted', 'certificates']);
+    // Progress that used to be shared by everyone on this browser
+    const LEGACY_KEYS = ['completedLessons', 'maxUnlockedModule', 'unitGate', 'unitTests', 'finalExam', 'gamesPlayed', 'localXP',
+        'bestStreak', 'bestActionCombo', 'bossDefeated', 'perfectQuizzes', 'questionsAsked', 'seenRewards', 'inspectedCadets',
+        'usedBackground', 'visitedPages', 'previewAll'];
+
+    const read = (k, store = localStorage) => { try { return store.getItem(k); } catch { return null; } };
+    const write = (k, v, store = localStorage) => { try { if (v === null) store.removeItem(k); else store.setItem(k, v); } catch { /* storage blocked */ } };
+
+    const activeId = () => read(ID_KEY);
+    const devMode = () => read(DEV_KEY, sessionStorage) === '1';
+    const prefix = () => `acct:${devMode() ? 'dev:' : ''}${activeId() || 'guest'}:`;
+    const key = k => DEVICE_KEYS.has(k) ? k : prefix() + k;
+
+    const owned = () => { try { return JSON.parse(read(OWNED_KEY)) || []; } catch { return []; } };
+    const markOwned = id => { if (id && !owned().includes(id)) write(OWNED_KEY, JSON.stringify([...owned(), id])); };
+
+    // One-time move of the old shared progress to whoever was logged in at the time
+    if (!read('ai_portal_accounts_v2')) {
+        const owner = activeId() || 'guest';
+        LEGACY_KEYS.forEach(k => {
+            const v = read(k);
+            if (v === null) return;
+            if (read(`acct:${owner}:${k}`) === null) write(`acct:${owner}:${k}`, v);
+            write(k, null);
+        });
+        if (activeId()) markOwned(activeId());
+        write('ai_portal_accounts_v2', '1');
+    }
+
+    // Switching account or mode reloads the page, so every module starts from that account's data
+    const reload = () => location.reload();
+    function logIn(id) { write(ID_KEY, id); markOwned(id); reload(); }
+    function logOut() { write(ID_KEY, null); reload(); }
+    function setDevMode(on) {
+        if (on) {
+            // Fresh sandbox every time Developer Mode starts
+            const stale = [];
+            for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith('acct:dev:')) stale.push(k); }
+            stale.forEach(k => write(k, null));
+        }
+        write(DEV_KEY, on ? '1' : null, sessionStorage);
+        reload();
+    }
+
+    return { ID_KEY, activeId, devMode, key, owned, markOwned, logIn, logOut, setDevMode };
+})();
+
 const PortalTheme = (() => {
     const THEME_KEY = 'ai_portal_active_theme';
     const VISIT_KEY = 'visitedPages';
@@ -22,6 +79,8 @@ const PortalTheme = (() => {
         bg_robot_painting: { name: 'Robot Painting', img: 'images/Untitled Design (2).png', palette: { accent: '#8fd3ff', accent2: '#2f7fb8', soft: '#5eb1e0', alt: '#2dd4bf', btn: ['#e0f2fe', '#7cc4ee'], ink: '#082f49', nav: ['#0b1c28', '#143247', '#1d4764'] } },
         bg_true_gold: { name: 'True Gold', img: 'images/generate_image_02.png', palette: { accent: '#ffd700', accent2: '#b8860b', soft: '#f2c94c', alt: '#ff9f1c', btn: ['#ffe566', '#e0a812'], ink: '#1c1300', nav: ['#0d0a02', '#1f1806', '#33270a'] } },
         bg_deep_space: { name: 'Deep Space', img: 'images/generate_a_flat_front-facing_full-bleed_deep_space_cosmic_ba.jpg', palette: { accent: '#e08bff', accent2: '#7c3aed', soft: '#c084fc', alt: '#f472b6', btn: ['#f0abfc', '#a78bfa'], ink: '#180426', nav: ['#07020f', '#180a2e', '#2a1050'] } },
+        bg_manga: { name: 'Manga Panels', img: 'images/bg_manga.svg', shade: [.66, .78], palette: { accent: '#f5f5f5', accent2: '#3f3f46', soft: '#d4d4d8', alt: '#ff3b5c', btn: ['#ffffff', '#d4d4d8'], ink: '#0a0a0a', nav: ['#000000', '#141414', '#232323'] } },
+        bg_fuji: { name: 'Mount Fuji Twilight', img: 'images/bg_fuji.svg', shade: [.42, .62], palette: { accent: '#ffb7d0', accent2: '#be123c', soft: '#fda4c4', alt: '#fbbf24', btn: ['#ffc8dc', '#f472b6'], ink: '#2a0614', nav: ['#0a0b1f', '#1d1640', '#3a1d4f'] } },
         bg_scrappy_console: { name: 'Scrappy on Console', img: 'images/b649ac97-d785-4643-951c-191279da5b6b.jpg', palette: { accent: '#b4cde6', accent2: '#4f6d8a', soft: '#8aa9c4', alt: '#a5b4fc', btn: ['#e2e8f0', '#93b4d1'], ink: '#0f172a', nav: ['#0d1117', '#1b2430', '#273445'] } },
         bg_neon_grid: { name: 'Neon Horizon Grid', palette: { accent: '#22e4ff', accent2: '#7c3aed', soft: '#67e8f9', alt: '#c026d3', btn: ['#22e4ff', '#a78bfa'], ink: '#0b0320', nav: ['#070316', '#160a36', '#241053'] } },
         bg_aurora: { name: 'Quantum Aurora', palette: { accent: '#5eead4', accent2: '#0e7490', soft: '#34d399', alt: '#818cf8', btn: ['#6ee7b7', '#38bdf8'], ink: '#022018', nav: ['#020d16', '#07283a', '#0b3d4d'] } },
@@ -126,9 +185,9 @@ const PortalTheme = (() => {
         }
         if (layer.dataset.bg === k) return;
         layer.dataset.bg = k;
-        const img = BACKGROUNDS[k].img;
-        // The dark shade keeps text readable on top of bright pictures
-        layer.style.backgroundImage = img ? `linear-gradient(rgba(8,8,18,.78), rgba(8,8,18,.88)), url("${img}")` : '';
+        const { img, shade = [.78, .88] } = BACKGROUNDS[k];
+        // The dark shade keeps text readable on top of bright pictures (darker scenes can use a lighter shade)
+        layer.style.backgroundImage = img ? `linear-gradient(rgba(8,8,18,${shade[0]}), rgba(8,8,18,${shade[1]})), url("${img}")` : '';
         root.classList.toggle('has-global-bg', k !== 'bg_default');
         if (BACKGROUNDS[k].matrix) startMatrix(layer); else stopMatrix();
     }
@@ -140,7 +199,7 @@ const PortalTheme = (() => {
     }
 
     function visited() {
-        try { return JSON.parse(localStorage.getItem(VISIT_KEY)) || {}; }
+        try { return JSON.parse(localStorage.getItem(PortalAccount.key(VISIT_KEY))) || {}; }
         catch { return {}; }
     }
 
@@ -149,7 +208,7 @@ const PortalTheme = (() => {
         const v = visited();
         if (v[page]) return false;
         v[page] = true;
-        try { localStorage.setItem(VISIT_KEY, JSON.stringify(v)); } catch { /* storage blocked */ }
+        try { localStorage.setItem(PortalAccount.key(VISIT_KEY), JSON.stringify(v)); } catch { /* storage blocked */ }
         return true;
     }
 

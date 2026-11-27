@@ -773,6 +773,36 @@ footer.site-footer {
 #active-profile-view.theme-bg_true_gold { --t-head: var(--text-accent); --t-head-glow: 0 0 12px var(--accent-glow); --t-font: 'Cinzel', 'Orbitron', sans-serif; }
 #active-profile-view.theme-bg_scrappy_console { --t-font: 'Fredoka', 'Orbitron', sans-serif; }
 #active-profile-view.theme-bg_grandmaster { --t-head-glow: 0 0 12px var(--accent-glow); }
+/* Manga Panels: inked borders, hard offset shadows, halftone cards, comic lettering */
+#active-profile-view.theme-bg_manga {
+    --t-card: radial-gradient(rgba(255,255,255,.08) 1.2px, transparent 1.7px) 0 0 / 9px 9px, linear-gradient(160deg, #141414, #050505);
+    --t-border: #f5f5f5;
+    --t-bw: 3px;
+    --t-shadow: 7px 7px 0 #000;
+    --t-head: #fff;
+    --t-head-glow: 3px 3px 0 #000;
+    --t-text: #d4d4d8;
+    --t-accent: #ff3b5c;
+    --t-btn: #0a0a0a;
+    --t-btn-border: #f5f5f5;
+    --t-btn-text: #fff;
+    --t-font: 'Bangers', 'Impact', 'Outfit', sans-serif;
+}
+/* Mount Fuji Twilight: lacquer-red frame with a gold inlay, sakura glow, Japanese serif headings */
+#active-profile-view.theme-bg_fuji {
+    --t-card: radial-gradient(circle at 100% 0%, rgba(255,183,208,.18), transparent 45%), linear-gradient(170deg, rgba(28,20,62,.94), rgba(62,22,64,.92));
+    --t-border: #e2563f;
+    --t-bw: 2px;
+    --t-shadow: 0 0 0 4px rgba(14,10,36,.9), 0 0 0 5px rgba(251,191,36,.55), 0 14px 32px rgba(255,120,170,.18);
+    --t-head: #ffe4ee;
+    --t-head-glow: 0 0 14px rgba(255,158,196,.55);
+    --t-text: #ead6e2;
+    --t-accent: #ffb7d0;
+    --t-btn: linear-gradient(135deg, rgba(226,86,63,.24), rgba(255,183,208,.16));
+    --t-btn-border: #ffb7d0;
+    --t-btn-text: #ffe4ee;
+    --t-font: 'Shippori Mincho', 'Cinzel', serif;
+}
 
 /* Equipped theme accent. It must stay after the theme blocks so it overrides them. */
 #active-profile-view.has-accent { --t-border: rgb(var(--r-rgb)); --t-shadow: 0 0 20px rgba(var(--r-rgb), .35); }
@@ -798,6 +828,35 @@ footer.site-footer {
 #active-profile-view .reward-card.locked { border-style: dashed; box-shadow: none; }
 #active-profile-view .reward-card.equipped { outline: 2px solid var(--t-accent); outline-offset: 2px; }
 #active-profile-view .edit-controls-row input, #active-profile-view .directory-search-input { background: rgba(0,0,0,.35); color: #fff; }
+
+/* Manga Panels: shape overrides that variables alone cannot express */
+#active-profile-view.theme-bg_manga :is(.profile-card-container, .shop-item, .reward-card, .directory-row) { border-radius: 4px; }
+#active-profile-view.theme-bg_manga :is(h1, h2, h3, h4, .directory-title, .vault-heading, .sub-heading, .dir-name) { letter-spacing: .06em; font-weight: 400; }
+#active-profile-view.theme-bg_manga :is(.btn-cyan-secondary, .lb-tab) { border-width: 2px; border-radius: 4px; box-shadow: 4px 4px 0 #000; animation: none; letter-spacing: .08em; font-size: 1.05em; }
+#active-profile-view.theme-bg_manga .btn-cyan-secondary:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #ff3b5c; }
+#active-profile-view.theme-bg_manga .lb-tab.active { background: #fff; color: #000; }
+#active-profile-view.theme-bg_manga .profile-avatar-ring:not(.has-frame),
+#active-profile-view.theme-bg_manga .dir-avatar:not(.has-frame) { border: 3px solid #fff; box-shadow: 4px 4px 0 #000, 0 0 0 6px #000; }
+#active-profile-view.theme-bg_manga :is(.edit-controls-row input, .directory-search-input) { border: 2px solid #f5f5f5; border-radius: 4px; box-shadow: 3px 3px 0 #000; }
+
+/* Mount Fuji Twilight */
+#active-profile-view.theme-bg_fuji :is(.profile-card-container, .shop-item, .reward-card, .directory-row) { border-radius: 16px 4px 16px 4px; }
+#active-profile-view.theme-bg_fuji :is(h1, h2, h3, h4, .directory-title, .vault-heading, .sub-heading, .dir-name) { font-weight: 800; letter-spacing: .03em; }
+#active-profile-view.theme-bg_fuji :is(.btn-cyan-secondary, .lb-tab) { border-radius: 999px; }
+#active-profile-view.theme-bg_fuji .lb-tab.active { background: linear-gradient(135deg, #ffc8dc, #f472b6); color: #2a0614; }
+#active-profile-view.theme-bg_fuji .profile-avatar-ring:not(.has-frame),
+#active-profile-view.theme-bg_fuji .dir-avatar:not(.has-frame) { border: 2px solid #e2563f; box-shadow: 0 0 0 3px #1a1236, 0 0 0 5px #fbbf24, 0 0 22px rgba(255,158,196,.6); }
+#active-profile-view.theme-bg_fuji .profile-card-container { position: relative; }
+#active-profile-view.theme-bg_fuji .profile-card-container::after {
+    content: ''; position: absolute; top: 10px; right: 12px; width: 26px; height: 26px; pointer-events: none; opacity: .85;
+    background: radial-gradient(circle, #fbbf24 0 3px, transparent 4px), conic-gradient(from 0deg, #ffb7d0 0 14%, transparent 14% 20%, #ffb7d0 20% 34%, transparent 34% 40%, #ffb7d0 40% 54%, transparent 54% 60%, #ffb7d0 60% 74%, transparent 74% 80%, #ffb7d0 80% 94%, transparent 94%);
+    border-radius: 50%;
+}
+
+
+/* Page titles pick up the theme's lettering site-wide */
+html.has-global-bg[data-theme="bg_manga"] .page-title { font-family: 'Bangers', 'Impact', sans-serif; font-weight: 400; letter-spacing: .06em; text-shadow: 4px 4px 0 #000; }
+html.has-global-bg[data-theme="bg_fuji"] .page-title { font-family: 'Shippori Mincho', 'Cinzel', serif; font-weight: 800; text-shadow: 0 0 18px rgba(255,158,196,.55), 0 2px 4px #000; }
 
 /* ==================================================
    TOASTS
@@ -1317,3 +1376,29 @@ a.btn-ghost { font-size: .85rem; }
     .cert-inner { padding: 26px 16px; }
 }
 @media print { .cursor-layer, .fx-layer { display: none !important; } }
+
+/* ==================================================
+   ACCOUNTS: log in / switch profile
+   ================================================== */
+.login-divider { margin-top: 34px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.08); }
+.login-divider .profile-main-title { font-size: 1.4rem; }
+.device-profiles { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.device-profiles[hidden] { display: none; }
+.device-profiles-label { color: #94a3b8; font-size: .85rem; font-weight: 700; margin-right: 2px; }
+.device-profile { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; background: rgba(var(--accent-rgb),.08); border: 1px solid rgba(var(--accent-rgb),.35); border-radius: 999px; color: #fff; font-weight: 700; font-size: .85rem; cursor: pointer; transition: background .2s ease, border-color .2s ease; }
+.device-profile:hover { background: rgba(var(--accent-rgb),.18); border-color: var(--cyan); }
+.device-profile img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
+
+/* ==================================================
+   DEVELOPER MODE
+   ================================================== */
+.dev-link { margin-left: 10px; padding: 0; background: none; border: none; color: inherit; font: inherit; opacity: .55; text-decoration: underline; cursor: pointer; }
+.dev-link:hover, .dev-link:focus-visible { opacity: 1; }
+.dev-card { max-width: 460px; }
+.dev-card h2 { font-family: 'Orbitron', sans-serif; margin: 0 0 10px; color: #fff; font-size: 1.3rem; }
+.dev-card p { color: #cbd5e1; margin: 0 0 18px; line-height: 1.5; }
+.dev-card label { display: block; font-weight: 700; color: #cbd5e1; margin-bottom: 8px; }
+.dev-card input { width: 100%; padding: 13px 16px; background: rgba(255,255,255,.04); border: 1px solid rgba(var(--accent-rgb),.3); border-radius: 12px; color: #fff; font-size: .95rem; }
+.dev-card input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 15px rgba(var(--accent-rgb),.25); }
+.dev-banner { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 10004; display: flex; align-items: center; gap: 14px; max-width: calc(100% - 32px); padding: 10px 12px 10px 18px; background: rgba(10,14,26,.94); border: 1px solid #f59e0b; border-radius: 14px; color: #fde68a; font-size: .88rem; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
+.dev-banner .btn-ghost { padding: 6px 14px; white-space: nowrap; }
