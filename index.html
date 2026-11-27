@@ -6,13 +6,15 @@
     <meta name="description" content="An interactive AI learning portal for high school students: lessons, simulators, arcade quizzes, badges, and an AI study chatbot.">
     <title>AI Learning Portal - TSA Webmaster Competition</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=5">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@700;800&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
     <!-- Firebase App + Firestore (Compat SDK) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
+    <!-- Must stay first: applies the equipped background before the page is drawn -->
+    <script src="theme.js?v=5"></script>
     <div id="read-progress" aria-hidden="true"></div>
 
     <!-- Fixed Navbar -->
@@ -126,8 +128,25 @@
             </div>
 
             <div class="panel">
-                <h3>Earned Achievement Badges</h3>
-                <div class="badge-grid" id="badge-grid"></div>
+                <h3>Profile Reward Progress</h3>
+                <p class="panel-note" id="reward-summary-count"></p>
+                <div id="reward-summary-meter"></div>
+                <h4 class="next-heading">Next Rewards Within Reach</h4>
+                <div class="next-reward-grid" id="next-rewards"></div>
+                <button type="button" class="btn-cyan-secondary" id="dash-view-rewards" data-go="profile"></button>
+            </div>
+
+            <div class="panel">
+                <h3>Cadet Leaderboard</h3>
+                <p class="panel-note">Click any player to inspect their profile, high scores, and badges.</p>
+                <div class="leaderboard-tabs" role="group" aria-label="Leaderboard category" data-board="dashboard"></div>
+                <div id="dash-leaderboard" class="directory-list"></div>
+            </div>
+
+            <div class="panel">
+                <h3>Achievement Badges &amp; Rewards</h3>
+                <p class="panel-note" id="badge-count"></p>
+                <div id="badge-grid"></div>
             </div>
         </section>
 
@@ -204,23 +223,32 @@
                                 <h1 id="dash-username">Cadet</h1>
                                 <span class="profile-rank-pill" id="dash-rank">Rookie AI Explorer</span>
                             </div>
+                            <div class="profile-flair-row">
+                                <span class="title-pill" id="dash-title" hidden></span>
+                                <span class="chat-badge" id="dash-chat-badge" hidden></span>
+                            </div>
                             <p id="dash-bio" class="profile-bio-text">Ready to conquer the AI modules.</p>
                             <span class="profile-joined-date" id="dash-joined">Profile active</span>
                         </div>
                         <button type="button" class="btn-cyan-secondary" id="btn-switch-profile">Switch Profile</button>
                     </div>
-                    <div class="profile-stats-row">
-                        <div class="p-stat-box"><span class="p-stat-label">TOTAL XP</span><span class="p-stat-num" id="dash-xp">0</span></div>
-                        <div class="p-stat-box"><span class="p-stat-label">ROCKET DEFENDER</span><span class="p-stat-num" id="dash-score-rocket">0</span></div>
-                        <div class="p-stat-box"><span class="p-stat-label">BLOCK BLAST AI</span><span class="p-stat-num" id="dash-score-blockblast">0</span></div>
-                        <div class="p-stat-box"><span class="p-stat-label">CANNON LAUNCHER</span><span class="p-stat-num" id="dash-score-pirate">0</span></div>
+                    <div class="profile-stats-row" id="profile-stats-row"></div>
+                </div>
+
+                <!-- Badge rewards (cards are built by app.js) -->
+                <div class="profile-card-container" style="margin-top:24px;">
+                    <div class="locker-header">
+                        <h2 class="vault-heading">🎁 Badge Reward Locker</h2>
+                        <span class="locker-count" id="locker-count"></span>
                     </div>
+                    <p class="profile-subtext">Earn badges to unlock these perks for free. Equip one title, avatar border, theme accent, chat badge, and background at a time. Backgrounds apply to every page.</p>
+                    <div id="reward-locker"></div>
                 </div>
 
                 <!-- XP shop (cards are built by app.js) -->
                 <div class="profile-card-container" style="margin-top:24px;">
                     <h2 class="vault-heading">🛒 Cadet Customization Vault</h2>
-                    <p class="profile-subtext">Spend your hard-earned XP to unlock exclusive profile backgrounds and rare avatars!</p>
+                    <p class="profile-subtext">Spend your hard-earned XP to unlock site-wide backgrounds and rare avatars!</p>
                     <div class="vault-grid" id="shop-grid"></div>
                 </div>
 
@@ -251,12 +279,7 @@
                         </div>
                         <input type="text" id="global-profile-search" class="directory-search-input" placeholder="🔍 Search callsign..." aria-label="Search cadets">
                     </div>
-                    <div class="leaderboard-tabs" role="tablist">
-                        <button type="button" class="lb-tab active" data-cat="xp">🌟 Top XP</button>
-                        <button type="button" class="lb-tab" data-cat="rocket">🚀 Rocket</button>
-                        <button type="button" class="lb-tab" data-cat="blockblast">🧱 Block Blast</button>
-                        <button type="button" class="lb-tab" data-cat="pirate">🏴‍☠️ Pirate</button>
-                    </div>
+                    <div class="leaderboard-tabs" role="group" aria-label="Leaderboard category" data-board="directory"></div>
                     <div id="global-directory-list" class="directory-list"></div>
                 </div>
             </div>
@@ -264,6 +287,7 @@
     </main>
 
     <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
-    <script src="app.js"></script>
+    <script src="app.js?v=5"></script>
+    <script src="games.js?v=5"></script>
 </body>
 </html>

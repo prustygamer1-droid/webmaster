@@ -371,7 +371,7 @@ const LESSONS = {
         title: 'Module 1: Fundamental AI Concepts',
         subs: {
             1: {
-                title: '1.1 Machine Learning Fundamentals', game: 'rocket',
+                title: '1.1 Machine Learning Fundamentals',
                 html: () => article(
                     hdr('Core Concept Article', 'Demystifying Machine Learning', 'An exciting journey into how computers stop following rigid rules and start learning from experience just like humans do.'),
                     h3('1. The Big Shift: Traditional Coding vs. Machine Learning'),
@@ -399,7 +399,7 @@ const LESSONS = {
                 )
             },
             2: {
-                title: '1.2 Neural Networks & Deep Learning', game: 'blockblast',
+                title: '1.2 Neural Networks & Deep Learning',
                 html: () => article(
                     hdr('Deep Learning', 'Neural Networks & Modern AI Systems', `Learn how neural networks process information, recognize patterns, and power today's advanced AI systems such as ChatGPT and image generators.`),
                     `<div class="article-callout article-reading-card">
@@ -421,7 +421,7 @@ const LESSONS = {
                 )
             },
             3: {
-                title: '1.3 Computer Vision & Generative AI Risks', game: 'pirate',
+                title: '1.3 Computer Vision & Generative AI Risks',
                 html: () => article(
                     hdr('Vision & Reliability', 'Computer Vision & Generative Hallucinations', 'Analyzing how machines interpret pixel data, exploring feature extraction, and examining the critical reliability risks of generative AI hallucinations.', 'vision-badge'),
                     h3('1. Computer Vision (CV) Fundamentals'),
@@ -443,7 +443,7 @@ const LESSONS = {
         title: 'Module 2: Practical AI Tools & Techniques',
         subs: {
             1: {
-                title: '2.1 Foundational Prompt Engineering', game: 'rocket',
+                title: '2.1 Foundational Prompt Engineering',
                 html: () => article(
                     hdr('Practical AI Mastery', 'Foundational Prompt Engineering', 'Learn how to communicate with Large Language Models (LLMs) using structured frameworks that turn vague guesses into precise, reliable results.'),
                     h3('1. Why Prompts Matter: Predicting Tokens, Not Reading Minds'),
@@ -462,7 +462,7 @@ const LESSONS = {
                 )
             },
             2: {
-                title: '2.2 Advanced Reasoning Frameworks', game: 'blockblast',
+                title: '2.2 Advanced Reasoning Frameworks',
                 html: () => article(
                     hdr('Reasoning & Logic', 'Chain-of-Thought & Few-Shot Frameworks', 'Unlock multi-step problem solving in LLMs by guiding models to show their intermediate reasoning steps before committing to a final answer.'),
                     h3('1. Why LLMs Fail at Mental Math & Multi-Step Logic'),
@@ -480,7 +480,7 @@ const LESSONS = {
                 )
             },
             3: {
-                title: '2.3 Hyperparameters & Fact Verification', game: 'pirate',
+                title: '2.3 Hyperparameters & Fact Verification',
                 html: () => article(
                     hdr('Model Controls & Truth', 'Temperature, Sampling & Fact Verification', 'Master the mathematical knobs that control AI creativity versus determinism, and build habits to catch confident hallucinations.'),
                     h3('1. How Temperature Shapes Next-Token Probability'),
@@ -496,7 +496,7 @@ const LESSONS = {
         title: 'Module 3: Ethical AI Usage & Academic Integrity',
         subs: {
             1: {
-                title: '3.1 Academic Citation Standards', game: 'rocket',
+                title: '3.1 Academic Citation Standards',
                 html: () => article(
                     hdr('Ethics & Integrity', 'Academic Citation & Responsible AI Standards', 'Learn how to use generative AI transparently as a brainstorming and study partner while upholding strict academic honesty.'),
                     h3('1. Study Aid vs. Ghostwriter: Drawing the Ethical Line'),
@@ -514,7 +514,7 @@ const LESSONS = {
                 )
             },
             2: {
-                title: '3.2 Algorithmic Bias & Data Privacy', game: 'blockblast',
+                title: '3.2 Algorithmic Bias & Data Privacy',
                 html: () => article(
                     hdr('Fairness & Privacy', 'Algorithmic Bias & Data Privacy Protection', 'Discover how historical prejudices enter training datasets and why protecting Personally Identifiable Information (PII) is vital.'),
                     h3('1. How Historical Bias Enters Machine Learning'),
@@ -525,7 +525,7 @@ const LESSONS = {
                 )
             },
             3: {
-                title: '3.3 Deepfakes & Synthetic Media', game: 'pirate',
+                title: '3.3 Deepfakes & Synthetic Media',
                 html: () => article(
                     hdr('Media Literacy', 'Synthetic Media, Deepfakes & Digital Trust', 'Learn how generative audio and video synthesis works and how to spot visual artifacts and missing cryptographic provenance.'),
                     h3('1. Recognizing Synthetic Audio and Video'),
@@ -541,7 +541,7 @@ const LESSONS = {
         title: 'Module 4: Data & Training Pipelines',
         subs: {
             1: {
-                title: '4.1 Data Cleaning & Preprocessing', game: 'rocket',
+                title: '4.1 Data Cleaning & Preprocessing',
                 html: () => article(
                     hdr('Data Engineering', 'Data Cleaning & Preprocessing Pipelines', 'Explore why data scientists spend up to 80% of their time cleaning, normalizing, and structuring raw datasets before training a single model.'),
                     h3('1. The Golden Rule: Garbage In, Garbage Out'),
@@ -559,7 +559,7 @@ const LESSONS = {
                 )
             },
             2: {
-                title: '4.2 Training vs Test Splits', game: 'blockblast',
+                title: '4.2 Training vs Test Splits',
                 html: () => article(
                     hdr('Model Generalization', 'Train/Test Splits & Preventing Overfitting', 'Learn how data splits verify that an AI model truly understands patterns instead of simply memorizing the answer key.'),
                     h3('1. Memorization vs. True Generalization'),
@@ -570,7 +570,7 @@ const LESSONS = {
                 )
             },
             3: {
-                title: '4.3 Feature Engineering', game: 'pirate',
+                title: '4.3 Feature Engineering',
                 html: () => article(
                     hdr('Signal Extraction', 'Feature Engineering & Dimensionality', 'Discover how domain knowledge transforms raw columns into high-signal predictors that dramatically simplify model learning.'),
                     h3('1. Turning Raw Variables into Predictive Signals'),
@@ -586,7 +586,7 @@ const LESSONS = {
         title: 'Module 5: Advanced Ethics & Governance',
         subs: {
             1: {
-                title: '5.1 Algorithmic Fairness & Transparency', game: 'rocket',
+                title: '5.1 Algorithmic Fairness & Transparency',
                 html: () => article(
                     hdr('AI Governance', 'Explainable AI (XAI) & Algorithmic Fairness', 'Examine how organizations open up opaque "black-box" neural networks to audit high-stakes decisions in healthcare, finance, and hiring.'),
                     h3('1. Opening the Black Box with Explainable AI (XAI)'),
@@ -604,7 +604,7 @@ const LESSONS = {
                 )
             },
             2: {
-                title: '5.2 Copyright & IP Compliance', game: 'blockblast',
+                title: '5.2 Copyright & IP Compliance',
                 html: () => article(
                     hdr('Intellectual Property', 'Copyright, Licensing & Fair Use in AI', 'Navigate the legal and ethical rules governing training datasets, open-source licenses, and generative AI outputs.'),
                     h3('1. Respecting Creators Across the AI Lifecycle'),
@@ -615,7 +615,7 @@ const LESSONS = {
                 )
             },
             3: {
-                title: '5.3 Safety Protocols & Guardrails', game: 'pirate',
+                title: '5.3 Safety Protocols & Guardrails',
                 html: () => article(
                     hdr('AI Safety Engineering', 'Safety Guardrails, Red Teaming & Defense', 'Learn how engineers protect AI applications against prompt injection attacks, jailbreaks, and harmful outputs.'),
                     h3('1. Defense-in-Depth: Input & Output Guardrails'),
@@ -631,7 +631,7 @@ const LESSONS = {
         title: 'Module 6: Testing & Evaluation',
         subs: {
             1: {
-                title: '6.1 Benchmark Testing & Metrics', game: 'rocket',
+                title: '6.1 Benchmark Testing & Metrics',
                 html: () => article(
                     hdr('Evaluation Science', 'Benchmark Testing, Precision & Recall', 'Learn why simple "accuracy" can be dangerously misleading and how Precision, Recall, and F1-Scores measure true model reliability.'),
                     h3(`1. Why Overall Accuracy Isn't Enough`),
@@ -649,7 +649,7 @@ const LESSONS = {
                 )
             },
             2: {
-                title: '6.2 Model Alignment & Reinforcement', game: 'blockblast',
+                title: '6.2 Model Alignment & Reinforcement',
                 html: () => article(
                     hdr('Human Alignment', 'RLHF & Aligning Models with Human Values', 'Understand how Reinforcement Learning from Human Feedback transforms raw next-word predictors into helpful, honest, and harmless assistants.'),
                     h3('1. From Raw Pretraining to Helpful Assistants'),
@@ -660,7 +660,7 @@ const LESSONS = {
                 )
             },
             3: {
-                title: '6.3 Future Horizons of AI', game: 'pirate',
+                title: '6.3 Future Horizons of AI',
                 html: () => article(
                     hdr('Capstone & Future', 'Future Horizons & Responsible Innovation', 'Look ahead at autonomous AI agents, multimodal systems, and how the next generation of student innovators can build safe, human-centered technology.'),
                     h3('1. Agentic Workflows & Human-in-the-Loop Design'),
@@ -735,22 +735,189 @@ function renderModulesGrid() {
     }
 }
 
-// ---- Dashboard
-const BADGES = [
-    ['🚀', 'AI Pioneer', 'Complete Module 1', () => moduleDone(1)],
-    ['🧱', 'Prompt Architect', 'Complete Module 2', () => moduleDone(2)],
-    ['⚖️', 'Ethical Scholar', 'Complete Module 3', () => moduleDone(3)],
-    ['📊', 'Data Expert', 'Complete Module 4', () => moduleDone(4)],
-    ['🛡️', 'Governance Guru', 'Complete Module 5', () => moduleDone(5)],
-    ['🎯', 'Alignment Master', 'Complete Module 6', () => moduleDone(6)],
-    ['🧠', 'Quiz Ace', 'Unlock Half of Curriculum', () => MODULES.filter(m => moduleDone(m.id)).length >= 3],
-    ['🕹️', 'Arcade Pro', 'Play Multiple Minigames', () => Object.keys(store.get('gamesPlayed', {})).length >= 2],
-    ['🔥', 'Streak Master', 'Master All 6 Modules', () => MODULES.every(m => moduleDone(m.id))]
+// ---- Badges: each one reports [current, target] so progress and unlocking share one rule
+const lessonsDoneCount = () => LESSON_ORDER.filter(([m, s]) => lessonDone(m, s)).length;
+const modulesDoneCount = () => MODULES.filter(m => moduleDone(m.id)).length;
+const moduleLessonsDone = m => [1, 2, 3].filter(s => lessonDone(m, s)).length;
+const gamesPlayedCount = () => Object.keys(store.get('gamesPlayed', {})).length;
+const perfectQuizCount = () => Object.keys(store.get('perfectQuizzes', {})).length;
+
+const playedGame = key => () => store.get('gamesPlayed', {})[key] ? 1 : 0;
+const SITE_PAGES = ['home', 'modules', 'dashboard', 'chatbot', 'references', 'profile'];
+
+const BADGE_CATEGORIES = [
+    { key: 'learn', label: 'Learning & Quiz Mastery' },
+    { key: 'arcade', label: 'Arcade Games' },
+    { key: 'combo', label: 'Combos & Streaks' },
+    { key: 'explore', label: 'Portal Explorer' }
 ];
 
+// "cat" groups the badge on the dashboard (badges without one are in "learn")
+const BADGES = [
+    { id: 'first_steps', icon: '👣', name: 'First Steps', desc: 'Complete your first lesson', unit: 'lessons', target: 1, current: lessonsDoneCount },
+    { id: 'pioneer', icon: '🚀', name: 'AI Pioneer', desc: 'Complete Module 1', unit: 'lessons', target: 3, current: () => moduleLessonsDone(1) },
+    { id: 'prompt', icon: '🧱', name: 'Prompt Architect', desc: 'Complete Module 2', unit: 'lessons', target: 3, current: () => moduleLessonsDone(2) },
+    { id: 'ethics', icon: '⚖️', name: 'Ethical Scholar', desc: 'Complete Module 3', unit: 'lessons', target: 3, current: () => moduleLessonsDone(3) },
+    { id: 'data', icon: '📊', name: 'Data Expert', desc: 'Complete Module 4', unit: 'lessons', target: 3, current: () => moduleLessonsDone(4) },
+    { id: 'governance', icon: '🛡️', name: 'Governance Guru', desc: 'Complete Module 5', unit: 'lessons', target: 3, current: () => moduleLessonsDone(5) },
+    { id: 'alignment', icon: '🎯', name: 'Alignment Master', desc: 'Complete Module 6', unit: 'lessons', target: 3, current: () => moduleLessonsDone(6) },
+    { id: 'quiz_ace', icon: '🧠', name: 'Quiz Ace', desc: 'Complete any 3 modules', unit: 'modules', target: 3, current: modulesDoneCount },
+    { id: 'arcade_pro', cat: 'arcade', icon: '🕹️', name: 'Arcade Pro', desc: 'Finish 2 different minigames', unit: 'games', target: 2, current: gamesPlayedCount },
+    { id: 'triple_threat', cat: 'arcade', icon: '🎲', name: 'Triple Threat', desc: 'Finish 3 different minigames', unit: 'games', target: 3, current: gamesPlayedCount },
+    { id: 'flawless', icon: '💎', name: 'Flawless Run', desc: 'Score 5 out of 5 on any lesson quiz', unit: 'perfect quizzes', target: 1, current: perfectQuizCount },
+    { id: 'sharpshooter', icon: '🏹', name: 'Sharpshooter', desc: 'Score 5 out of 5 on 5 different lesson quizzes', unit: 'perfect quizzes', target: 5, current: perfectQuizCount },
+    { id: 'streak', icon: '🏆', name: 'Streak Master', desc: 'Master all 6 modules', unit: 'modules', target: 6, current: modulesDoneCount },
+    { id: 'quiz_scholar', icon: '📘', name: 'Quiz Scholar', desc: 'Master 9 lesson quizzes', unit: 'quizzes', target: 9, current: lessonsDoneCount },
+    { id: 'quiz_grandmaster', icon: '🎓', name: 'Quiz Grandmaster', desc: 'Master all 18 lesson quizzes', unit: 'quizzes', target: 18, current: lessonsDoneCount },
+
+    { id: 'tower_guardian', cat: 'arcade', icon: '🛡️', name: 'Tower Guardian', desc: 'Finish Cyber Shield Defense (Lesson 2.1 or 4.2)', unit: 'games', target: 1, current: playedGame('defense') },
+    { id: 'neon_racer', cat: 'arcade', icon: '🛹', name: 'Neon Racer', desc: 'Finish Neon Hover Runner (Lesson 1.1)', unit: 'games', target: 1, current: playedGame('runner') },
+    { id: 'vault_cracker', cat: 'arcade', icon: '🔐', name: 'Vault Cracker', desc: 'Finish Vault Code Breaker (Lesson 1.3)', unit: 'games', target: 1, current: playedGame('vault') },
+    { id: 'data_diver', cat: 'arcade', icon: '📦', name: 'Data Diver', desc: 'Finish Data Packet Catcher (Lesson 3.1)', unit: 'games', target: 1, current: playedGame('catcher') },
+    { id: 'boss_slayer', cat: 'arcade', icon: '⚔️', name: 'Boss Slayer', desc: 'Defeat the Glitch Overlord (Lesson 2.2)', unit: 'bosses', target: 1, current: () => store.get('bossDefeated', false) ? 1 : 0 },
+    { id: 'arcade_legend', cat: 'arcade', icon: '👑', name: 'Arcade Legend', desc: 'Finish all 8 different minigames', unit: 'games', target: 8, current: gamesPlayedCount },
+
+    { id: 'hot_streak', cat: 'combo', icon: '🔥', name: 'Hot Streak', desc: 'Answer 3 quiz questions correctly in a row', unit: 'in a row', target: 3, current: () => store.get('bestStreak', 0) },
+    { id: 'unstoppable', cat: 'combo', icon: '⚡', name: 'Unstoppable', desc: 'Answer 5 quiz questions correctly in a row', unit: 'in a row', target: 5, current: () => store.get('bestStreak', 0) },
+    { id: 'chain_reaction', cat: 'combo', icon: '💥', name: 'Chain Reaction', desc: 'Land a 10-hit action chain inside a minigame', unit: 'hits', target: 10, current: () => store.get('bestActionCombo', 0) },
+
+    { id: 'explorer', cat: 'explore', icon: '🧭', name: 'Explorer', desc: 'Visit Home, Modules, Dashboard, Chatbot, References, and Profile', unit: 'pages', target: 6, current: () => SITE_PAGES.filter(p => PortalTheme.visited()[p]).length },
+    { id: 'networker', cat: 'explore', icon: '🤝', name: 'Networker', desc: 'Inspect 2 other players from a leaderboard', unit: 'profiles', target: 2, current: () => Object.keys(store.get('inspectedCadets', {})).length },
+    { id: 'world_builder', cat: 'explore', icon: '🌌', name: 'World Builder', desc: 'Equip a site-wide background', unit: 'backgrounds', target: 1, current: () => store.get('usedBackground', false) ? 1 : 0 },
+    { id: 'curious_mind', cat: 'explore', icon: '💬', name: 'Curious Mind', desc: 'Ask Scrappy 3 questions', unit: 'questions', target: 3, current: () => store.get('questionsAsked', 0) }
+];
+const BADGE_MAP = new Map(BADGES.map(b => [b.id, b]));
+const badgeProgress = b => {
+    const current = Math.min(b.current(), b.target);
+    return { current, target: b.target, pct: Math.round((current / b.target) * 100), done: current >= b.target };
+};
+
+// ---- Profile rewards: unlocked automatically by the badge named in "badge"
+const REWARD_TYPES = [
+    { key: 'title', label: 'Unique Titles', single: 'Title' },
+    { key: 'border', label: 'Avatar Borders', single: 'Avatar Border' },
+    { key: 'accent', label: 'Theme Accents', single: 'Theme Accent' },
+    { key: 'chat', label: 'Chat Badges', single: 'Chat Badge' },
+    { key: 'bg', label: 'Site-Wide Backgrounds', single: 'Background' }
+];
+// "colors" are used by borders (two-color ring), "anim" animates a border,
+// "rgb" is used by theme accents, and "bg" names a background from theme.js
+const REWARDS = [
+    { id: 'title_trailblazer', type: 'title', badge: 'first_steps', icon: '🏷️', name: 'Trailblazer' },
+    { id: 'border_pioneer', type: 'border', badge: 'pioneer', icon: '⭕', name: 'Ion Ring', colors: ['#00f2fe', '#2563eb'] },
+    { id: 'chat_prompt', type: 'chat', badge: 'prompt', icon: '⌨️', name: 'Prompt Smith' },
+    { id: 'accent_ethics', type: 'accent', badge: 'ethics', icon: '🎨', name: 'Emerald Circuit', rgb: '52,211,153' },
+    { id: 'accent_data', type: 'accent', badge: 'data', icon: '🎨', name: 'Solar Data', rgb: '251,191,36' },
+    { id: 'border_governance', type: 'border', badge: 'governance', icon: '⭕', name: 'Sentinel Shield', colors: ['#34d399', '#38bdf8'] },
+    { id: 'title_alignment', type: 'title', badge: 'alignment', icon: '🏷️', name: 'Alignment Architect' },
+    { id: 'chat_quiz', type: 'chat', badge: 'quiz_ace', icon: '🧠', name: 'Big Brain' },
+    { id: 'accent_arcade', type: 'accent', badge: 'arcade_pro', icon: '🎨', name: 'Synthwave Magenta', rgb: '244,114,182' },
+    { id: 'chat_arcade', type: 'chat', badge: 'triple_threat', icon: '👾', name: 'Arcade Elite' },
+    { id: 'border_flawless', type: 'border', badge: 'flawless', icon: '⭕', name: 'Prism Edge', colors: ['#f472b6', '#00f2fe'] },
+    { id: 'title_sharpshooter', type: 'title', badge: 'sharpshooter', icon: '🏷️', name: 'Precision Operative' },
+    { id: 'title_streak', type: 'title', badge: 'streak', icon: '🏷️', name: 'Neon Legend' },
+    { id: 'border_legend', type: 'border', badge: 'streak', icon: '⭕', name: 'Legendary Plasma', colors: ['#ffd700', '#a855f7'], anim: 'pulse' },
+    { id: 'accent_legend', type: 'accent', badge: 'streak', icon: '🎨', name: 'Ultraviolet Core', rgb: '192,132,252' },
+
+    { id: 'bg_reward_aurora', type: 'bg', badge: 'quiz_scholar', icon: '🌌', name: 'Quantum Aurora', bg: 'bg_aurora' },
+    { id: 'title_grandmaster', type: 'title', badge: 'quiz_grandmaster', icon: '🏷️', name: 'Quiz Grandmaster' },
+    { id: 'border_singularity', type: 'border', badge: 'quiz_grandmaster', icon: '⭕', name: 'Singularity', colors: ['#ffffff', '#6366f1'], anim: 'spin' },
+    { id: 'chat_warden', type: 'chat', badge: 'tower_guardian', icon: '🛡️', name: 'Firewall Warden' },
+    { id: 'bg_reward_synthwave', type: 'bg', badge: 'neon_racer', icon: '🌌', name: 'Synthwave Sunset', bg: 'bg_synthwave' },
+    { id: 'title_vault', type: 'title', badge: 'vault_cracker', icon: '🏷️', name: 'Master Decryptor' },
+    { id: 'chat_wrangler', type: 'chat', badge: 'data_diver', icon: '📦', name: 'Data Wrangler' },
+    { id: 'title_slayer', type: 'title', badge: 'boss_slayer', icon: '🏷️', name: 'Glitch Slayer' },
+    { id: 'border_flame', type: 'border', badge: 'boss_slayer', icon: '⭕', name: 'Overlord Flame', colors: ['#fb923c', '#ef4444'], anim: 'flicker' },
+    { id: 'bg_reward_plasma', type: 'bg', badge: 'arcade_legend', icon: '🌌', name: 'Plasma Core', bg: 'bg_plasma' },
+    { id: 'border_spectrum', type: 'border', badge: 'arcade_legend', icon: '⭕', name: 'Hyperspectrum', colors: ['#00f2fe', '#f472b6'], anim: 'rainbow' },
+    { id: 'chat_fire', type: 'chat', badge: 'hot_streak', icon: '🔥', name: 'On Fire' },
+    { id: 'bg_reward_grid', type: 'bg', badge: 'unstoppable', icon: '🌌', name: 'Neon Horizon Grid', bg: 'bg_neon_grid' },
+    { id: 'border_orbit', type: 'border', badge: 'unstoppable', icon: '⭕', name: 'Orbit Drive', colors: ['#00f2fe', '#a855f7'], anim: 'spin' },
+    { id: 'title_combo', type: 'title', badge: 'chain_reaction', icon: '🏷️', name: 'Combo Commander' },
+    { id: 'bg_reward_circuit', type: 'bg', badge: 'explorer', icon: '🌌', name: 'Living Circuit', bg: 'bg_circuit' },
+    { id: 'chat_networker', type: 'chat', badge: 'networker', icon: '🤝', name: 'Networker' },
+    { id: 'title_builder', type: 'title', badge: 'world_builder', icon: '🏷️', name: 'World Builder' },
+    { id: 'bg_reward_rain', type: 'bg', badge: 'curious_mind', icon: '🌌', name: 'Data Rain', bg: 'bg_data_rain' }
+];
+const REWARD_MAP = new Map(REWARDS.map(r => [r.id, r]));
+const rewardUnlocked = r => badgeProgress(BADGE_MAP.get(r.badge)).done;
+const rewardsFor = badgeId => REWARDS.filter(r => r.badge === badgeId);
+const rewardTypeName = r => REWARD_TYPES.find(t => t.key === r.type).single;
+
+// Returns the rewards unlocked since the last check, so each one is announced only once
+function syncRewards() {
+    const unlocked = REWARDS.filter(rewardUnlocked);
+    const seen = store.get('seenRewards', null);
+    const fresh = seen === null ? [] : unlocked.filter(r => !seen.includes(r.id));
+    if (seen === null || fresh.length) store.set('seenRewards', [...new Set([...(seen || []), ...unlocked.map(r => r.id)])]);
+    return fresh;
+}
+
+// Call after anything that can earn a badge: announces new rewards and updates the profile
+function checkRewards() {
+    const fresh = syncRewards();
+    if (fresh.length) {
+        toast(`🎁 ${plural(fresh.length, 'new profile reward', 'new profile rewards')} unlocked: ${fresh.map(r => r.name).join(', ')}`, 'success');
+        FX.play('power');
+    }
+    if (!Portal.syncProfile() && fresh.length) Portal.refresh();
+    return fresh;
+}
+
+// Avatar border helpers (values come only from the REWARDS table above)
+const frameClass = r => r ? ` has-frame${r.anim ? ' frame-' + r.anim : ''}` : '';
+const frameStyle = r => r ? `--f1:${r.colors[0]};--f2:${r.colors[1]};` : '';
+
+const meterHTML = (p, label) => `<div class="meter" role="progressbar" aria-label="${esc(label)}" aria-valuemin="0" aria-valuemax="${p.target}" aria-valuenow="${p.current}"><div style="width:${p.pct}%"></div></div>`;
+
+// ---- Dashboard
+function renderDashboardRewards() {
+    const earned = BADGES.filter(b => badgeProgress(b).done).length;
+    $('#badge-count').textContent = `${earned} of ${BADGES.length} badges earned`;
+    const card = b => {
+        const p = badgeProgress(b);
+        const perks = rewardsFor(b.id).map(r => `<li title="${esc(rewardTypeName(r))}">${p.done ? r.icon : '🔒'} ${esc(r.name)} <small>${esc(rewardTypeName(r))}</small></li>`).join('');
+        return `
+            <div class="achv${p.done ? ' unlocked' : ''}">
+                <span class="achv-state">${p.done ? '✓ Earned' : '🔒 Locked'}</span>
+                <span class="ico" aria-hidden="true">${b.icon}</span><h4>${esc(b.name)}</h4><p>${esc(b.desc)}</p>
+                ${meterHTML(p, `${b.name} progress`)}
+                <span class="meter-label">${p.current} / ${p.target} ${esc(b.unit)}</span>
+                <ul class="perk-list" aria-label="Rewards from this badge">${perks}</ul>
+            </div>`;
+    };
+    $('#badge-grid').innerHTML = BADGE_CATEGORIES.map(c => {
+        const list = BADGES.filter(b => (b.cat || 'learn') === c.key);
+        return `<h4 class="badge-category">${c.label} <small>${list.filter(b => badgeProgress(b).done).length} / ${list.length}</small></h4>
+            <div class="badge-grid">${list.map(card).join('')}</div>`;
+    }).join('');
+
+    const count = REWARDS.filter(rewardUnlocked).length;
+    const overall = { current: count, target: REWARDS.length, pct: Math.round((count / REWARDS.length) * 100) };
+    $('#reward-summary-count').textContent = `${count} of ${REWARDS.length} profile rewards unlocked`;
+    $('#reward-summary-meter').innerHTML = meterHTML(overall, 'Profile rewards unlocked');
+
+    // The three locked rewards the student is closest to earning
+    const next = REWARDS.filter(r => !rewardUnlocked(r))
+        .map(r => ({ r, b: BADGE_MAP.get(r.badge), p: badgeProgress(BADGE_MAP.get(r.badge)) }))
+        .sort((a, z) => z.p.pct - a.p.pct || (a.p.target - a.p.current) - (z.p.target - z.p.current))
+        .slice(0, 3);
+    $('#next-rewards').innerHTML = next.length
+        ? next.map(({ r, b, p }) => `
+            <div class="next-reward">
+                <span class="next-type">🔒 ${esc(rewardTypeName(r))}</span>
+                <h4>${esc(r.name)}</h4>
+                <p>${esc(b.desc)} to earn <strong>${esc(b.name)}</strong></p>
+                ${meterHTML(p, `${r.name} progress`)}
+                <span class="meter-label">${p.current} / ${p.target} ${esc(b.unit)}</span>
+            </div>`).join('')
+        : '<p class="empty-note">🏆 Every profile reward is unlocked. Legendary work!</p>';
+    $('#dash-view-rewards').textContent = Portal.getActiveUser() ? 'Equip Rewards on Profile' : 'Create a Profile to Equip Rewards';
+}
+
 function updateDashboardStats() {
-    const doneLessons = LESSON_ORDER.filter(([m, s]) => lessonDone(m, s)).length;
-    const doneModules = MODULES.filter(m => moduleDone(m.id)).length;
+    const doneLessons = lessonsDoneCount();
+    const doneModules = modulesDoneCount();
     const pct = Math.round((doneLessons / LESSON_ORDER.length) * 100);
     const user = Portal.getActiveUser();
     const xp = user ? (user.xp || 0) : store.get('localXP', 0);
@@ -761,8 +928,8 @@ function updateDashboardStats() {
     $('#dashboard-xp-text').textContent = xp + ' XP';
     $('#dashboard-modules-count').textContent = `${doneModules} / 6`;
     $('#dashboard-lessons-count').textContent = `${doneLessons} of ${LESSON_ORDER.length} lessons complete`;
-    $('#badge-grid').innerHTML = BADGES.map(([ico, name, desc, test]) =>
-        `<div class="achv${test() ? ' unlocked' : ''}"><span class="ico">${ico}</span><h4>${name}</h4><p>${desc}</p></div>`).join('');
+    renderDashboardRewards();
+    Portal.renderDashboardBoard();
     const cont = $('#dash-continue');
     if (cont) cont.textContent = doneLessons >= LESSON_ORDER.length ? 'Review a Lesson' : 'Continue Learning';
 }
@@ -781,6 +948,47 @@ function showView(id) {
     if (id === 'dashboard') updateDashboardStats();
     window.scrollTo({ top: 0, behavior: 'auto' });
     updateReadProgress();
+    if (PortalTheme.visit(id === 'lesson' ? 'modules' : id)) checkRewards();
+    animateView(document.getElementById(VIEWS[id]));
+}
+
+// ---- Page-entry animations: staggered cards, filling progress bars, counting numbers
+const STAGGER_TARGETS = '.stat-card, .panel, .achv, .next-reward, .profile-card-container, .reward-card, .shop-item, .directory-row, .chat-shell, .paradigm-row-card, .footer-section, .lesson-tabs button';
+
+function countUp(el) {
+    const match = el.textContent.match(/^(\d+)(.*)$/);
+    if (!match || +match[1] === 0) return;
+    const target = +match[1], suffix = match[2], start = performance.now();
+    let written = el.textContent;
+    const tick = now => {
+        if (el.textContent !== written) return;          // something else updated it; leave it alone
+        const t = clamp((now - start) / 800, 0, 1);
+        written = Math.round(target * (1 - Math.pow(1 - t, 3))) + suffix;
+        el.textContent = written;
+        if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+}
+
+function animateView(view) {
+    if (!view || reducedMotion()) return;
+    const items = $$(STAGGER_TARGETS, view);
+    items.forEach(el => el.classList.remove('stagger-in'));
+    void view.offsetWidth;                               // restart the animation on repeat visits
+    items.forEach((el, i) => {
+        el.style.setProperty('--stagger', Math.min(i, 14));
+        el.classList.add('stagger-in');
+        el.addEventListener('animationend', function done(e) {
+            if (e.target !== el || e.animationName !== 'staggerIn') return;
+            el.classList.remove('stagger-in');           // hand the element back to hover and glow styles
+            el.removeEventListener('animationend', done);
+        });
+    });
+    const bars = $$('.meter > div, #dashboard-progress-fill', view).map(el => [el, el.style.width]);
+    bars.forEach(([el]) => { el.style.transition = 'none'; el.style.width = '0'; });
+    void view.offsetWidth;
+    bars.forEach(([el, width]) => { el.style.transition = ''; el.style.width = width; });
+    $$('.stat-card p, .p-stat-num', view).forEach(countUp);
 }
 
 function route() {
@@ -824,8 +1032,9 @@ function openLesson(modId, subId) {
         <div class="lesson-kicker">${esc(sub.title)}</div>
         <div class="lesson-body">${sub.html()}</div>
         <div class="arcade-launch">
+            <span class="game-tag">${GAMES[gameFor(modId, subId)].icon} ${GAMES[gameFor(modId, subId)].name}</span>
             <h3>Ready to Play Arcade Challenge ${modId}.${subId}?</h3>
-            <p>Review the rules, answer questions correctly for power-ups and block shapes, and score 4 out of 5 to complete this lesson!</p>
+            <p>Review the rules, build answer streaks for score multipliers and power-ups, and score 4 out of 5 to complete this lesson!</p>
             <button type="button" class="btn-launch" data-launch="${modId}.${subId}">🎮 Launch Minigame Quiz ${modId}.${subId}</button>
         </div>
         ${pager}`;
@@ -1057,9 +1266,16 @@ function makeModal() {
     modal.className = 'quiz-modal';
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
-    modal.innerHTML = '<button type="button" class="quiz-exit">✕ Exit</button><div class="quiz-stage"></div>';
+    modal.innerHTML = '<button type="button" class="quiz-mute"></button><button type="button" class="quiz-exit">✕ Exit</button><div class="quiz-stage"></div>';
     document.body.appendChild(modal);
     document.body.classList.add('modal-open');
+    const mute = $('.quiz-mute', modal);
+    const label = () => {
+        mute.textContent = FX.isMuted() ? '🔇 Sound Off' : '🔊 Sound On';
+        mute.setAttribute('aria-pressed', !FX.isMuted());
+    };
+    label();
+    mute.onclick = () => { FX.toggleMute(); label(); mute.blur(); };
     $('.quiz-exit', modal).onclick = () => {
         if (confirm('Exit this challenge? Your progress in it will be lost.')) closeModal(modal);
     };
@@ -1068,6 +1284,7 @@ function makeModal() {
 function closeModal(modal) {
     modal.remove();
     document.body.classList.remove('modal-open');
+    checkRewards();      // streak badges still count if the player exits early
 }
 function hype(text) {
     const el = document.createElement('div');
@@ -1090,40 +1307,17 @@ function showInstructionsModal(title, rulesHTML, onStart) {
 }
 
 window.startArcadeQuiz = function (modId, subId) {
-    const game = (LESSONS[modId] && LESSONS[modId].subs[subId] && LESSONS[modId].subs[subId].game) || 'rocket';
-    if (game === 'rocket') {
-        showInstructionsModal('Rocket Space Defender', `
-            <p><strong>Objective:</strong> Answer AI concept questions correctly to earn Credits, then survive the 30-second asteroid wave!</p>
-            <ul>
-                <li><strong>Move:</strong> LEFT/RIGHT arrows (or A/D). On a touch screen, drag to steer; your ship fires automatically.</li>
-                <li><strong>Shoot:</strong> UP arrow (W or Space).</li>
-                <li><strong>Armory:</strong> Spend credits on Faster Ship (50), Double Laser (75), Rapid Fire (100), 2x Score (125), and Triple Bullets (150).</li>
-                <li><strong>Pass mark:</strong> 4 out of 5 quiz answers right completes the lesson.</li>
-            </ul>`, () => runRocketGame(modId, subId));
-    } else if (game === 'blockblast') {
-        showInstructionsModal('Block Blast AI Grid', `
-            <p><strong>Objective:</strong> Answer quiz questions correctly, then build combos with the shape blocks in your tray!</p>
-            <ul>
-                <li><strong>Place pieces:</strong> Click a piece in your tray, then hover over the 8x8 grid to preview where it fits. Click (or tap) to set it.</li>
-                <li>Complete full rows or columns to clear them and trigger bonus points.</li>
-                <li><strong>Pass mark:</strong> 4 out of 5 quiz answers right completes the lesson.</li>
-            </ul>`, () => runBlockBlastGame(modId, subId));
-    } else {
-        showInstructionsModal('Pirate Ship Cannon Launcher', `
-            <p><strong>Objective:</strong> Answer questions correctly, then smash the wooden crates with your cannon. You get 3 shots per level!</p>
-            <ul>
-                <li><strong>Aim:</strong> Click or touch and drag the cannonball backward to see the trajectory arc, then release to fire.</li>
-                <li><strong>Upgrades:</strong> Heavy Iron Ball (40), Explosive Shot (80), and 2x Multiplier (60).</li>
-                <li><strong>Pass mark:</strong> 4 out of 5 quiz answers right completes the lesson.</li>
-            </ul>`, () => runPirateGame(modId, subId));
-    }
+    const def = GAMES[gameFor(modId, subId)];
+    showInstructionsModal(def.name, `${def.rules}
+        <p><strong>Streaks:</strong> Back-to-back right answers multiply your score up to x3.
+        <strong>Pass mark:</strong> 4 out of 5 right completes the lesson.</p>`, () => def.run(modId, subId));
 };
 
 // ---- Shared quiz question screen
-function askQuestion({ stage, q, index, total, badge, theme = '', onResult }) {
+function askQuestion({ stage, q, index, total, badge, theme = '', combo, onResult }) {
     stage.innerHTML = `
         <div class="quiz-game-card ${theme}">
-            <div class="quiz-header-row"><span class="quiz-counter">Question ${index + 1} of ${total}</span><span class="quiz-credits">${badge}</span></div>
+            <div class="quiz-header-row"><span class="quiz-counter">Question ${index + 1} of ${total}</span><span data-combo>${comboPill(combo)}</span><span class="quiz-credits">${badge}</span></div>
             <div class="quiz-progress"><div style="width:${(index / total) * 100}%"></div></div>
             <h2 class="quiz-title">${esc(q.q)}</h2>
             <div class="options-container">
@@ -1142,6 +1336,27 @@ function askQuestion({ stage, q, index, total, badge, theme = '', onResult }) {
         btns[i].classList.add(ok ? 'correct' : 'incorrect');
         if (!ok) btns[q.correct].classList.add('correct');
         fb.textContent = ok ? '✅ Correct!' : `❌ Not quite. The correct answer was ${'ABCD'[q.correct]}.`;
+        const lost = combo ? combo.streak : 0;
+        if (combo) {
+            combo.answer(ok);
+            $('[data-combo]', stage).innerHTML = comboPill(combo);
+        }
+        const card = $('.quiz-game-card', stage);
+        if (ok) {
+            FX.play('correct');
+            FX.burstAt(btns[i], { color: '#34d399', count: 28 + (combo ? combo.streak * 10 : 0) });
+            card.classList.add('glow-good');
+            if (combo && combo.streak >= 2) {
+                hype(`${combo.streak}x STREAK! Score x${combo.mult}`);
+                FX.comboSound(combo.streak);
+                if (combo.streak >= 3) { FX.shake(card, 4 + combo.streak); FX.flash('rgba(251,191,36,.25)'); }
+            }
+        } else {
+            FX.play('wrong');
+            FX.shake(card, 12);
+            card.classList.add('glow-bad');
+            if (lost >= 2) fb.textContent += ' Streak lost!';
+        }
         setTimeout(() => { if (document.body.contains(stage)) onResult(ok); }, 1300);
     }
     function onKey(e) {
@@ -1155,12 +1370,19 @@ function askQuestion({ stage, q, index, total, badge, theme = '', onResult }) {
 
 // ---- Shared results screen: marks lesson complete, awards XP, shows leaderboard
 function finishGame(o) {
-    const { modal, stage, modId, subId, gameKey, title, quizScore, total, arcadeLabel, arcadeScore, retry, theme = '' } = o;
+    const { modal, stage, modId, subId, gameKey, title, quizScore, total, arcadeLabel, arcadeScore, bestStreak = 0, retry, theme = '' } = o;
     const passed = quizScore >= 4;
     const result = passed ? completeLesson(modId, subId) : { first: false, unlocked: null };
     const xp = quizScore * 20 + (result.first ? 50 : 0);
-    const saved = Portal.award(gameKey, arcadeScore, xp);
+    // Record all progress first, so the profile re-render in award() sees the new badges
     markPlayed(gameKey);
+    if (quizScore === total) {
+        const perfect = store.get('perfectQuizzes', {});
+        perfect[`${modId}.${subId}`] = true;
+        store.set('perfectQuizzes', perfect);
+    }
+    const saved = Portal.award(gameKey, arcadeScore, xp);
+    const newRewards = checkRewards();
 
     const me = Portal.getActiveUser();
     const rows = [...Portal.getDirectory()]
@@ -1175,9 +1397,11 @@ function finishGame(o) {
             <h1 class="summary-title">${title} Complete!</h1>
             <div class="summary-banner ${passed ? 'pass' : 'fail'}">${passed ? `✅ Lesson ${modId}.${subId} complete!` : '⚠️ Score 4 out of 5 or better to complete this lesson.'}</div>
             ${result.unlocked ? `<div class="summary-banner pass">🔓 Module ${result.unlocked} unlocked!</div>` : ''}
+            ${newRewards.length ? `<div class="summary-banner reward">🎁 New rewards: ${newRewards.map(r => `${esc(r.name)} (${esc(rewardTypeName(r))})`).join(', ')}</div>` : ''}
             <div class="summary-rows">
                 <div><span>Quiz Score</span><strong>${quizScore} / ${total}</strong></div>
                 <div><span>${esc(arcadeLabel)}</span><strong>${arcadeScore} pts</strong></div>
+                <div><span>Best Answer Streak</span><strong>🔥 ${bestStreak} in a row</strong></div>
                 <div><span>XP Earned</span><strong style="color:#00f2fe;">+${xp} XP 🌟</strong></div>
             </div>
             ${saved ? '' : '<p class="canvas-instructions" style="margin:0 0 6px;">Create a profile to save XP and join the leaderboard.</p>'}
@@ -1196,6 +1420,10 @@ function finishGame(o) {
         $('#active-module-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
     updateDashboardStats();
+    if (passed) {
+        FX.play('win');
+        [0.25, 0.5, 0.75].forEach((x, i) => setTimeout(() => FX.burst(window.innerWidth * x, window.innerHeight * 0.3, { color: ['#00f2fe', '#a855f7', '#fbbf24'][i], count: 60, power: 9 }), i * 180));
+    } else FX.play('lose');
 }
 
 // ----------------------------------------------------------------------------
@@ -1204,13 +1432,13 @@ function finishGame(o) {
 function runRocketGame(modId, subId) {
     const { modal, stage } = makeModal();
     const questions = prepareQuiz(modId, subId);
-    const S = { q: 0, credits: 0, quiz: 0, score: 0, speed: false, dbl: false, rapid: false, triple: false, mult: 1 };
+    const S = { q: 0, credits: 0, quiz: 0, score: 0, speed: false, dbl: false, rapid: false, triple: false, mult: 1, combo: createCombo() };
 
     function ask() {
         if (S.q >= questions.length) return finish();
         askQuestion({
-            stage, q: questions[S.q], index: S.q, total: questions.length, badge: `Credits: ${S.credits} 💰`,
-            onResult: ok => { if (ok) { S.credits += 100; S.quiz++; } wave(); }
+            stage, q: questions[S.q], index: S.q, total: questions.length, badge: `Credits: ${S.credits} 💰`, combo: S.combo,
+            onResult: ok => { if (ok) { S.credits += 100 + (S.combo.streak - 1) * 25; S.quiz++; } wave(); }
         });
     }
 
@@ -1219,6 +1447,7 @@ function runRocketGame(modId, subId) {
             <div class="quiz-game-card canvas-card">
                 <div class="quiz-header-row">
                     <span class="quiz-counter">Wave ${S.q + 1} · Rocket Defense</span>
+                    ${comboPill(S.combo)}
                     <span id="g-timer" class="quiz-credits danger">Time: 30s</span>
                     <span id="g-shield" class="quiz-credits">🛡️ 100%</span>
                     <span id="g-score" class="quiz-credits">Score: ${S.score}</span>
@@ -1227,6 +1456,9 @@ function runRocketGame(modId, subId) {
                 <p class="canvas-instructions">Arrows / A-D to move · Up / W / Space to shoot · On touch, drag to steer (auto-fire)</p>
             </div>`;
         const canvas = $('#spaceCanvas', stage), ctx = canvas.getContext('2d');
+        const card = $('.quiz-game-card', stage), juice = canvasJuice(), chain = createChain(2500);
+        const freeTriple = S.combo.streak >= 3;          // streak power-up for this wave
+        if (freeTriple) { juice.text(canvas.width / 2, 120, 'STREAK BONUS: TRIPLE BULLETS', '#fbbf24'); FX.play('power'); }
         const player = { x: canvas.width / 2 - 18, y: canvas.height - 45, w: 36, h: 36, speed: S.speed ? 9 : 5.5 };
         let bullets = [], asteroids = [], particles = [], keys = {}, lastShoot = 0, timeLeft = 30, shield = 100, animId, ended = false, pointerDown = false;
         const stars = Array.from({ length: 45 }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2 + 1, speed: Math.random() * 1.8 + 0.5 }));
@@ -1282,9 +1514,12 @@ function runRocketGame(modId, subId) {
         function loop(now) {
             if (ended) return;
             if (!document.body.contains(canvas)) { cleanup(); return; }
+            chain.tick(16.67);
+            ctx.save();
+            juice.offset(ctx);
             const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
             bg.addColorStop(0, '#060919'); bg.addColorStop(0.5, '#0b1329'); bg.addColorStop(1, '#02040a');
-            ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = bg; ctx.fillRect(-12, -12, canvas.width + 24, canvas.height + 24);
             ctx.fillStyle = '#38bdf8';
             stars.forEach(s => { s.y += s.speed; if (s.y > canvas.height) s.y = 0; ctx.globalAlpha = s.size > 2 ? 0.9 : 0.4; ctx.fillRect(s.x, s.y, s.size, s.size); });
             ctx.globalAlpha = 1;
@@ -1294,7 +1529,8 @@ function runRocketGame(modId, subId) {
 
             if ((keys.ArrowUp || keys.KeyW || keys.Space || pointerDown) && now - lastShoot > (S.rapid ? 150 : 320)) {
                 const cx = player.x + player.w / 2 - 2;
-                if (S.triple) {
+                FX.play('shoot');
+                if (S.triple || freeTriple) {
                     bullets.push({ x: player.x + 2, y: player.y, w: 4, h: 14, color: '#38bdf8' }, { x: cx, y: player.y - 6, w: 4, h: 14, color: '#00f2fe' }, { x: player.x + player.w - 6, y: player.y, w: 4, h: 14, color: '#38bdf8' });
                 } else if (S.dbl) {
                     bullets.push({ x: player.x + 6, y: player.y, w: 4, h: 14, color: '#00f2fe' }, { x: player.x + player.w - 10, y: player.y, w: 4, h: 14, color: '#00f2fe' });
@@ -1349,7 +1585,11 @@ function runRocketGame(modId, subId) {
                     if (b.x < a.x + a.size && b.x + b.w > a.x && b.y < a.y + a.size && b.y + b.h > a.y) {
                         explode(a.x + a.size / 2, a.y + a.size / 2, '#38bdf8');
                         bullets.splice(j, 1);
-                        S.score += 20 * S.mult;
+                        const pts = Math.round(20 * S.mult * S.combo.mult * chain.hit());
+                        S.score += pts;
+                        juice.text(a.x + a.size / 2, a.y, `+${pts}`, '#67e8f9');
+                        juice.shake(chain.count % 5 === 0 ? 12 : 3);
+                        FX.play('hit');
                         dead = true; hud();
                         break;
                     }
@@ -1358,11 +1598,15 @@ function runRocketGame(modId, subId) {
                     explode(a.x + a.size / 2, a.y + a.size / 2, '#ef4444');
                     S.score = Math.max(0, S.score - 15);
                     shield = Math.max(0, shield - 20);
+                    chain.reset(); juice.shake(18); FX.shake(card, 10); FX.play('explode');
                     dead = true; hud();
-                    if (shield <= 0) { endWave('Your ship was destroyed!'); return; }
+                    if (shield <= 0) { ctx.restore(); endWave('Your ship was destroyed!'); return; }
                 }
                 if (dead || a.y > canvas.height) asteroids.splice(i, 1);
             }
+            juice.draw(ctx);
+            if (chain.count >= 3) { ctx.font = '800 16px Orbitron, sans-serif'; ctx.fillStyle = '#fbbf24'; ctx.fillText(`HIT CHAIN x${chain.count}`, 14, 26); }
+            ctx.restore();
             animId = requestAnimationFrame(loop);
         }
         animId = requestAnimationFrame(loop);
@@ -1396,7 +1640,7 @@ function runRocketGame(modId, subId) {
     }
 
     function finish() {
-        finishGame({ modal, stage, modId, subId, gameKey: 'rocket', title: '🚀 Rocket Challenge', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Arcade Score', arcadeScore: S.score, retry: () => runRocketGame(modId, subId) });
+        finishGame({ modal, stage, modId, subId, gameKey: 'rocket', title: '🚀 Rocket Challenge', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Arcade Score', arcadeScore: S.score, bestStreak: S.combo.best, retry: () => runRocketGame(modId, subId) });
     }
     ask();
 }
@@ -1407,7 +1651,7 @@ function runRocketGame(modId, subId) {
 function runBlockBlastGame(modId, subId) {
     const { modal, stage } = makeModal();
     const questions = prepareQuiz(modId, subId);
-    const S = { q: 0, quiz: 0, score: 0 };
+    const S = { q: 0, quiz: 0, score: 0, chain: 0, combo: createCombo() };
     const grid = Array.from({ length: 8 }, () => Array(8).fill(null));
     const colors = ['#00f2fe', '#38bdf8', '#a855f7', '#ec4899', '#f59e0b', '#22c55e', '#6366f1'];
     const shapes = [[[1, 1], [1, 1]], [[1, 1, 1]], [[1], [1], [1]], [[1, 0], [1, 1]], [[1, 1, 1], [0, 0, 1]], [[1]]];
@@ -1416,10 +1660,12 @@ function runBlockBlastGame(modId, subId) {
     function ask() {
         if (S.q >= questions.length) return finish();
         askQuestion({
-            stage, q: questions[S.q], index: S.q, total: questions.length, badge: `Grid Score: ${S.score} 🧱`,
+            stage, q: questions[S.q], index: S.q, total: questions.length, badge: `Grid Score: ${S.score} 🧱`, combo: S.combo,
             onResult: ok => {
                 if (ok) S.quiz++;
                 tray = Array.from({ length: 6 }, () => ({ shape: shapes[Math.floor(Math.random() * shapes.length)], color: colors[Math.floor(Math.random() * colors.length)] }));
+                if (ok && S.combo.streak >= 3) { tray.unshift({ shape: [[1]], color: '#fbbf24', bomb: true }); FX.play('power'); }
+                S.chain = 0;
                 sel = 0;
                 board();
             }
@@ -1441,12 +1687,12 @@ function runBlockBlastGame(modId, subId) {
                 const on = p.shape[r] && p.shape[r][c] === 1;
                 mini += `<i style="background:${on ? p.color : 'transparent'};${on ? `box-shadow:0 0 6px ${p.color}` : ''}"></i>`;
             }
-            return `<div class="tray-piece${i === sel ? ' selected' : ''}" data-i="${i}" role="button" tabindex="0"><div class="mini">${mini}</div>Piece #${i + 1}</div>`;
+            return `<div class="tray-piece${i === sel ? ' selected' : ''}${p.bomb ? ' bomb' : ''}" data-i="${i}" role="button" tabindex="0"><div class="mini">${mini}</div>${p.bomb ? '💣 Neon Bomb' : `Piece #${i + 1}`}</div>`;
         }).join('') : 'Tray empty. Press Next Question to earn more pieces!';
         const last = S.q >= questions.length - 1;
         stage.innerHTML = `
             <div class="quiz-game-card canvas-card" style="max-width:680px;">
-                <div class="quiz-header-row"><span class="quiz-counter">Wave ${S.q + 1} · Block Grid Arena</span><span class="quiz-credits">Grid Score: ${S.score} 🧱</span></div>
+                <div class="quiz-header-row"><span class="quiz-counter">Wave ${S.q + 1} · Block Grid Arena</span>${comboPill(S.combo)}${S.chain >= 2 ? `<span class="combo-pill">💥 CLEAR CHAIN x${S.chain}</span>` : ''}<span class="quiz-credits">Grid Score: ${S.score} 🧱</span></div>
                 <p class="canvas-instructions" style="margin:0 0 10px;">Pick a piece, then hover over the grid to see the <strong>ghost outline</strong>. Click to place it.</p>
                 <div class="bb-grid" id="bb-grid">${cells}</div>
                 <div class="bb-tray">${trayHTML}</div>
@@ -1464,6 +1710,10 @@ function runBlockBlastGame(modId, subId) {
             el.onmouseenter = () => {
                 const p = tray[sel]; if (!p) return;
                 clearPreview();
+                if (p.bomb) {
+                    blastArea(r, c).forEach(([br, bc]) => { cellEls[br * 8 + bc].style.cssText = 'background:rgba(251,191,36,.35);border:1px dashed #fbbf24;'; });
+                    return;
+                }
                 const ok = fits(p.shape, r, c);
                 p.shape.forEach((row, sr) => row.forEach((v, sc) => {
                     if (!v) return;
@@ -1480,14 +1730,42 @@ function runBlockBlastGame(modId, subId) {
     function place(r, c) {
         const p = tray[sel];
         if (!p) { toast('Select a piece from your tray first.', 'warn'); return; }
-        if (!fits(p.shape, r, c)) { hype('⚠️ Invalid Placement!'); return; }
-        p.shape.forEach((row, sr) => row.forEach((v, sc) => { if (v) grid[r + sr][c + sc] = p.color; }));
+        if (!p.bomb && !fits(p.shape, r, c)) { hype('⚠️ Invalid Placement!'); FX.play('wrong'); return; }
+        const cellEls = $$('.bb-cell', stage);
+        // Burst effects are placed using the current cells, before the board is redrawn
+        const sparkle = (br, bc, color) => FX.burstAt(cellEls[br * 8 + bc], { color, count: 7, power: 4 });
+        if (p.bomb) {
+            let blasted = 0;
+            blastArea(r, c).forEach(([br, bc]) => {
+                sparkle(br, bc, '#fbbf24');
+                if (grid[br][bc]) { blasted++; grid[br][bc] = null; }
+            });
+            S.score += Math.round((50 + blasted * 40) * S.combo.mult);
+            FX.play('explode');
+        } else {
+            p.shape.forEach((row, sr) => row.forEach((v, sc) => { if (v) grid[r + sr][c + sc] = p.color; }));
+            S.score += Math.round(50 * S.combo.mult);
+            FX.play('hit');
+        }
         tray.splice(sel, 1);
         sel = 0;
-        S.score += 50;
-        const lines = clearLines();
-        if (lines > 0) hype(['Block Blast!', 'Awesome Combo!', 'Clean Clear!', 'Brilliant!'][Math.floor(Math.random() * 4)]);
+        const { n, cells } = clearLines();
+        if (n > 0) {
+            S.chain++;
+            recordBest('bestActionCombo', S.chain);
+            S.score += Math.round((n * 200 + (n - 1) * 100) * S.combo.mult * (1 + (S.chain - 1) * 0.25));
+            cells.forEach(([br, bc]) => sparkle(br, bc, '#00f2fe'));
+            hype(S.chain > 1 ? `CHAIN x${S.chain}! 💥` : ['Block Blast!', 'Awesome Combo!', 'Clean Clear!', 'Brilliant!'][Math.floor(Math.random() * 4)]);
+            FX.comboSound(S.chain * 2);
+        } else if (!p.bomb) S.chain = 0;
         board();
+        if (n > 0 || p.bomb) FX.shake($('#bb-grid', stage), 6 + n * 5);
+    }
+
+    function blastArea(r, c) {
+        const area = [];
+        for (let br = r - 1; br <= r + 1; br++) for (let bc = c - 1; bc <= c + 1; bc++) if (br >= 0 && br < 8 && bc >= 0 && bc < 8) area.push([br, bc]);
+        return area;
     }
 
     // Find every full row/column first, then clear them together (so crossings both count)
@@ -1495,15 +1773,15 @@ function runBlockBlastGame(modId, subId) {
         const rows = [], cols = [];
         for (let r = 0; r < 8; r++) if (grid[r].every(v => v !== null)) rows.push(r);
         for (let c = 0; c < 8; c++) if (grid.every(row => row[c] !== null)) cols.push(c);
-        rows.forEach(r => { for (let c = 0; c < 8; c++) grid[r][c] = null; });
-        cols.forEach(c => { for (let r = 0; r < 8; r++) grid[r][c] = null; });
-        const n = rows.length + cols.length;
-        S.score += n * 200 + (n > 1 ? (n - 1) * 100 : 0);
-        return n;
+        const cells = [];
+        rows.forEach(r => { for (let c = 0; c < 8; c++) cells.push([r, c]); });
+        cols.forEach(c => { for (let r = 0; r < 8; r++) cells.push([r, c]); });
+        cells.forEach(([r, c]) => { grid[r][c] = null; });
+        return { n: rows.length + cols.length, cells };
     }
 
     function finish() {
-        finishGame({ modal, stage, modId, subId, gameKey: 'blockblast', title: '🧱 Block Blast', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Grid Score', arcadeScore: S.score, retry: () => runBlockBlastGame(modId, subId) });
+        finishGame({ modal, stage, modId, subId, gameKey: 'blockblast', title: '🧱 Block Blast', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Grid Score', arcadeScore: S.score, bestStreak: S.combo.best, retry: () => runBlockBlastGame(modId, subId) });
     }
     ask();
 }
@@ -1520,13 +1798,13 @@ const CRATE_LAYOUTS = {
 function runPirateGame(modId, subId) {
     const { modal, stage } = makeModal();
     const questions = prepareQuiz(modId, subId);
-    const S = { q: 0, quiz: 0, score: 0, credits: 50, heavy: false, bomb: false, mult: 1 };
+    const S = { q: 0, quiz: 0, score: 0, credits: 50, heavy: false, bomb: false, mult: 1, combo: createCombo() };
 
     function ask() {
         if (S.q >= questions.length) return finish();
         askQuestion({
             stage, q: questions[S.q], index: S.q, total: questions.length, theme: 'theme-pirate',
-            badge: `${S.credits} 💰 Credits · Level ${S.q + 1}`,
+            badge: `${S.credits} 💰 Credits · Level ${S.q + 1}`, combo: S.combo,
             onResult: ok => { if (ok) { S.credits += 100; S.quiz++; } arena(); }
         });
     }
@@ -1534,16 +1812,19 @@ function runPirateGame(modId, subId) {
     function arena() {
         const level = Math.min(S.q + 1, 3);
         let targets = CRATE_LAYOUTS[level].map(([x, y, s]) => ({ x, y, w: s, h: s }));
+        const maxShots = S.combo.streak >= 3 ? 4 : 3;   // streak power-up: an extra cannonball
+        let shotHits = 0;
+        if (maxShots > 3) FX.play('power');
         stage.innerHTML = `
             <div class="quiz-game-card canvas-card theme-pirate" style="max-width:740px;">
-                <div class="quiz-header-row"><span class="quiz-counter" style="color:#ff4757;">⛰️ Hilltop Assault · Level ${S.q + 1}</span><span id="p-shots" class="quiz-credits">Shots: 🔴🔴🔴</span><span id="birds-score" class="quiz-credits">Score: ${S.score}</span></div>
+                <div class="quiz-header-row"><span class="quiz-counter" style="color:#ff4757;">⛰️ Hilltop Assault · Level ${S.q + 1}</span>${comboPill(S.combo)}<span id="p-shots" class="quiz-credits">Shots: ${'🔴'.repeat(maxShots)}</span><span id="birds-score" class="quiz-credits">Score: ${S.score}</span></div>
                 <div class="canvas-wrap"><canvas id="birdsCanvas" width="680" height="340"></canvas><div id="shot-feedback"></div></div>
                 <p class="canvas-instructions">Click or touch and drag the cannonball backward to aim, then release to fire at the crates!</p>
             </div>`;
         const canvas = $('#birdsCanvas', stage), ctx = canvas.getContext('2d');
         const cannon = { x: 110, y: 155 }, groundY = 275, gravity = S.heavy ? 0.48 : 0.36;
         const ball = { x: cannon.x, y: cannon.y, r: 14, vx: 0, vy: 0, launched: false, frames: 0 };
-        let dragging = false, shots = 3, ended = false, shake = 0, muzzle = 0, particles = [], floaters = [], animId;
+        let dragging = false, shots = maxShots, ended = false, shake = 0, muzzle = 0, particles = [], floaters = [], animId;
 
         const pos = e => { const r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * canvas.width / r.width, y: (e.clientY - r.top) * canvas.height / r.height }; };
         canvas.addEventListener('pointerdown', e => {
@@ -1565,8 +1846,8 @@ function runPirateGame(modId, subId) {
             const dx = cannon.x - ball.x, dy = cannon.y - ball.y;
             if (Math.hypot(dx, dy) < 12) { ball.x = cannon.x; ball.y = cannon.y; return; }   // ignore accidental taps
             ball.vx = dx * 0.38; ball.vy = dy * 0.38; ball.launched = true; ball.frames = 0;
-            shots--; muzzle = 10; shake = 6;
-            const sEl = $('#p-shots', stage); if (sEl) sEl.textContent = 'Shots: ' + '🔴'.repeat(shots) + '⚫'.repeat(3 - shots);
+            shots--; muzzle = 10; shake = 6; shotHits = 0; FX.play('explode');
+            const sEl = $('#p-shots', stage); if (sEl) sEl.textContent = 'Shots: ' + '🔴'.repeat(shots) + '⚫'.repeat(maxShots - shots);
         };
         canvas.addEventListener('pointerup', release);
         canvas.addEventListener('pointercancel', release);
@@ -1660,9 +1941,14 @@ function runPirateGame(modId, subId) {
             animId = requestAnimationFrame(loop);
         }
         function smash(t) {
-            S.score += 100 * S.mult;
-            for (let p = 0; p < 16; p++) particles.push({ x: t.x + t.w / 2, y: t.y + t.h / 2, vx: (Math.random() - 0.5) * 9, vy: (Math.random() - 0.5) * 9, color: Math.random() > 0.5 ? '#f59e0b' : '#ef4444', alpha: 1, size: 3 + Math.random() * 5 });
-            floaters.push({ text: `+${100 * S.mult} PTS!`, x: t.x, y: t.y, alpha: 1 });
+            shotHits++;
+            recordBest('bestActionCombo', shotHits);
+            const pts = Math.round(100 * S.mult * S.combo.mult * (1 + (shotHits - 1) * 0.25));
+            S.score += pts;
+            for (let p = 0; p < 16 + shotHits * 6; p++) particles.push({ x: t.x + t.w / 2, y: t.y + t.h / 2, vx: (Math.random() - 0.5) * 9, vy: (Math.random() - 0.5) * 9, color: Math.random() > 0.5 ? '#f59e0b' : '#ef4444', alpha: 1, size: 3 + Math.random() * 5 });
+            floaters.push({ text: shotHits > 1 ? `CHAIN x${shotHits}! +${pts}` : `+${pts} PTS!`, x: t.x, y: t.y, alpha: 1 });
+            FX.play('hit');
+            if (shotHits >= 3) { FX.comboSound(shotHits); FX.shake($('.quiz-game-card', stage), 6 + shotHits * 2); }
         }
         animId = requestAnimationFrame(loop);
     }
@@ -1693,7 +1979,7 @@ function runPirateGame(modId, subId) {
 
     function finish() {
         const total = S.quiz * 150 + S.score;
-        finishGame({ modal, stage, modId, subId, gameKey: 'pirate', title: '🏴‍☠️ Battle', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Total Arcade Score', arcadeScore: total, theme: 'theme-pirate', retry: () => runPirateGame(modId, subId) });
+        finishGame({ modal, stage, modId, subId, gameKey: 'pirate', title: '🏴‍☠️ Battle', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Total Arcade Score', arcadeScore: total, bestStreak: S.combo.best, theme: 'theme-pirate', retry: () => runPirateGame(modId, subId) });
     }
     ask();
 }
@@ -1713,7 +1999,7 @@ const PortalSecurity = (() => {
         if (typeof user.xp !== 'number' || Number.isNaN(user.xp) || user.xp < 0) user.xp = 0;
         user.xp = Math.min(user.xp, 100000);
         if (!user.scores || typeof user.scores !== 'object') user.scores = {};
-        ['rocket', 'blockblast', 'pirate'].forEach(g => {
+        GAME_KEYS.forEach(g => {
             const v = user.scores[g];
             user.scores[g] = (typeof v !== 'number' || Number.isNaN(v) || v < 0) ? 0 : Math.min(v, 50000);
         });
@@ -1737,13 +2023,14 @@ const SHOP = [
     { key: 'avatar_true_god_scrappy', type: 'avatar', name: 'True God Scrappy', desc: 'Ascended mascot form.', cost: 350, img: 'images/generate_image_01 (1).png', tier: 'purple' }
 ];
 const AVATAR_MAP = Object.fromEntries(SHOP.filter(i => i.type === 'avatar').map(i => [i.key, i.img]));
-const BG_MAP = { bg_default: '', ...Object.fromEntries(SHOP.filter(i => i.type === 'bg').map(i => [i.key, i.img])) };
 const STARTER_AVATARS = ['images/Designer (1).png', 'images/Designer (2).png', 'images/Designer (3).png'];
 
 const Portal = (() => {
-    const ID_KEY = 'ai_portal_active_user_id', THEME_KEY = 'ai_portal_active_theme', LOCAL_KEY = 'ai_portal_local_directory';
+    const ID_KEY = 'ai_portal_active_user_id', LOCAL_KEY = 'ai_portal_local_directory';
     let dir = [];
-    let category = 'xp';
+    // Each leaderboard (Profile directory and Dashboard) remembers its own tab
+    const category = { directory: 'xp', dashboard: 'xp' };
+    const DASH_LIMIT = 10;
 
     const SEEDS = [
         { id: 'seed_1', username: 'NovaPrime', bio: 'Neural network architect & laser ace', avatar: 'images/Designer (1).png', background: 'bg_default', xp: 650, scores: { rocket: 1420, blockblast: 980, pirate: 1100 }, unlocks: ['bg_default'] },
@@ -1753,9 +2040,10 @@ const Portal = (() => {
     function normalize(d) {
         d.scores = d.scores && typeof d.scores === 'object' ? d.scores : {};
         if (d.scores.pirate === undefined) d.scores.pirate = d.pirateScore || d.scores.angrybirds || 0;
-        ['rocket', 'blockblast'].forEach(g => { if (d.scores[g] === undefined) d.scores[g] = 0; });
+        GAME_KEYS.forEach(g => { if (d.scores[g] === undefined) d.scores[g] = 0; });
         if (!Array.isArray(d.unlocks) || !d.unlocks.length) d.unlocks = ['bg_default'];
-        d.username = d.username || 'Cadet';
+        d.equipped = d.equipped && typeof d.equipped === 'object' ? d.equipped : {};
+        d.username = String(d.username || 'Cadet');
         return d;
     }
 
@@ -1764,7 +2052,25 @@ const Portal = (() => {
         return id ? dir.find(u => u.id === id) || null : null;
     };
 
+    // Progress lives in this browser, so a summary is copied onto your profile for others to see
+    const progressSnapshot = () => ({
+        badges: BADGES.filter(b => badgeProgress(b).done).map(b => b.id),
+        modulesDone: modulesDoneCount(),
+        lessonsDone: lessonsDoneCount()
+    });
+
+    // Saves the profile only if its progress summary is out of date. Returns true if it saved.
+    function syncProfile() {
+        const u = getActiveUser();
+        if (!u) return false;
+        const snap = progressSnapshot();
+        if (JSON.stringify(snap) === JSON.stringify({ badges: u.badges, modulesDone: u.modulesDone, lessonsDone: u.lessonsDone })) return false;
+        persist(u);
+        return true;
+    }
+
     async function persist(user) {
+        if (user.id === localStorage.getItem(ID_KEY)) Object.assign(user, progressSnapshot());
         PortalSecurity.validateUserMetrics(user);
         const i = dir.findIndex(u => u.id === user.id);
         if (i >= 0) dir[i] = user; else dir.push(user);
@@ -1780,7 +2086,7 @@ const Portal = (() => {
         if (!db) {
             dir = store.get(LOCAL_KEY, []).map(normalize);
             if (!dir.length) SEEDS.forEach(s => persist(normalize({ ...s })));
-            refreshUI();
+            if (!syncProfile()) refreshUI();
             return;
         }
         db.collection('cadets').onSnapshot(snap => {
@@ -1789,7 +2095,7 @@ const Portal = (() => {
             if (!cloud.length) { SEEDS.forEach(s => persist(normalize({ ...s }))); return; }
             dir = cloud;
             store.set(LOCAL_KEY, dir);
-            refreshUI();
+            if (!syncProfile()) refreshUI();
         }, err => {
             console.error('Firestore sync error:', err);
             dir = store.get(LOCAL_KEY, []).map(normalize);
@@ -1802,7 +2108,8 @@ const Portal = (() => {
         const u = getActiveUser();
         if (!u) return false;
         u.xp = (Number(u.xp) || 0) + xp;
-        if (typeof score === 'number' && score >= 0 && score <= 50000 && score > (u.scores[game] || 0)) u.scores[game] = score;
+        const capped = Math.min(50000, Math.round(score));     // combo multipliers can push past the cap
+        if (capped > (u.scores[game] || 0)) u.scores[game] = capped;
         persist(u);
         return true;
     }
@@ -1823,29 +2130,239 @@ const Portal = (() => {
         const user = getActiveUser();
         if (!user) return;
         if (AVATAR_MAP[key]) { user.avatar = AVATAR_MAP[key]; toast('Avatar equipped.', 'success'); }
-        else if (key in BG_MAP) { user.background = key; localStorage.setItem(THEME_KEY, key); toast('Background equipped.', 'success'); }
+        else if (PortalTheme.has(key)) {
+            user.background = key;
+            if (key !== 'bg_default') store.set('usedBackground', true);
+            toast('Background applied across the whole portal.', 'success');
+        }
         persist(user);
+        checkRewards();
+    }
+
+    // Looks up an equipped reward. Saved ids are untrusted, so only known ids of the right type count.
+    // Your own rewards must also be earned on this device.
+    function getEquipped(user, type) {
+        const r = user && user.equipped ? REWARD_MAP.get(user.equipped[type]) : null;
+        if (!r || r.type !== type) return null;
+        const me = getActiveUser();
+        return me && me.id === user.id && !rewardUnlocked(r) ? null : r;
+    }
+
+    function toggleReward(id) {
+        const user = getActiveUser(), reward = REWARD_MAP.get(id);
+        if (!user || !reward) return;
+        if (!rewardUnlocked(reward)) { toast(`Locked. Earn the ${BADGE_MAP.get(reward.badge).name} badge to unlock it.`, 'warn'); return; }
+        const on = isEquipped(user, reward);
+        if (reward.type === 'bg') {
+            user.background = on ? 'bg_default' : reward.bg;
+            if (!on) store.set('usedBackground', true);
+        } else {
+            // Unequip stores '' (not delete) because Firestore merge saves keep deleted keys
+            user.equipped = { ...user.equipped, [reward.type]: on ? '' : id };
+        }
+        persist(user);
+        toast(`${reward.name} ${on ? 'unequipped' : 'equipped'}.`, 'success');
+        checkRewards();
+        $(`#reward-locker [data-reward="${id}"]`)?.focus({ preventScroll: true });
+    }
+
+    // Backgrounds are stored in user.background; every other reward type in user.equipped
+    const isEquipped = (user, r) => r.type === 'bg' ? user.background === r.bg : user.equipped[r.type] === r.id;
+
+    function renderRewardLocker(user) {
+        const locker = $('#reward-locker');
+        if (!locker) return;
+        $('#locker-count').textContent = `${REWARDS.filter(rewardUnlocked).length} / ${REWARDS.length} unlocked`;
+        locker.innerHTML = REWARD_TYPES.map(type => `
+            <h3 class="locker-group-title">${type.label} <small>${REWARDS.filter(r => r.type === type.key && rewardUnlocked(r)).length} / ${REWARDS.filter(r => r.type === type.key).length}</small></h3>
+            <div class="reward-grid">${REWARDS.filter(r => r.type === type.key).map(r => {
+                const badge = BADGE_MAP.get(r.badge), p = badgeProgress(badge);
+                const on = p.done && isEquipped(user, r);
+                const preview = {
+                    title: () => `<span class="title-pill">${esc(r.name)}</span>`,
+                    border: () => `<span class="frame-swatch${frameClass(r)}" style="${frameStyle(r)}"><img src="${esc(user.avatar)}" alt=""></span>`,
+                    accent: () => `<span class="accent-swatch" style="--r-rgb:${r.rgb}"></span>`,
+                    chat: () => `<span class="chat-badge">${r.icon} ${esc(r.name)}</span>`,
+                    bg: () => `<span class="bg-swatch" data-bg="${r.bg}"></span>`
+                }[r.type]();
+                return `
+                    <div class="reward-card${p.done ? ' unlocked' : ' locked'}${on ? ' equipped' : ''}">
+                        <div class="reward-preview" aria-hidden="true">${preview}</div>
+                        <h4>${esc(r.name)}</h4>
+                        ${p.done
+                            ? `<p>Earned with ${badge.icon} ${esc(badge.name)}</p>
+                               <button type="button" class="btn-cyan-secondary" data-reward="${r.id}" aria-pressed="${on}" aria-label="${on ? 'Unequip' : 'Equip'} ${esc(r.name)}">${on ? '✓ Equipped (Remove)' : 'Equip'}</button>`
+                            : `<p>🔒 ${esc(badge.desc)} to earn <strong>${esc(badge.name)}</strong></p>
+                               ${meterHTML(p, `${r.name} progress`)}
+                               <span class="meter-label">${p.current} / ${p.target} ${esc(badge.unit)}</span>`}
+                    </div>`;
+            }).join('')}</div>`).join('');
+    }
+
+    // Applies the equipped border, title, chat badge and accent to the profile header
+    function applyRewards(user) {
+        const border = getEquipped(user, 'border'), title = getEquipped(user, 'title');
+        const chat = getEquipped(user, 'chat'), accent = getEquipped(user, 'accent');
+        const ring = $('#dash-avatar');
+        ring.className = 'profile-avatar-ring' + frameClass(border);
+        ring.style.cssText = frameStyle(border);
+        const titleEl = $('#dash-title'), chatEl = $('#dash-chat-badge');
+        titleEl.hidden = !title;
+        titleEl.textContent = title ? title.name : '';
+        chatEl.hidden = !chat;
+        chatEl.textContent = chat ? `${chat.icon} ${chat.name}` : '';
+        const view = $('#active-profile-view');
+        view.classList.toggle('has-accent', !!accent);
+        if (accent) view.style.setProperty('--r-rgb', accent.rgb); else view.style.removeProperty('--r-rgb');
     }
 
     const rankTitle = xp => xp >= 1000 ? 'Grandmaster AI Architect' : xp >= 500 ? 'Cyber Specialist' : xp >= 200 ? 'Prompt Engineer' : 'Rookie AI Explorer';
 
+    // ---- Leaderboards (Profile directory + Dashboard) ---------------------
+    // Built on demand because games.js (which lists the games) loads after this file
+    const boardCats = () => [
+        { key: 'xp', tab: '🌟 Top XP', value: u => num(u.xp), text: v => `${v} XP` },
+        { key: 'total', tab: '🏅 Total Score', value: u => totalScore(u), text: v => `${v} pts` },
+        ...GAME_KEYS.map(k => ({ key: k, tab: `${GAMES[k].icon} ${GAMES[k].short}`, value: u => num(u.scores[k]), text: v => `${v} pts` }))
+    ];
+    // Other players' data comes from the shared database, so never trust its types
+    const num = v => Number.isFinite(Number(v)) ? Math.max(0, Math.floor(Number(v))) : 0;
+    const totalScore = u => GAME_KEYS.reduce((sum, k) => sum + num(u.scores[k]), 0);
+
+    const flairHTML = u => {
+        const title = getEquipped(u, 'title'), chat = getEquipped(u, 'chat');
+        return (title ? `<span class="title-pill">${esc(title.name)}</span>` : '') + (chat ? `<span class="chat-badge">${chat.icon} ${esc(chat.name)}</span>` : '');
+    };
+
+    function boardRow(u, rank, cat, me) {
+        const isMe = me && u.id === me.id;
+        const border = getEquipped(u, 'border'), flair = flairHTML(u);
+        const score = cat.text(cat.value(u));
+        return `<div class="directory-row clickable${isMe ? ' is-me' : ''}" role="button" tabindex="0" data-inspect="${esc(u.id)}" aria-label="View ${esc(u.username)}'s profile, rank ${rank}, ${score}">
+            <div class="dir-user-info"><span class="dir-rank${rank <= 3 ? ' top-' + rank : ''}">#${rank}</span>
+                <div class="dir-avatar${frameClass(border)}" style="${frameStyle(border)}"><img src="${esc(u.avatar)}" alt=""></div>
+                <div><span class="dir-name">${esc(u.username)}${isMe ? ' (You)' : ''}</span>${flair ? `<span class="dir-flair">${flair}</span>` : ''}<span class="dir-bio">${esc(u.bio || 'AI Learning Cadet')}</span></div>
+            </div><div class="dir-side"><div class="dir-scores">${score}</div><span class="dir-view" aria-hidden="true">View profile →</span></div></div>`;
+    }
+
+    const ranked = cat => [...dir].sort((a, b) => cat.value(b) - cat.value(a));
+    const findCat = key => { const cats = boardCats(); return cats.find(c => c.key === key) || cats[0]; };
+
     function renderDirectory() {
         const list = $('#global-directory-list');
         if (!list) return;
-        const me = getActiveUser();
+        const me = getActiveUser(), cat = findCat(category.directory);
         const q = ($('#global-profile-search')?.value || '').toLowerCase().trim();
-        const rows = dir.filter(u => u.username.toLowerCase().includes(q) || (u.bio || '').toLowerCase().includes(q))
-            .sort((a, b) => category === 'xp' ? (b.xp || 0) - (a.xp || 0) : (b.scores[category] || 0) - (a.scores[category] || 0));
-        if (!rows.length) { list.innerHTML = `<p class="empty-note">No cadets found${q ? ` matching "${esc(q)}"` : ''}.</p>`; return; }
-        const label = { xp: u => `${u.xp || 0} XP`, rocket: u => `Rocket: ${u.scores.rocket || 0} pts`, blockblast: u => `Block Blast: ${u.scores.blockblast || 0} pts`, pirate: u => `Pirate: ${u.scores.pirate || 0} pts` }[category];
-        list.innerHTML = rows.map((u, i) => {
-            const isMe = me && u.id === me.id;
-            return `<div class="directory-row${isMe ? ' is-me' : ''}">
-                <div class="dir-user-info"><span class="dir-rank">#${i + 1}</span>
-                    <div class="dir-avatar"><img src="${esc(u.avatar)}" alt=""></div>
-                    <div><span class="dir-name">${esc(u.username)}${isMe ? ' (You)' : ''}</span><span class="dir-bio">${esc(u.bio || 'AI Learning Cadet')}</span></div>
-                </div><div class="dir-scores">${label(u)}</div></div>`;
-        }).join('');
+        // Ranks are worked out before searching, so a search never changes anyone's rank
+        const rows = ranked(cat).map((u, i) => [u, i + 1])
+            .filter(([u]) => u.username.toLowerCase().includes(q) || String(u.bio || '').toLowerCase().includes(q));
+        list.innerHTML = rows.length
+            ? rows.map(([u, rank]) => boardRow(u, rank, cat, me)).join('')
+            : `<p class="empty-note">No cadets found${q ? ` matching "${esc(q)}"` : ''}.</p>`;
+    }
+
+    function renderDashboardBoard() {
+        const list = $('#dash-leaderboard');
+        if (!list) return;
+        const me = getActiveUser(), cat = findCat(category.dashboard);
+        const all = ranked(cat).map((u, i) => [u, i + 1]);
+        const rows = all.slice(0, DASH_LIMIT);
+        const mine = me && all.find(([u]) => u.id === me.id);
+        if (mine && mine[1] > DASH_LIMIT) rows.push(mine);
+        const focused = document.activeElement?.closest?.('#dash-leaderboard [data-inspect]')?.dataset.inspect;
+        list.innerHTML = rows.length ? rows.map(([u, rank]) => boardRow(u, rank, cat, me)).join('') : '<p class="empty-note">No cadets yet. Create a profile to claim the top spot!</p>';
+        if (focused) $$('[data-inspect]', list).find(el => el.dataset.inspect === focused)?.focus({ preventScroll: true });
+    }
+
+    function buildBoardTabs() {
+        $$('[data-board]').forEach(wrap => {
+            wrap.innerHTML = boardCats().map(c => `<button type="button" class="lb-tab${c.key === category[wrap.dataset.board] ? ' active' : ''}" data-cat="${c.key}" aria-pressed="${c.key === category[wrap.dataset.board]}">${c.tab}</button>`).join('');
+            wrap.addEventListener('click', e => {
+                const tab = e.target.closest('.lb-tab');
+                if (!tab) return;
+                category[wrap.dataset.board] = tab.dataset.cat;
+                $$('.lb-tab', wrap).forEach(t => { t.classList.toggle('active', t === tab); t.setAttribute('aria-pressed', t === tab); });
+                if (wrap.dataset.board === 'dashboard') renderDashboardBoard(); else renderDirectory();
+                animateView(wrap.parentElement);
+            });
+        });
+    }
+
+    // ---- Profile inspection modal -----------------------------------------
+    let closeInspector = () => {};
+
+    function inspectorHTML(u) {
+        const me = getActiveUser(), isMe = me && u.id === me.id;
+        const border = getEquipped(u, 'border'), accent = getEquipped(u, 'accent'), flair = flairHTML(u);
+        const shared = Array.isArray(u.badges);
+        const badges = shared ? [...new Set(u.badges)].map(id => BADGE_MAP.get(id)).filter(Boolean) : [];
+        const modules = shared ? Math.min(MODULES.length, num(u.modulesDone)) : null;
+        const best = Math.max(1, ...GAME_KEYS.map(k => num(u.scores[k])));
+        const stat = (label, value) => `<div class="p-stat-box"><span class="p-stat-label">${label}</span><span class="p-stat-num">${value}</span></div>`;
+        return `
+            <div class="inspect-card" role="dialog" aria-modal="true" aria-labelledby="inspect-name" tabindex="-1" style="${accent ? '--i-rgb:' + accent.rgb : ''}">
+                <button type="button" class="inspect-close" aria-label="Close profile">✕</button>
+                <div class="inspect-head">
+                    <div class="profile-avatar-ring${frameClass(border)}" style="${frameStyle(border)}"><img src="${esc(u.avatar)}" alt=""></div>
+                    <div>
+                        <h2 id="inspect-name">${esc(u.username)}${isMe ? ' (You)' : ''}</h2>
+                        <span class="profile-rank-pill">${rankTitle(num(u.xp))}</span>
+                        <div class="profile-flair-row">${flair || '<span class="meter-label">No title equipped</span>'}</div>
+                        <p>${esc(u.bio || 'AI Learning Cadet')}</p>
+                    </div>
+                </div>
+                <div class="inspect-stats">
+                    ${stat('TOTAL XP', num(u.xp))}${stat('TOTAL SCORE', totalScore(u))}
+                    ${stat('MODULES', modules === null ? '—' : `${modules} / ${MODULES.length}`)}
+                    ${stat('BADGES', shared ? `${badges.length} / ${BADGES.length}` : '—')}
+                </div>
+                <h3>Arcade High Scores</h3>
+                <ul class="score-list">${GAME_KEYS.map(k => `
+                    <li><span>${GAMES[k].icon} ${GAMES[k].short}</span><div class="score-bar"><div style="--w:${(num(u.scores[k]) / best) * 100}%"></div></div><b>${num(u.scores[k])}</b></li>`).join('')}
+                </ul>
+                <h3>Unlocked Badges</h3>
+                ${!shared ? '<p class="empty-note">This cadet has not synced badge progress yet.</p>'
+                    : badges.length ? `<ul class="inspect-badges">${badges.map((b, i) => `<li style="--stagger:${Math.min(i, 14)}" title="${esc(b.desc)}"><span aria-hidden="true">${b.icon}</span>${esc(b.name)}</li>`).join('')}</ul>`
+                    : '<p class="empty-note">No badges earned yet.</p>'}
+            </div>`;
+    }
+
+    function openInspector(id) {
+        const user = dir.find(u => u.id === id);
+        if (!user) { toast('That profile is no longer available.', 'warn'); return; }
+        closeInspector(true);
+        const opener = document.activeElement;
+        const overlay = document.createElement('div');
+        overlay.className = 'inspect-overlay';
+        overlay.innerHTML = inspectorHTML(user);
+        document.body.appendChild(overlay);
+        document.body.classList.add('modal-open');
+        const onKey = e => {
+            if (e.key === 'Escape') closeInspector();
+            // The close button is the only control, so Tab stays on it
+            if (e.key === 'Tab') { e.preventDefault(); $('.inspect-close', overlay).focus(); }
+        };
+        closeInspector = instant => {
+            closeInspector = () => {};
+            document.removeEventListener('keydown', onKey);
+            window.removeEventListener('hashchange', onHash);
+            document.body.classList.remove('modal-open');
+            overlay.classList.add('closing');
+            if (instant) overlay.remove(); else setTimeout(() => overlay.remove(), 220);
+            // Rows may have been redrawn while the modal was open
+            const row = opener?.dataset?.inspect && $$('.view.is-active [data-inspect]').find(el => el.dataset.inspect === opener.dataset.inspect);
+            (row || opener)?.focus?.({ preventScroll: true });
+        };
+        const onHash = () => closeInspector(true);
+        document.addEventListener('keydown', onKey);
+        window.addEventListener('hashchange', onHash);
+        overlay.addEventListener('click', e => { if (e.target === overlay || e.target.closest('.inspect-close')) closeInspector(); });
+        $('.inspect-close', overlay).focus();
+        FX.play('collect');
+        if (user.id !== localStorage.getItem(ID_KEY)) {
+            const seen = store.get('inspectedCadets', {});
+            if (!seen[id]) { seen[id] = true; store.set('inspectedCadets', seen); checkRewards(); }
+        }
     }
 
     function refreshUI() {
@@ -1853,12 +2370,17 @@ const Portal = (() => {
         const navLabel = $('#nav-username-label'), createView = $('#create-account-view'), activeView = $('#active-profile-view');
         if (navLabel) navLabel.textContent = user ? user.username : 'Create Profile';
 
+        // Keep the dashboard current, including after switching away from a profile
+        if ($('#dashboard-page-view')?.classList.contains('is-active')) updateDashboardStats();
+
+        // While the cloud profile is still loading, keep the background saved on this device
+        if (user) PortalTheme.set(user.background || 'bg_default');
+        else if (!localStorage.getItem(ID_KEY)) PortalTheme.set('bg_default');
         if (activeView) {
-            const theme = (user && user.background) || localStorage.getItem(THEME_KEY) || 'bg_default';
-            activeView.className = theme === 'bg_default' ? 'theme-default' : `theme-${theme}`;
-            activeView.style.backgroundImage = BG_MAP[theme] ? `linear-gradient(rgba(10,10,20,.85), rgba(10,10,20,.95)), url('${BG_MAP[theme]}')` : '';
-            activeView.style.backgroundSize = 'cover';
-            activeView.style.backgroundPosition = 'center';
+            const theme = PortalTheme.current();
+            // classList (not className) keeps the equipped accent class
+            [...activeView.classList].filter(c => c.startsWith('theme-')).forEach(c => activeView.classList.remove(c));
+            activeView.classList.add(theme === 'bg_default' ? 'theme-default' : `theme-${theme}`);
         }
         if (!user) {
             if (createView) createView.style.display = 'block';
@@ -1873,10 +2395,11 @@ const Portal = (() => {
         $('#dash-username').textContent = user.username;
         $('#dash-rank').textContent = rankTitle(user.xp || 0);
         $('#dash-bio').textContent = user.bio || 'Ready to conquer the AI modules.';
-        $('#dash-xp').textContent = user.xp || 0;
-        $('#dash-score-rocket').textContent = user.scores.rocket || 0;
-        $('#dash-score-blockblast').textContent = user.scores.blockblast || 0;
-        $('#dash-score-pirate').textContent = user.scores.pirate || 0;
+        $('#profile-stats-row').innerHTML = `<div class="p-stat-box"><span class="p-stat-label">TOTAL XP</span><span class="p-stat-num" id="dash-xp">${num(user.xp)}</span></div>`
+            + GAME_KEYS.map(k => `<div class="p-stat-box"><span class="p-stat-label">${GAMES[k].icon} ${GAMES[k].short.toUpperCase()}</span><span class="p-stat-num">${num(user.scores[k])}</span></div>`).join('');
+
+        applyRewards(user);
+        renderRewardLocker(user);
 
         // shop buttons show owned items
         $$('#shop-grid [data-buy]').forEach(b => {
@@ -1888,7 +2411,11 @@ const Portal = (() => {
         // inventory
         const inv = $('#user-inventory-list');
         inv.innerHTML = user.unlocks.length
-            ? user.unlocks.map(k => `<div class="inventory-item"><span>✅ ${esc(k.replace(/_/g, ' ').toUpperCase())}</span><button type="button" class="btn-cyan-secondary" data-equip="${esc(k)}">Equip</button></div>`).join('')
+            ? user.unlocks.map(k => {
+                const name = SHOP.find(i => i.key === k)?.name || (PortalTheme.has(k) ? PortalTheme.BACKGROUNDS[k].name + ' Background' : k);
+                const inUse = user.background === k || (AVATAR_MAP[k] && user.avatar === AVATAR_MAP[k]);
+                return `<div class="inventory-item"><span>✅ ${esc(name)}</span><button type="button" class="btn-cyan-secondary" data-equip="${esc(k)}"${inUse ? ' disabled' : ''}>${inUse ? 'In Use' : 'Equip'}</button></div>`;
+            }).join('')
             : '<span>No items unlocked yet. Buy something from the vault above!</span>';
 
         // avatar picker
@@ -1896,7 +2423,6 @@ const Portal = (() => {
         $('#edit-avatar-picker').innerHTML = avatars.map(p => `<button type="button" class="avatar-pick${user.avatar === p ? ' selected' : ''}" data-avatar="${esc(p)}"><img src="${esc(p)}" alt=""></button>`).join('');
 
         renderDirectory();
-        if ($('#dashboard-page-view')?.classList.contains('is-active')) updateDashboardStats();
     }
 
     function buildShop() {
@@ -1910,6 +2436,7 @@ const Portal = (() => {
 
     function bind() {
         buildShop();
+        buildBoardTabs();
         let createAvatar = STARTER_AVATARS[0];
         $$('#create-avatar-picker .avatar-pick').forEach(btn => btn.addEventListener('click', () => {
             $$('#create-avatar-picker .avatar-pick').forEach(b => b.classList.remove('selected'));
@@ -1923,7 +2450,8 @@ const Portal = (() => {
             if (!username) return;
             if (PortalSecurity.containsProfanity(username) || PortalSecurity.containsProfanity(bio)) { toast('Please choose an appropriate callsign and bio.', 'warn'); return; }
             if (dir.some(u => u.username.toLowerCase() === username.toLowerCase())) { toast('That callsign is taken. Try another one.', 'warn'); return; }
-            const user = { id: 'cadet_' + Date.now(), username, bio: bio || 'AI Explorer', avatar: createAvatar, background: 'bg_default', xp: 100 + store.get('localXP', 0), scores: { rocket: 0, blockblast: 0, pirate: 0 }, unlocks: ['bg_default'] };
+            const user = { id: 'cadet_' + Date.now(), username, bio: bio || 'AI Explorer', avatar: createAvatar, background: 'bg_default', xp: 100 + store.get('localXP', 0), scores: { rocket: 0, blockblast: 0, pirate: 0 }, unlocks: ['bg_default'], equipped: {} };
+            GAME_KEYS.forEach(k => { user.scores[k] = 0; });
             localStorage.setItem(ID_KEY, user.id);
             persist(user);
             e.target.reset();
@@ -1949,20 +2477,23 @@ const Portal = (() => {
         $('#profile-page').addEventListener('click', e => {
             const buyBtn = e.target.closest('[data-buy]'); if (buyBtn) return buy(buyBtn.dataset.buy);
             const eq = e.target.closest('[data-equip]'); if (eq) return equip(eq.dataset.equip);
+            const rw = e.target.closest('[data-reward]'); if (rw) return toggleReward(rw.dataset.reward);
             const av = e.target.closest('#edit-avatar-picker .avatar-pick');
             if (av) { const u = getActiveUser(); if (u) { u.avatar = av.dataset.avatar; persist(u); } }
-            const tab = e.target.closest('.lb-tab');
-            if (tab) {
-                $$('.lb-tab').forEach(t => t.classList.toggle('active', t === tab));
-                category = tab.dataset.cat;
-                renderDirectory();
-            }
+        });
+        // Clickable leaderboard rows, with keyboard support
+        document.addEventListener('click', e => {
+            const row = e.target.closest('[data-inspect]');
+            if (row) openInspector(row.dataset.inspect);
+        });
+        document.addEventListener('keydown', e => {
+            if ((e.key === 'Enter' || e.key === ' ') && e.target.matches?.('[data-inspect]')) { e.preventDefault(); openInspector(e.target.dataset.inspect); }
         });
         $('#global-profile-search').addEventListener('input', renderDirectory);
         initSync();
     }
 
-    return { bind, getActiveUser, getDirectory: () => dir, award };
+    return { bind, getActiveUser, getDirectory: () => dir, award, getEquipped, syncProfile, refresh: refreshUI, renderDashboardBoard };
 })();
 
 // ============================================================================
@@ -2002,8 +2533,9 @@ const Chatbot = (() => {
         { k: ['precision', 'recall', 'f1', 'accuracy', 'benchmark'], a: `Precision = of the things flagged positive, how many were right. Recall = of the real positives, how many were caught. F1 is their harmonic mean. Accuracy alone can mislead on rare events (a model that always says "healthy" scores 99% when only 1% are sick). See Lesson 6.1.` },
         { k: ['rlhf', 'alignment', 'reward model'], a: `RLHF (Reinforcement Learning from Human Feedback): people rank model answers, a reward model learns those preferences, and the AI is fine-tuned to be helpful, honest, and harmless. A KL penalty prevents reward hacking. See Lesson 6.2.` },
         { k: ['agent', 'multimodal', 'human-in-the-loop', 'hitl'], a: `AI agents plan multi-step tasks and use tools; multimodal models handle text, images, audio, and code. Human-in-the-loop design keeps people approving high-impact actions. See Lesson 6.3.` },
-        { k: ['xp', 'badge', 'level up', 'points', 'shop', 'leaderboard'], a: `You earn XP for every correct quiz answer plus a bonus for completing a lesson for the first time. Spend XP in the Profile shop on avatars and backgrounds, and earn badges on the Dashboard as you complete modules. Your best arcade scores appear on the leaderboard.` },
+        { k: ['xp', 'badge', 'level up', 'points', 'shop', 'leaderboard'], a: `You earn XP for every correct quiz answer plus a bonus for completing a lesson for the first time. Spend XP in the Profile shop on avatars and backgrounds. Badges on the Dashboard (for lessons, modules, minigames, and perfect quiz scores) (for lessons, minigames, combos, and exploring) automatically unlock titles, animated avatar borders, theme accents, chat badges, and site-wide backgrounds that you can equip on your Profile. Click any player on a leaderboard to see their stats. Your best arcade scores appear on the leaderboard.` },
         { k: ['unlock', 'locked', 'pass', 'module'], a: `Each lesson ends with an arcade quiz. Answer 4 out of 5 correctly to complete the lesson. Finish all three lessons in a module to unlock the next one.` },
+        { k: ['game', 'arcade', 'combo', 'streak', 'boss'], a: `Lessons use eight quiz games: Rocket Space Defender, Block Blast, Pirate Cannon, Cyber Shield Defense, Neon Hover Runner, Vault Code Breaker, Glitch Boss Battle, and Data Packet Catcher. Back-to-back right answers multiply your score up to x3 and unlock power-ups.` },
         { k: ['video'], a: `Lesson 1.1 has a video before the spam-classifier simulator. Watch it and the simulator unlocks!` }
     ];
     const FALLBACK = `I'm not sure about that one yet. Try asking about machine learning, neural networks, prompts, temperature, citing AI, bias, overfitting, precision and recall, or how XP and badges work.`;
@@ -2057,6 +2589,13 @@ const Chatbot = (() => {
         const el = document.createElement('div');
         el.className = `msg ${role}`;
         el.textContent = text;                 // textContent keeps user/AI text from running as HTML
+        const chat = role === 'user' ? Portal.getEquipped(Portal.getActiveUser(), 'chat') : null;
+        if (chat) {
+            const tag = document.createElement('span');
+            tag.className = 'chat-badge msg-badge';
+            tag.textContent = `${chat.icon} ${chat.name}`;
+            el.prepend(tag);
+        }
         log.appendChild(el);
         log.scrollTop = log.scrollHeight;
         return el;
@@ -2075,6 +2614,8 @@ const Chatbot = (() => {
         $('#chat-send').disabled = true;
         addMessage('user', text);
         history.push({ role: 'user', content: text });
+        store.set('questionsAsked', store.get('questionsAsked', 0) + 1);
+        checkRewards();
         const typing = document.createElement('div');
         typing.className = 'msg bot';
         typing.innerHTML = '<span class="typing" aria-label="Scrappy is typing"><i></i><i></i><i></i></span>';
@@ -2110,6 +2651,7 @@ const Chatbot = (() => {
 // ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
     renderModulesGrid();
+    syncRewards();   // on first run, records already-earned rewards without announcing them
     Portal.bind();
     Chatbot.bind();
 
