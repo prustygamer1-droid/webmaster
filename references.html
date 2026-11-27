@@ -3,98 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>References & Documentation - AI Learning Portal</title>
-    <link rel="stylesheet" href="style.css?v=2">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>References &amp; Documentation - AI Learning Portal</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <link rel="stylesheet" href="style.css?v=3">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body style="background: #0a0a14; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0;">
+<body>
 
-    <!-- Navbar -->
-    <nav class="navbar" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18, 18, 30, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #2d2d42; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; box-sizing: border-box;">
-        <div class="logo" style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 22px; color: #00f2fe; text-shadow: 0 0 10px rgba(0,242,254,0.5);">AI Portal</div>
-        <ul class="nav-links" style="display: flex; list-style: none; gap: 25px; margin: 0; padding: 0; align-items: center;">
-            <li><a href="index.html" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Home</a></li>
-            <li><a href="index.html" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Modules</a></li>
-            <li><a href="index.html" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Dashboard</a></li>
-            <li><a href="index.html" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s;">Chatbot</a></li>
-            <!-- Points back to index.html and targets the profile view -->
-            <li><a href="index.html#profile-page-view" style="color: #00f2fe; text-decoration: none; font-weight: 600; transition: color 0.3s;">Profile</a></li>
-            <li><a href="references.html" style="color: #00f2fe; text-decoration: none; font-weight: 600; transition: color 0.3s;">References</a></li>
+    <nav class="navbar" aria-label="Main navigation">
+        <a class="logo" href="index.html#home">AI Portal</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#modules">Modules</a></li>
+            <li><a href="index.html#dashboard">Dashboard</a></li>
+            <li><a href="index.html#chatbot">Chatbot</a></li>
+            <li><a href="references.html" class="active">References</a></li>
+            <li><a href="index.html#profile" class="nav-profile-btn">👤 Profile</a></li>
         </ul>
     </nav>
 
-    <!-- Standalone References Content Wrapper -->
-    <main class="container references-page" style="max-width: 1000px; margin: 0 auto; padding: 120px 20px 60px;">
-        <section class="sources-list" style="margin-bottom: 40px;">
-            <h2 style="color: #00f2fe; font-family: 'Orbitron', sans-serif;">Sources List</h2>
-            <div class="source-items">
-                <div class="source-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                    <h3 style="color: #fff; margin-top: 0;">Textbook: "Artificial Intelligence: A Modern Approach"</h3>
-                    <p style="color: #aaa; margin-bottom: 0;">Russell, S. & Norvig, P. (2021). Pearson Education.</p>
-                </div>
-                <div class="source-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                    <h3 style="color: #fff; margin-top: 0;">OpenAI Documentation</h3>
-                    <p style="color: #aaa; margin-bottom: 0;">OpenAI API Documentation (2024). Retrieved from https://platform.openai.com/docs</p>
-                </div>
-                <div class="source-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                    <h3 style="color: #fff; margin-top: 0;">Wikipedia: Machine Learning</h3>
-                    <p style="color: #aaa; margin-bottom: 0;">Wikipedia contributors. (2024). "Machine learning." Wikipedia.</p>
-                </div>
-                <div class="source-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                    <h3 style="color: #fff; margin-top: 0;">IEEE: Computer Vision Resources</h3>
-                    <p style="color: #aaa; margin-bottom: 0;">IEEE Xplore Digital Library (2024).</p>
-                </div>
+    <main class="ref-page">
+        <h1 class="page-title" style="margin-bottom:10px;">PROJECT REFERENCES &amp; DOCUMENTATION</h1>
+        <p class="page-sub">Citations, tool disclosures, and academic integrity documents for our TSA Webmaster entry.</p>
+
+        <section class="sources-list" aria-labelledby="h-sources">
+            <h2 id="h-sources">Sources List</h2>
+            <div class="ref-list">
+                <div class="ref-card"><h3>Textbook: "Artificial Intelligence: A Modern Approach"</h3><p>Russell, S. &amp; Norvig, P. (2021). Pearson Education.</p></div>
+                <div class="ref-card"><h3>OpenAI Documentation</h3><p>OpenAI API Documentation (2024). Retrieved from <a href="https://platform.openai.com/docs" target="_blank" rel="noopener">https://platform.openai.com/docs</a></p></div>
+                <div class="ref-card"><h3>Wikipedia: Machine Learning</h3><p>Wikipedia contributors. (2024). "Machine learning." Wikipedia. <a href="https://en.wikipedia.org/wiki/Machine_learning" target="_blank" rel="noopener">en.wikipedia.org/wiki/Machine_learning</a></p></div>
+                <div class="ref-card"><h3>IEEE: Computer Vision Resources</h3><p>IEEE Xplore Digital Library (2024). <a href="https://ieeexplore.ieee.org" target="_blank" rel="noopener">ieeexplore.ieee.org</a></p></div>
+                <div class="ref-card"><h3>IBM: What Are Neural Networks?</h3><p>IBM. "What is a neural network?" Required reading for Lesson 1.2. <a href="https://www.ibm.com/topics/neural-networks" target="_blank" rel="noopener">ibm.com/topics/neural-networks</a></p></div>
+                <div class="ref-card"><h3>Google: Machine Learning Crash Course</h3><p>Google for Developers. Machine Learning Crash Course. <a href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">developers.google.com/machine-learning/crash-course</a></p></div>
+                <div class="ref-card"><h3>NIST AI Risk Management Framework</h3><p>National Institute of Standards and Technology. (2023). Artificial Intelligence Risk Management Framework (AI RMF 1.0). <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">nist.gov/itl/ai-risk-management-framework</a></p></div>
+                <div class="ref-card"><h3>C2PA Content Credentials</h3><p>Coalition for Content Provenance and Authenticity. Technical specification and overview. <a href="https://c2pa.org" target="_blank" rel="noopener">c2pa.org</a></p></div>
+                <div class="ref-card"><h3>Chain-of-Thought Prompting</h3><p>Wei, J., et al. (2022). "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models." arXiv:2201.11903.</p></div>
+                <div class="ref-card"><h3>Reinforcement Learning from Human Feedback</h3><p>Ouyang, L., et al. (2022). "Training language models to follow instructions with human feedback." arXiv:2203.02155.</p></div>
+                <div class="ref-card"><h3>Citing Generative AI</h3><p>MLA Style Center, "How do I cite generative AI in MLA style?" and APA Style, "How to cite ChatGPT." Used for Lesson 3.1.</p></div>
+                <!-- ADD HERE: a credit line for every image, avatar, and video you did not create, plus any written permission. -->
             </div>
         </section>
 
-        <section class="framework-documentation" style="margin-bottom: 40px;">
-            <h2 style="color: #00f2fe; font-family: 'Orbitron', sans-serif;">Framework & Tool Documentation</h2>
-            <div class="framework-items">
-                <div class="framework-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                    <h3 style="color: #fff; margin-top: 0;">HTML5</h3>
-                    <p style="color: #aaa; margin-bottom: 0;">Standard markup language for structuring web content. Used for all page semantics and layout.</p>
-                </div>
-                <div class="framework-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                    <h3 style="color: #fff; margin-top: 0;">CSS3</h3>
-                    <p style="color: #aaa; margin-bottom: 0;">Styling language for visual presentation. Implements dark mode, gradients, responsive design, and animations.</p>
-                </div>
-                <div class="framework-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                    <h3 style="color: #fff; margin-top: 0;">JavaScript (ES6+)</h3>
-                    <p style="color: #aaa; margin-bottom: 0;">Programming language for interactive elements. Handles quiz logic, XP tracking, badge unlocking, and chatbot functionality.</p>
-                </div>
-                <div class="framework-item" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                    <h3 style="color: #fff; margin-top: 0;">No External Frameworks</h3>
-                    <p style="color: #aaa; margin-bottom: 0;">This portal is hand-coded without Wix, Squarespace, Webflow, WordPress, Joomla, or Drupal CMS platforms.</p>
-                </div>
+        <section class="framework-documentation" aria-labelledby="h-frameworks">
+            <h2 id="h-frameworks">Framework &amp; Tool Documentation</h2>
+            <div class="ref-grid">
+                <div class="ref-card"><h3>HTML5</h3><p>Standard markup language for structuring web content. Used for all page semantics and layout.</p></div>
+                <div class="ref-card"><h3>CSS3</h3><p>Styling language for visual presentation. Implements dark mode, gradients, responsive design, and animations.</p></div>
+                <div class="ref-card"><h3>JavaScript (ES6+)</h3><p>Programming language for interactive elements. Handles quiz logic, XP tracking, badge unlocking, arcade games, and the chatbot.</p></div>
+                <div class="ref-card"><h3>Firebase Firestore (Compat SDK 9.23)</h3><p>Google's cloud database. Stores cadet profiles, XP, and arcade high scores for the global leaderboard. Documentation: <a href="https://firebase.google.com/docs/firestore" target="_blank" rel="noopener">firebase.google.com/docs/firestore</a></p></div>
+                <div class="ref-card"><h3>Google Fonts</h3><p>Orbitron, Outfit, Inter, Manrope, and other open-source typefaces (SIL Open Font License). <a href="https://fonts.google.com" target="_blank" rel="noopener">fonts.google.com</a></p></div>
+                <div class="ref-card"><h3>No Website Builders or CMS</h3><p>This portal is hand-coded without Wix, Squarespace, Webflow, WordPress, Joomla, or Drupal CMS platforms.</p></div>
             </div>
         </section>
 
-        <section class="copyright-checklist" style="margin-bottom: 40px;">
-            <h2 style="color: #00f2fe; font-family: 'Orbitron', sans-serif;">Student Copyright Checklist</h2>
-            <div class="checklist-content" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; color: #aaa;">
-                <ol style="margin: 0; padding-left: 20px; line-height: 1.6;">
+        <section class="copyright-checklist" aria-labelledby="h-checklist">
+            <h2 id="h-checklist">Student Copyright Checklist</h2>
+            <div class="ref-card">
+                <ol>
                     <li>I have not copied text word-for-word from AI outputs without attribution.</li>
                     <li>I have cited all AI-generated content using proper academic citation format.</li>
                     <li>I have transformed and rephrased AI ideas into my own words.</li>
                     <li>I have verified that all images and resources are either original or properly licensed.</li>
                     <li>I understand that submitting AI-generated work as my own violates academic integrity policies.</li>
                 </ol>
+                <!-- Export the completed official form (1 page max) to forms/Student_Copyright_Checklist.pdf -->
+                <div class="pdf-actions">
+                    <a class="btn-cyan-secondary" href="forms/Student_Copyright_Checklist.pdf" target="_blank" rel="noopener">Open completed checklist (PDF)</a>
+                    <a class="btn-ghost" href="forms/Student_Copyright_Checklist.pdf" download>Download</a>
+                </div>
+                <iframe class="pdf-frame" src="forms/Student_Copyright_Checklist.pdf" title="Completed Student Copyright Checklist (PDF)"></iframe>
             </div>
         </section>
 
-        <section class="ai-reflection" style="margin-bottom: 40px;">
-            <h2 style="color: #00f2fe; font-family: 'Orbitron', sans-serif;">Resources & AI Reflection</h2>
-            <div class="reflection-content" style="background: #161625; border: 1px solid #2d2d42; padding: 20px; border-radius: 8px; color: #aaa; line-height: 1.6;">
-                <p style="margin-top: 0;">This section documents my GenAI usage for this project:</p>
-                <ul style="margin-bottom: 0; padding-left: 20px;">
-                    <li>AI tools used: ChatGPT for concept explanations, Claude for code review</li>
-                    <li>Purpose: Ideation, outline generation, and code debugging assistance</li>
-                    <li>Ethics: All code and content has been reviewed, modified, and verified by me</li>
-                    <li>Reflection: The AI assisted in structuring the modules and provided prompt engineering guidance, but all final content decisions and ethical determinations were made independently.</li>
+        <section class="ai-reflection" aria-labelledby="h-reflection">
+            <h2 id="h-reflection">Resources &amp; AI Reflection</h2>
+            <div class="ref-card">
+                <p style="margin-bottom:10px;">This section documents GenAI usage for this project:</p>
+                <ul>
+                    <li><strong>AI Tools Used:</strong> ChatGPT for concept explanations, Claude for code debugging support.</li>
+                    <li><strong>Purpose:</strong> Ideation, outline generation, and layout architecture assistance.</li>
+                    <li><strong>Ethics:</strong> All code and content has been reviewed, modified, and verified independently.</li>
+                    <li><strong>Reflection:</strong> The AI assisted in structuring modular components and providing syntax guidance, but all final content and design decisions were made by the student team.</li>
                 </ul>
+                <!-- Export the completed official form (4 pages max) to forms/Resources_and_AI_Reflection.pdf -->
+                <div class="pdf-actions">
+                    <a class="btn-cyan-secondary" href="forms/Resources_and_AI_Reflection.pdf" target="_blank" rel="noopener">Open full reflection (PDF)</a>
+                    <a class="btn-ghost" href="forms/Resources_and_AI_Reflection.pdf" download>Download</a>
+                </div>
+                <iframe class="pdf-frame" src="forms/Resources_and_AI_Reflection.pdf" title="Completed Resources and AI Reflection (PDF)"></iframe>
             </div>
         </section>
     </main>
 
+    <script>
+        (function () {
+            var t = document.getElementById('nav-toggle'), l = document.getElementById('nav-links');
+            t.addEventListener('click', function () {
+                var open = l.classList.toggle('open');
+                t.setAttribute('aria-expanded', open);
+            });
+        })();
+    </script>
 </body>
 </html>
