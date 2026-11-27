@@ -6,7 +6,7 @@
     <meta name="description" content="An interactive AI learning portal for high school students: lessons, simulators, arcade quizzes, badges, and an AI study chatbot.">
     <title>AI Learning Portal - TSA Webmaster Competition</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@700;800&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
     <!-- Firebase App + Firestore (Compat SDK) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -14,7 +14,7 @@
 </head>
 <body>
     <!-- Must stay first: applies the equipped background before the page is drawn -->
-    <script src="theme.js?v=5"></script>
+    <script src="theme.js?v=6"></script>
     <div id="read-progress" aria-hidden="true"></div>
 
     <!-- Fixed Navbar -->
@@ -26,6 +26,7 @@
             <li><a href="#modules" data-page="modules">Modules</a></li>
             <li><a href="#dashboard" data-page="dashboard">Dashboard</a></li>
             <li><a href="#chatbot" data-page="chatbot">Chatbot</a></li>
+            <li><a href="#final-exam" data-page="final">Final Exam</a></li>
             <li><a href="references.html">References</a></li>
             <li>
                 <button class="nav-profile-btn" id="nav-profile-btn" data-page="profile" type="button">
@@ -77,7 +78,7 @@
                     </div>
                     <div class="footer-section">
                         <h3>LATEST UPDATE</h3>
-                        <p><strong style="color:#00f2fe;">Version 1.0</strong></p>
+                        <p><strong style="color:var(--text-accent);">Version 1.0</strong></p>
                         <p>Interactive Modules Added</p>
                         <p>Enhanced UI / Arcade Engine</p>
                         <p>Last Updated: October 2026</p>
@@ -90,11 +91,12 @@
         <!-- 2. MODULES GRID -->
         <section id="modules-grid-view" class="view view-pad">
             <h2 class="page-title">ALL LEARNING MODULES</h2>
-            <p class="page-sub">Complete all three lessons in a module and pass each arcade quiz (4 out of 5 or better) to unlock the next module in your tech journey!</p>
+            <p class="page-sub">Pass each lesson's arcade quiz (4 out of 5 or better), then score 80% or higher on the module's Unit Test to unlock the next module in your tech journey!</p>
             <div class="preview-toggle-row">
                 <button type="button" class="btn-ghost" id="preview-toggle" aria-pressed="false"></button>
             </div>
             <div class="modules-grid" id="modules-grid"></div>
+            <div class="final-banner" id="final-banner"></div>
         </section>
 
         <!-- 3. LESSON VIEW (filled by app.js) -->
@@ -128,6 +130,14 @@
             </div>
 
             <div class="panel">
+                <h3>Course Certification</h3>
+                <p class="panel-note" id="cert-status"></p>
+                <div id="cert-meter"></div>
+                <div class="unit-chips" id="cert-units"></div>
+                <div class="exam-actions" id="cert-actions"></div>
+            </div>
+
+            <div class="panel">
                 <h3>Profile Reward Progress</h3>
                 <p class="panel-note" id="reward-summary-count"></p>
                 <div id="reward-summary-meter"></div>
@@ -148,6 +158,13 @@
                 <p class="panel-note" id="badge-count"></p>
                 <div id="badge-grid"></div>
             </div>
+        </section>
+
+        <!-- FINAL EXAM (filled by exams.js) -->
+        <section id="final-exam-view" class="view view-pad">
+            <h2 class="page-title">COURSE FINAL EXAM</h2>
+            <p class="page-sub">Bring together everything from all six modules to earn your Certificate of Completion.</p>
+            <div class="module-view-inner" id="final-exam-root"></div>
         </section>
 
         <!-- 5. CHATBOT -->
@@ -235,6 +252,9 @@
                     <div class="profile-stats-row" id="profile-stats-row"></div>
                 </div>
 
+                <!-- Ultimate reward toggles (built by app.js) -->
+                <div class="profile-card-container ultimate-panel" id="ultimate-panel" style="margin-top:24px;"></div>
+
                 <!-- Badge rewards (cards are built by app.js) -->
                 <div class="profile-card-container" style="margin-top:24px;">
                     <div class="locker-header">
@@ -287,7 +307,9 @@
     </main>
 
     <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
-    <script src="app.js?v=5"></script>
-    <script src="games.js?v=5"></script>
+    <script src="app.js?v=6"></script>
+    <script src="games.js?v=6"></script>
+    <script src="layouts.js?v=6"></script>
+    <script src="exams.js?v=6"></script>
 </body>
 </html>

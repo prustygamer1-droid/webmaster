@@ -73,6 +73,20 @@ const PROMPT_PREVIEWS = [
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 const SIMS = {
+    '1.2': {
+        icon: '🧠', title: 'Interactive Simulator: Build an Artificial Neuron',
+        desc: 'Change the input, weight, and bias to see how one neuron decides how strongly to activate.',
+        out: 'Neuron Activation (Sigmoid):',
+        sliders: [
+            { k: 'x', label: 'Input Signal:', min: 0, max: 1, step: 0.1, value: 0.8, fmt: v => v.toFixed(1) },
+            { k: 'w', label: 'Weight (Importance of the Input):', min: -6, max: 6, step: 0.5, value: 4, fmt: v => v.toFixed(1) },
+            { k: 'b', label: 'Bias (Shifts the Threshold):', min: -6, max: 6, step: 0.5, value: -1.5, fmt: v => v.toFixed(1) }
+        ],
+        calc: v => {
+            const a = 1 / (1 + Math.exp(-(v.w * v.x + v.b)));
+            return { out: a.toFixed(2), badge: a >= 0.7 ? ['NEURON FIRES', GREEN] : a >= 0.3 ? ['PARTIAL SIGNAL', AMBER] : ['NEURON STAYS QUIET', RED] };
+        }
+    },
     '1.1': {
         icon: '🔬', title: 'Interactive Model Simulator: Supervised Spam Classifier',
         desc: 'Adjust the sliders below to see how a live AI calculates threat probabilities in real time!',
@@ -86,51 +100,6 @@ const SIMS = {
             return { out: s.toFixed(2), badge: s >= 0.5 ? ['SPAM DETECTED', RED] : ['LEGITIMATE (HAM)', GREEN] };
         }
     },
-    '1.3': {
-        icon: '🎯', title: 'Interactive Simulator: Object Detection Confidence',
-        desc: 'Adjust image resolution clarity to evaluate how pixel quality affects model classification confidence.',
-        out: 'Model Detection Confidence:',
-        before: `<img class="sim-image" data-sim-image src="images/NYC.jpg" alt="Target object for the detection simulator" loading="lazy">`,
-        sliders: [{ k: 'res', label: 'Image Resolution Clarity:', min: 10, max: 100, value: 50, fmt: v => v + '%' }],
-        calc: v => {
-            const conf = clamp(15 + ((v.res - 10) / 90) * 84.8, 15, 99.8).toFixed(1);
-            return {
-                out: conf + '%',
-                badge: v.res >= 75 ? ['OBJECT VERIFIED', GREEN] : v.res >= 40 ? ['UNCERTAIN', AMBER] : ['LOW CONFIDENCE / RISK', RED]
-            };
-        },
-        apply: (v, box) => { const img = $('[data-sim-image]', box); if (img) img.style.filter = `blur(${((100 - v.res) / 100) * 12}px)`; }
-    },
-    '2.1': {
-        icon: '✍️', title: 'Interactive Simulator: Prompt Architecture Quality Analyzer',
-        desc: 'Adjust Role, Context, and Constraints to see how prompt structure boosts LLM response precision!',
-        out: 'Estimated Output Precision:', preview: true,
-        sliders: [
-            { k: 'role', label: '1. Role & Persona Definition:', min: 0, max: 2, value: 2, fmt: v => ['None (Generic)', 'Basic Persona', 'Domain Expert'][v] },
-            { k: 'context', label: '2. Context & Audience Depth:', min: 0, max: 2, value: 1, fmt: v => ['Vague Topic', 'Background Included', 'Rich Examples + Data'][v] },
-            { k: 'constraints', label: '3. Output Format & Constraints:', min: 0, max: 2, value: 2, fmt: v => ['Unbounded', 'Word Limit Set', 'Format + Tone + Rules'][v] }
-        ],
-        calc: v => {
-            const q = Math.min(99, 25 + v.role * 12 + v.context * 15 + v.constraints * 10);
-            return {
-                out: q + '%', preview: PROMPT_PREVIEWS[q >= 80 ? 2 : q >= 55 ? 1 : 0],
-                badge: q >= 80 ? ['PRODUCTION-READY PROMPT', GREEN] : q >= 55 ? ['MODERATE CLARITY', AMBER] : ['AMBIGUOUS / WEAK', RED]
-            };
-        }
-    },
-    '2.2': {
-        icon: '🧩', title: 'Interactive Simulator: Multi-Step Logic Accuracy',
-        desc: 'Increase reasoning steps and few-shot examples to see how logic accuracy scales on complex benchmarks.',
-        out: 'Multi-Step Benchmark Accuracy:',
-        sliders: [
-            { k: 'steps', label: 'Chain-of-Thought Depth:', min: 1, max: 5, value: 4, fmt: v => v === 1 ? '1 Step (Direct)' : v + ' Reasoning Steps' },
-            { k: 'shots', label: 'Few-Shot Examples Provided:', min: 0, max: 5, value: 3, fmt: v => plural(v, 'Example', 'Examples') }
-        ],
-        calc: v => {
-            const a = Math.min(98.5, 42 + v.steps * 8.5 + v.shots * 4.5);
-            return { out: a.toFixed(1) + '%', badge: a >= 85 ? ['VERIFIED LOGIC CHAIN', GREEN] : a >= 65 ? ['PARTIAL REASONING', AMBER] : ['HIGH LOGIC ERROR RISK', RED] };
-        }
-    },
     '2.3': {
         icon: '🌡️', title: 'Interactive Simulator: Temperature vs. Hallucination Risk',
         desc: 'Slide the temperature dial to observe the trade-off between deterministic accuracy and creative randomness.',
@@ -139,59 +108,6 @@ const SIMS = {
         calc: v => {
             const r = Math.min(96, Math.round(8 + v.temp * 58));
             return { out: r + '%', badge: v.temp <= 0.3 ? ['DETERMINISTIC / FACTUAL', GREEN] : v.temp <= 0.8 ? ['BALANCED CREATIVITY', AMBER] : ['HIGH CREATIVITY / HALLUCINATION RISK', RED] };
-        }
-    },
-    '3.1': {
-        icon: '⚖️', title: 'Interactive Simulator: Academic Integrity & Citation Auditor',
-        desc: 'Test how different levels of AI usage and disclosure affect academic compliance.',
-        out: 'Academic Review Status:',
-        sliders: [
-            { k: 'usage', label: 'Level of AI Assistance Used:', min: 0, max: 2, value: 1, fmt: v => ['Brainstorming Only', 'Outline & Grammar Check', 'Drafting Paragraphs'][v] },
-            { k: 'disclosure', label: 'Citation & Disclosure Level:', min: 0, max: 2, value: 2, fmt: v => ['No Citation', 'Informal Mention', 'Full APA/MLA Citation + Prompt Log'][v] }
-        ],
-        calc: v => {
-            if (v.usage === 2 && v.disclosure < 2) return { out: 'Violation Risk', badge: ['PLAGIARISM FLAG', RED] };
-            if (v.disclosure === 0) return { out: 'Missing Attribution', badge: ['NEEDS CITATION', AMBER] };
-            return { out: '100% Compliant', badge: ['ETHICAL SCHOLAR', GREEN] };
-        }
-    },
-    '3.2': {
-        icon: '🛡️', title: 'Interactive Simulator: Dataset Fairness & Privacy Auditor',
-        desc: 'Adjust dataset demographic balance and PII anonymization to evaluate ethical readiness.',
-        out: 'Ethical Compliance Score:',
-        sliders: [
-            { k: 'diversity', label: 'Demographic Representation Balance:', min: 10, max: 100, value: 85, fmt: v => v + '%' },
-            { k: 'pii', label: 'PII Scrubbing & Anonymization:', min: 10, max: 100, value: 90, fmt: v => v + '%' }
-        ],
-        calc: v => {
-            const f = Math.round(v.diversity * 0.6 + v.pii * 0.4);
-            return { out: f + ' / 100', badge: f >= 80 ? ['BALANCED & ANONYMIZED', GREEN] : f >= 50 ? ['MODERATE SKEW DETECTED', AMBER] : ['HIGH BIAS / PRIVACY LEAK', RED] };
-        }
-    },
-    '3.3': {
-        icon: '🕵️', title: 'Interactive Simulator: Synthetic Media Forensics',
-        desc: 'Adjust detected visual anomalies and C2PA metadata verification to calculate deepfake probability.',
-        out: 'Synthetic Manipulation Probability:',
-        sliders: [
-            { k: 'artifacts', label: 'Visual/Audio Artifacts Detected:', min: 0, max: 5, value: 1, fmt: v => plural(v, 'Anomaly', 'Anomalies') },
-            { k: 'metadata', label: 'Cryptographic Provenance (C2PA):', min: 0, max: 1, value: 1, fmt: v => v ? 'C2PA Verified' : 'Stripped / Missing' }
-        ],
-        calc: v => {
-            const p = Math.min(99, Math.max(4, v.artifacts * 16 + (v.metadata ? 0 : 28)));
-            return { out: p + '%', badge: p >= 65 ? ['SYNTHETIC / DEEPFAKE', RED] : p >= 35 ? ['UNVERIFIED SOURCE', AMBER] : ['AUTHENTIC MEDIA', GREEN] };
-        }
-    },
-    '4.1': {
-        icon: '🧹', title: 'Interactive Simulator: Dataset Hygiene vs. Model Accuracy',
-        desc: 'Lower the missing values and outlier rates to watch downstream model accuracy climb!',
-        out: 'Resulting Validation Accuracy:',
-        sliders: [
-            { k: 'missing', label: 'Unresolved Missing Values:', min: 0, max: 40, value: 5, fmt: v => v + '%' },
-            { k: 'outliers', label: 'Corrupted Outliers Remaining:', min: 0, max: 30, value: 4, fmt: v => v + '%' }
-        ],
-        calc: v => {
-            const a = clamp(98 - v.missing * 0.9 - v.outliers * 1.1, 32, 97.5);
-            return { out: a.toFixed(1) + '%', badge: a >= 85 ? ['CLEAN PIPELINE', GREEN] : a >= 65 ? ['NOISY DATASET', AMBER] : ['GARBAGE IN, GARBAGE OUT', RED] };
         }
     },
     '4.2': {
@@ -209,58 +125,6 @@ const SIMS = {
             return { out: a.toFixed(1) + '%', badge: a >= 85 ? ['OPTIMAL GENERALIZATION', GREEN] : v.epochs > 60 ? ['OVERFITTING DETECTED', RED] : ['SUBOPTIMAL SPLIT', AMBER] };
         }
     },
-    '4.3': {
-        icon: '⚙️', title: 'Interactive Simulator: Signal-to-Noise Feature Selector',
-        desc: 'Add engineered signal features and prune irrelevant noise columns to maximize F1 performance.',
-        out: 'Model Signal Score (F1):',
-        sliders: [
-            { k: 'signal', label: 'High-Signal Domain Features:', min: 1, max: 6, value: 5, fmt: v => plural(v, 'Feature', 'Features') },
-            { k: 'noise', label: 'Irrelevant Noise Columns:', min: 0, max: 8, value: 1, fmt: v => plural(v, 'Noise Column', 'Noise Columns') }
-        ],
-        calc: v => {
-            const f = clamp(52 + v.signal * 7.5 - v.noise * 4.5, 35, 97);
-            return { out: f.toFixed(1) + '%', badge: f >= 82 ? ['HIGH PREDICTIVE SIGNAL', GREEN] : f >= 62 ? ['MODERATE NOISE', AMBER] : ['DIMENSIONALITY NOISE', RED] };
-        }
-    },
-    '5.1': {
-        icon: '🔍', title: 'Interactive Simulator: XAI & Governance Audit Score',
-        desc: 'Configure feature explainability coverage and bias auditing to evaluate public trust readiness.',
-        out: 'Governance Trust Index:',
-        sliders: [
-            { k: 'xai', label: 'Feature Attribution Transparency:', min: 10, max: 100, value: 80, fmt: v => v + '%' },
-            { k: 'audit', label: 'Independent Subgroup Bias Audit:', min: 0, max: 1, value: 1, fmt: v => v ? 'Active Bias Audit' : 'No Audit' }
-        ],
-        calc: v => {
-            const t = Math.min(99, Math.round(v.xai * 0.7 + (v.audit ? 30 : 0)));
-            return { out: t + ' / 100', badge: t >= 80 ? ['TRANSPARENT & AUDITED', GREEN] : t >= 50 ? ['PARTIAL EXPLAINABILITY', AMBER] : ['OPAQUE BLACK-BOX', RED] };
-        }
-    },
-    '5.2': {
-        icon: '📜', title: 'Interactive Simulator: IP & Dataset Licensing Risk',
-        desc: 'Evaluate how dataset licensing and transformative human editing affect copyright risk.',
-        out: 'Estimated IP Dispute Risk:',
-        sliders: [
-            { k: 'license', label: 'Source Dataset License Type:', min: 0, max: 2, value: 2, fmt: v => ['Unlicensed Scraped Data', 'Creative Commons (CC-BY)', 'Public Domain / Permitted'][v] },
-            { k: 'transform', label: 'Human Transformative Editing:', min: 0, max: 100, value: 80, fmt: v => v + '%' }
-        ],
-        calc: v => {
-            const r = clamp((2 - v.license) * 35 + Math.round((100 - v.transform) * 0.25), 5, 95);
-            return { out: r + '% Risk', badge: r <= 25 ? ['IP COMPLIANT', GREEN] : r <= 55 ? ['REVIEW LICENSING', AMBER] : ['HIGH INFRINGEMENT RISK', RED] };
-        }
-    },
-    '5.3': {
-        icon: '🚧', title: 'Interactive Simulator: Dual-Layer Guardrail Defense',
-        desc: 'Tune input prompt screening and output moderation strength to block adversarial attacks.',
-        out: 'Adversarial Block Rate:',
-        sliders: [
-            { k: 'input', label: 'Input Prompt Injection Classifier:', min: 10, max: 100, value: 90, fmt: v => v + '%' },
-            { k: 'output', label: 'Output Moderation & PII Filter:', min: 10, max: 100, value: 88, fmt: v => v + '%' }
-        ],
-        calc: v => {
-            const d = Math.min(99.5, v.input * 0.5 + v.output * 0.5);
-            return { out: d.toFixed(1) + '%', badge: d >= 85 ? ['JAILBREAKS BLOCKED', GREEN] : d >= 55 ? ['MODERATE PROTECTION', AMBER] : ['VULNERABLE TO INJECTION', RED] };
-        }
-    },
     '6.1': {
         icon: '📐', title: 'Interactive Simulator: Precision, Recall & F1 Calculator',
         desc: 'Adjust Precision and Recall sliders to compute the live harmonic F1-Score!',
@@ -275,32 +139,6 @@ const SIMS = {
             return { out: f1.toFixed(1) + '%', badge: f1 >= 85 ? ['PRODUCTION BENCHMARK', GREEN] : f1 >= 65 ? ['NEEDS THRESHOLD TUNING', AMBER] : ['FAILS BENCHMARK', RED] };
         }
     },
-    '6.2': {
-        icon: '🤝', title: 'Interactive Simulator: RLHF Alignment & Reward Balance',
-        desc: 'Adjust human preference comparisons and KL-divergence regularization to tune alignment quality.',
-        out: 'Human Alignment Score:',
-        sliders: [
-            { k: 'rlhf', label: 'Human Preference Dataset Size:', min: 10, max: 100, value: 85, fmt: v => v + 'k Comparisons' },
-            { k: 'kl', label: 'KL-Divergence Anti-Hacking Penalty:', min: 10, max: 100, value: 80, fmt: v => v + '%' }
-        ],
-        calc: v => {
-            const a = Math.min(99, Math.round(v.rlhf * 0.65 + v.kl * 0.35));
-            return { out: a + '%', badge: a >= 80 ? ['HELPFUL, HONEST & HARMLESS', GREEN] : a >= 50 ? ['PARTIALLY ALIGNED', AMBER] : ['REWARD HACKING RISK', RED] };
-        }
-    },
-    '6.3': {
-        icon: '🚀', title: 'Interactive Simulator: Autonomous Agent Deployment Readiness',
-        desc: 'Combine benchmark evaluation rigor with Human-in-the-Loop oversight to certify safe deployment.',
-        out: 'Deployment Certification Score:',
-        sliders: [
-            { k: 'rigor', label: 'Pre-Deployment Eval Rigor:', min: 20, max: 100, value: 90, fmt: v => v + '%' },
-            { k: 'hitl', label: 'Human Oversight Architecture:', min: 0, max: 1, value: 1, fmt: v => v ? 'Human-in-the-Loop Active' : 'Fully Autonomous' }
-        ],
-        calc: v => {
-            const r = Math.min(100, Math.round(v.rigor * 0.7 + (v.hitl ? 30 : 0)));
-            return { out: r + '%', badge: r >= 85 ? ['SAFE FOR DEPLOYMENT', GREEN] : r >= 55 ? ['SANDBOX TESTING ONLY', AMBER] : ['UNSAFE AUTONOMY', RED] };
-        }
-    }
 };
 
 function simBox(key, opts = {}) {
@@ -417,6 +255,7 @@ const LESSONS = {
                         <div id="nn-options"></div>
                         <div id="nn-result" class="nn-result" role="status">Select an answer above.</div>
                     </div>`,
+                    simBox('1.2'),
                     callout('🎮 BlockBlast Challenge', `After completing the knowledge check, continue to the BlockBlast activity to reinforce what you've learned.`)
                 )
             },
@@ -433,8 +272,7 @@ const LESSONS = {
                     para('As generative AI models become a standard part of software toolkits, understanding their failure modes is crucial. One of the most prominent risks is the <strong>hallucination phenomenon</strong>, where an AI model generates factually incorrect, nonsensical, or entirely fabricated information while maintaining an authoritative, highly confident tone.'),
                     para('Because generative language models predict the next most statistically likely token based on training correlations rather than performing logical truth verification, they can easily invent fake academic citations, non-existent historical events, or buggy code snippets. Cross-referencing primary human sources is therefore mandatory in professional and academic environments.'),
                     h3('3. Edge Cases & Adversarial Vulnerabilities'),
-                    para(`Computer vision systems are also vulnerable to <strong>adversarial attacks</strong>—tiny, human-imperceptible pixel modifications that trick neural networks into misclassifying objects entirely. For example, placing a tiny, inconspicuous sticker on a stop sign can cause an autonomous vehicle's vision model to classify it as a 45 MPH speed limit sign, proving that AI pattern recognition operates very differently from human cognitive reasoning.`),
-                    simBox('1.3')
+                    para(`Computer vision systems are also vulnerable to <strong>adversarial attacks</strong>—tiny, human-imperceptible pixel modifications that trick neural networks into misclassifying objects entirely. For example, placing a tiny, inconspicuous sticker on a stop sign can cause an autonomous vehicle's vision model to classify it as a 45 MPH speed limit sign, proving that AI pattern recognition operates very differently from human cognitive reasoning.`)
                 )
             }
         }
@@ -457,8 +295,7 @@ const LESSONS = {
                         ['B. Task & Action Verb', 'Start with an unmistakable action verb: <strong>Summarize, Compare, Debug, Outline,</strong> or <strong>Critique</strong>. Never leave the model guessing what operation to perform.'],
                         ['C. Context & Audience', `Provide background facts, target audience (e.g., <em>"for 9th-grade students"</em>), and any reference text the model should rely on so it doesn't invent details.`],
                         ['D. Format & Constraints', 'Specify exact boundaries: word limits, bulleted lists, JSON/table structure, or negative constraints like <em>"Do not use technical jargon."</em>']
-                    ]),
-                    simBox('2.1')
+                    ])
                 )
             },
             2: {
@@ -475,8 +312,7 @@ const LESSONS = {
                         ['B. Few-Shot Prompting', 'Providing 2 to 5 input-output examples inside the prompt so the model mirrors your exact reasoning pattern and structure.'],
                         ['C. Chain-of-Thought (CoT)', 'Breaking problems into sequential sub-steps before stating the final conclusion, dramatically boosting math, coding, and debugging accuracy.'],
                         ['D. Self-Critique & Verification', 'Prompting the AI to review its own draft for edge cases, hidden assumptions, or calculation errors before finalizing the response.']
-                    ]),
-                    simBox('2.2')
+                    ])
                 )
             },
             3: {
@@ -509,8 +345,7 @@ const LESSONS = {
                         ['B. Cite Tool, Model & Date', 'Document the exact platform (e.g., ChatGPT, Gemini, Claude), model version, and date in your Works Cited or References page.'],
                         ['C. Keep a Prompt & Verification Log', 'Save your prompts and note how you fact-checked and rewrote ideas into your own authentic voice.'],
                         ['D. Human Authorship & Accountability', 'Because AI cannot take responsibility for errors or bias, you are 100% accountable for every word and line of code you submit.']
-                    ]),
-                    simBox('3.1')
+                    ])
                 )
             },
             2: {
@@ -520,8 +355,7 @@ const LESSONS = {
                     h3('1. How Historical Bias Enters Machine Learning'),
                     para('Algorithms do not possess personal prejudices, yet they frequently amplify inequality. When a model is trained on historical data—such as past hiring decisions, loan approvals, or medical studies that underrepresented certain demographics—it learns to treat historical bias as a predictive rule.'),
                     para('At the same time, typing private data—like full names, student IDs, medical details, or passwords—into public AI chatbots risks exposing <strong>Personally Identifiable Information (PII)</strong> through logs or model training pipelines.'),
-                    takeaway('Fair AI requires diverse, representative training datasets and regular subgroup audits—and smart users never paste private personal data into public AI tools.'),
-                    simBox('3.2')
+                    takeaway('Fair AI requires diverse, representative training datasets and regular subgroup audits—and smart users never paste private personal data into public AI tools.')
                 )
             },
             3: {
@@ -531,8 +365,7 @@ const LESSONS = {
                     h3('1. Recognizing Synthetic Audio and Video'),
                     para('<strong>Deepfakes</strong> use generative neural networks (such as diffusion models and GANs) to clone voices or swap faces in video with startling realism. While synthetic media has positive uses in film dubbing and accessibility, malicious deepfakes threaten elections, online safety, and digital trust.'),
                     para('Verifying media requires checking both visual/audio cues (unnatural blinking, warped background edges, flat vocal cadence) and cryptographic provenance standards like <strong>C2PA Content Credentials</strong>.'),
-                    takeaway('"Seeing is believing" no longer applies online. Always verify viral clips against multiple reputable news outlets and inspect metadata before sharing.'),
-                    simBox('3.3')
+                    takeaway('"Seeing is believing" no longer applies online. Always verify viral clips against multiple reputable news outlets and inspect metadata before sharing.')
                 )
             }
         }
@@ -554,8 +387,7 @@ const LESSONS = {
                         ['B. Outlier Detection & Removal', 'Identify impossible sensor spikes or typos (like an age of 999) so extreme numbers do not skew model weights.'],
                         ['C. Normalization & Scaling', `Scale features onto a common range (e.g., <code>0.0</code> to <code>1.0</code>) so large numbers like house prices don't overpower smaller numbers like bedroom counts.`],
                         ['D. Categorical Encoding', 'Convert text labels (like <code>"Red"</code>, <code>"Blue"</code>, <code>"Green"</code>) into numerical vectors using One-Hot Encoding.']
-                    ]),
-                    simBox('4.1')
+                    ])
                 )
             },
             2: {
@@ -576,8 +408,7 @@ const LESSONS = {
                     h3('1. Turning Raw Variables into Predictive Signals'),
                     para('<strong>Feature Engineering</strong> is the art of creating, combining, or selecting the most informative input variables for a machine learning model. For example, instead of feeding raw timestamps into a delivery-time predictor, engineering a boolean feature called <code>is_rush_hour</code> immediately exposes the pattern that matters most.'),
                     para('Conversely, feeding dozens of irrelevant noise columns causes the <strong>Curse of Dimensionality</strong>, slowing down training and confusing the model.'),
-                    takeaway('Domain expertise shines in feature engineering: removing irrelevant noise columns while crafting meaningful ratios or flags boosts both speed and accuracy.'),
-                    simBox('4.3')
+                    takeaway('Domain expertise shines in feature engineering: removing irrelevant noise columns while crafting meaningful ratios or flags boosts both speed and accuracy.')
                 )
             }
         }
@@ -599,8 +430,7 @@ const LESSONS = {
                         ['B. Disparate Impact Audits', 'Testing approval and error rates across demographic groups to ensure equal opportunity and catch hidden proxy bias.'],
                         ['C. Model Cards & Documentation', `Publishing transparent spec sheets detailing a model's training data, intended use cases, and known limitations.`],
                         ['D. Human Recourse & Appeals', 'Ensuring people affected by automated decisions have a clear path to request a human review.']
-                    ]),
-                    simBox('5.1')
+                    ])
                 )
             },
             2: {
@@ -610,8 +440,7 @@ const LESSONS = {
                     h3('1. Respecting Creators Across the AI Lifecycle'),
                     para('Modern generative models learn from billions of images, articles, and code repositories. Using copyrighted books, artwork, or proprietary code without permission or proper licensing raises serious intellectual property disputes.'),
                     para('Ethical developers verify dataset licenses (such as <strong>MIT, Apache 2.0, Creative Commons,</strong> or <strong>Public Domain</strong>) and ensure generated works are genuinely transformative rather than direct copies of protected art or text.'),
-                    takeaway('Just because an image or snippet of code is publicly visible on the internet does not mean it is free to copy or train on without checking its license.'),
-                    simBox('5.2')
+                    takeaway('Just because an image or snippet of code is publicly visible on the internet does not mean it is free to copy or train on without checking its license.')
                 )
             },
             3: {
@@ -621,8 +450,7 @@ const LESSONS = {
                     h3('1. Defense-in-Depth: Input & Output Guardrails'),
                     para('When an AI chatbot is deployed to students or customers, bad actors may attempt <strong>prompt injection</strong> or "jailbreak" tricks designed to override system instructions. To prevent misuse, engineers build multi-layered <strong>Safety Guardrails</strong>.'),
                     para('Input classifiers screen incoming prompts for malicious intent before they reach the main model, while output filters inspect responses to block toxic content, PII leaks, or unsafe advice—validated continuously through adversarial <strong>Red Teaming</strong>.'),
-                    takeaway('Never rely on a single system prompt for security. True AI safety layers input validation, output moderation, and continuous red-team stress testing.'),
-                    simBox('5.3')
+                    takeaway('Never rely on a single system prompt for security. True AI safety layers input validation, output moderation, and continuous red-team stress testing.')
                 )
             }
         }
@@ -655,8 +483,7 @@ const LESSONS = {
                     h3('1. From Raw Pretraining to Helpful Assistants'),
                     para('A base language model trained only to predict internet text might respond to a question with another question or generate unhelpful jargon. To align model behavior with human expectations, engineers apply <strong>RLHF (Reinforcement Learning from Human Feedback)</strong>.'),
                     para('Human reviewers compare pairs of model responses and rank which one is more helpful and safe. Those rankings train a <strong>Reward Model</strong>, which then fine-tunes the AI using reinforcement learning—while a <strong>KL-Divergence penalty</strong> stops the model from gaming the reward signal with repetitive or unnatural text.'),
-                    takeaway('Pretraining gives an AI knowledge; RLHF alignment teaches it judgment, safety boundaries, and how to follow human intent constructively.'),
-                    simBox('6.2')
+                    takeaway('Pretraining gives an AI knowledge; RLHF alignment teaches it judgment, safety boundaries, and how to follow human intent constructively.')
                 )
             },
             3: {
@@ -666,8 +493,7 @@ const LESSONS = {
                     h3('1. Agentic Workflows & Human-in-the-Loop Design'),
                     para('AI is rapidly evolving from single-turn chatbots into <strong>multimodal agents</strong> capable of reasoning across text, code, audio, and live video while using external software tools. As autonomy grows, keeping <strong>Humans-in-the-Loop (HITL)</strong> for high-impact approvals ensures technology amplifies human creativity rather than replacing human accountability.'),
                     para('Congratulations on completing the full AI Learning Portal curriculum! By combining technical literacy, rigorous evaluation metrics, and strong ethical guardrails, you are ready to lead responsibly in an AI-powered world.'),
-                    takeaway(`The future of AI isn't automatic—it is shaped by the engineers, policymakers, and students who insist on transparency, fairness, and human oversight.`),
-                    simBox('6.3')
+                    takeaway(`The future of AI isn't automatic—it is shaped by the engineers, policymakers, and students who insist on transparency, fairness, and human oversight.`)
                 )
             }
         }
@@ -687,20 +513,43 @@ if (completed === null) {
 }
 
 const lessonDone = (m, s) => !!completed[`${m}.${s}`];
-const moduleDone = m => [1, 2, 3].every(s => lessonDone(m, s));
+// One-time migration: students who progressed before Unit Tests existed keep their module access
+// and module badges. They still need to pass every Unit Test to open the Final Exam.
+let unitGate = store.get('unitGate', null);
+if (unitGate === null) {
+    const finished = [1, 2, 3, 4, 5, 6].filter(m => [1, 2, 3].every(s => lessonDone(m, s)));
+    let open = 1;
+    while (open < 6 && finished.includes(open)) open++;
+    unitGate = { legacyModules: finished, legacyUnlocked: open };
+    store.set('unitGate', unitGate);
+}
+const legacyModule = m => unitGate.legacyModules.includes(m);
+// A module counts as passed once its lessons AND its Unit Test are done (see exams.js)
+const moduleDone = m => [1, 2, 3].every(s => lessonDone(m, s)) && (unitPassed(m) || legacyModule(m));
 const previewMode = () => store.get('previewAll', false);
-function maxUnlocked() {
-    if (previewMode()) return 6;
-    let n = 1;
-    while (n < 6 && moduleDone(n)) n++;
+// Passing a module's Unit Test is what unlocks the next module
+function earnedUnlock() {
+    let n = clamp(unitGate.legacyUnlocked, 1, 6);
+    while (n < 6 && unitPassed(n)) n++;
     return n;
 }
+const maxUnlocked = () => previewMode() ? 6 : earnedUnlock();
+const saveMaxUnlocked = () => store.set('maxUnlockedModule', earnedUnlock());
+const lockedMessage = m => `Module ${m} is locked. Pass the Module ${m - 1} Unit Test (80% or higher) to unlock it.`;
 function completeLesson(m, s) {
-    const key = `${m}.${s}`, before = maxUnlocked(), first = !completed[key];
+    const key = `${m}.${s}`, first = !completed[key];
     completed[key] = true;
     store.set('completedLessons', completed);
-    const after = maxUnlocked();
-    return { first, unlocked: after > before ? after : null };
+    return { first };
+}
+// The next thing a student should do, as a page address
+function nextStepHash() {
+    for (let m = 1; m <= maxUnlocked(); m++) {
+        const lesson = [1, 2, 3].find(s => !lessonDone(m, s));
+        if (lesson) return `#module-${m}-${lesson}`;
+        if (!unitPassed(m)) return `#module-${m}-test`;
+    }
+    return allUnitsPassed() && !activeCertificate() ? '#final-exam' : '#module-1-1';
 }
 function markPlayed(game) {
     const played = store.get('gamesPlayed', {});
@@ -718,14 +567,22 @@ function renderModulesGrid() {
     grid.innerHTML = MODULES.map((mod, i) => {
         const open = mod.id <= limit;
         const chips = [1, 2, 3].map(s => `<span class="lesson-chip${lessonDone(mod.id, s) ? ' done' : ''}">${lessonDone(mod.id, s) ? '✓ ' : ''}${mod.id}.${s}</span>`).join('');
+        const testChip = `<span class="lesson-chip${unitPassed(mod.id) ? ' done' : ''}">${unitPassed(mod.id) ? '✓ ' : '📝 '}Test</span>`;
         return `
             <div class="module-card${open ? '' : ' locked'}" id="card-module-${mod.id}" style="--pop-delay:${0.1 + i * 0.1}s">
                 <h3>${esc(mod.title)}</h3>
                 <p>${esc(mod.desc)}</p>
-                <div class="lesson-chips">${chips}</div>
+                <div class="lesson-chips">${chips}${testChip}</div>
                 <button class="quiz-btn" id="btn-module-${mod.id}" data-module="${mod.id}" ${open ? '' : 'disabled'}>${open ? 'Explore Module' : '🔒 Locked'}</button>
             </div>`;
     }).join('');
+    const banner = $('#final-banner');
+    if (banner) {
+        const cert = activeCertificate(), ready = allUnitsPassed();
+        banner.className = 'final-banner' + (ready || cert ? ' ready' : '');
+        banner.innerHTML = `<div><h3>🎓 Course Final Exam</h3><p>${cert ? 'Course completed. Your certificate is ready.' : ready ? 'All Unit Tests passed. The Final Exam is unlocked!' : `🔒 Pass all 6 Module Unit Tests to unlock (${unitsPassedCount()} of 6 passed).`}</p></div>
+            <a class="${ready || cert ? 'btn-cyan-primary' : 'btn-ghost'}" href="#final-exam">${cert ? 'View Results' : ready ? 'Take the Final Exam' : 'See Requirements'}</a>`;
+    }
     const t = $('#preview-toggle');
     if (t) {
         const on = previewMode();
@@ -738,7 +595,7 @@ function renderModulesGrid() {
 // ---- Badges: each one reports [current, target] so progress and unlocking share one rule
 const lessonsDoneCount = () => LESSON_ORDER.filter(([m, s]) => lessonDone(m, s)).length;
 const modulesDoneCount = () => MODULES.filter(m => moduleDone(m.id)).length;
-const moduleLessonsDone = m => [1, 2, 3].filter(s => lessonDone(m, s)).length;
+const moduleSteps = m => moduleDone(m) ? 4 : [1, 2, 3].filter(s => lessonDone(m, s)).length + (unitPassed(m) ? 1 : 0);
 const gamesPlayedCount = () => Object.keys(store.get('gamesPlayed', {})).length;
 const perfectQuizCount = () => Object.keys(store.get('perfectQuizzes', {})).length;
 
@@ -749,18 +606,19 @@ const BADGE_CATEGORIES = [
     { key: 'learn', label: 'Learning & Quiz Mastery' },
     { key: 'arcade', label: 'Arcade Games' },
     { key: 'combo', label: 'Combos & Streaks' },
-    { key: 'explore', label: 'Portal Explorer' }
+    { key: 'explore', label: 'Portal Explorer' },
+    { key: 'cert', label: 'Exams & Certification' }
 ];
 
 // "cat" groups the badge on the dashboard (badges without one are in "learn")
 const BADGES = [
     { id: 'first_steps', icon: '👣', name: 'First Steps', desc: 'Complete your first lesson', unit: 'lessons', target: 1, current: lessonsDoneCount },
-    { id: 'pioneer', icon: '🚀', name: 'AI Pioneer', desc: 'Complete Module 1', unit: 'lessons', target: 3, current: () => moduleLessonsDone(1) },
-    { id: 'prompt', icon: '🧱', name: 'Prompt Architect', desc: 'Complete Module 2', unit: 'lessons', target: 3, current: () => moduleLessonsDone(2) },
-    { id: 'ethics', icon: '⚖️', name: 'Ethical Scholar', desc: 'Complete Module 3', unit: 'lessons', target: 3, current: () => moduleLessonsDone(3) },
-    { id: 'data', icon: '📊', name: 'Data Expert', desc: 'Complete Module 4', unit: 'lessons', target: 3, current: () => moduleLessonsDone(4) },
-    { id: 'governance', icon: '🛡️', name: 'Governance Guru', desc: 'Complete Module 5', unit: 'lessons', target: 3, current: () => moduleLessonsDone(5) },
-    { id: 'alignment', icon: '🎯', name: 'Alignment Master', desc: 'Complete Module 6', unit: 'lessons', target: 3, current: () => moduleLessonsDone(6) },
+    { id: 'pioneer', icon: '🚀', name: 'AI Pioneer', desc: 'Pass all 3 lessons and the Module 1 Unit Test', unit: 'steps', target: 4, current: () => moduleSteps(1) },
+    { id: 'prompt', icon: '🧱', name: 'Prompt Architect', desc: 'Pass all 3 lessons and the Module 2 Unit Test', unit: 'steps', target: 4, current: () => moduleSteps(2) },
+    { id: 'ethics', icon: '⚖️', name: 'Ethical Scholar', desc: 'Pass all 3 lessons and the Module 3 Unit Test', unit: 'steps', target: 4, current: () => moduleSteps(3) },
+    { id: 'data', icon: '📊', name: 'Data Expert', desc: 'Pass all 3 lessons and the Module 4 Unit Test', unit: 'steps', target: 4, current: () => moduleSteps(4) },
+    { id: 'governance', icon: '🛡️', name: 'Governance Guru', desc: 'Pass all 3 lessons and the Module 5 Unit Test', unit: 'steps', target: 4, current: () => moduleSteps(5) },
+    { id: 'alignment', icon: '🎯', name: 'Alignment Master', desc: 'Pass all 3 lessons and the Module 6 Unit Test', unit: 'steps', target: 4, current: () => moduleSteps(6) },
     { id: 'quiz_ace', icon: '🧠', name: 'Quiz Ace', desc: 'Complete any 3 modules', unit: 'modules', target: 3, current: modulesDoneCount },
     { id: 'arcade_pro', cat: 'arcade', icon: '🕹️', name: 'Arcade Pro', desc: 'Finish 2 different minigames', unit: 'games', target: 2, current: gamesPlayedCount },
     { id: 'triple_threat', cat: 'arcade', icon: '🎲', name: 'Triple Threat', desc: 'Finish 3 different minigames', unit: 'games', target: 3, current: gamesPlayedCount },
@@ -784,7 +642,12 @@ const BADGES = [
     { id: 'explorer', cat: 'explore', icon: '🧭', name: 'Explorer', desc: 'Visit Home, Modules, Dashboard, Chatbot, References, and Profile', unit: 'pages', target: 6, current: () => SITE_PAGES.filter(p => PortalTheme.visited()[p]).length },
     { id: 'networker', cat: 'explore', icon: '🤝', name: 'Networker', desc: 'Inspect 2 other players from a leaderboard', unit: 'profiles', target: 2, current: () => Object.keys(store.get('inspectedCadets', {})).length },
     { id: 'world_builder', cat: 'explore', icon: '🌌', name: 'World Builder', desc: 'Equip a site-wide background', unit: 'backgrounds', target: 1, current: () => store.get('usedBackground', false) ? 1 : 0 },
-    { id: 'curious_mind', cat: 'explore', icon: '💬', name: 'Curious Mind', desc: 'Ask Scrappy 3 questions', unit: 'questions', target: 3, current: () => store.get('questionsAsked', 0) }
+    { id: 'curious_mind', cat: 'explore', icon: '💬', name: 'Curious Mind', desc: 'Ask Scrappy 3 questions', unit: 'questions', target: 3, current: () => store.get('questionsAsked', 0) },
+
+    { id: 'test_pilot', cat: 'cert', icon: '📝', name: 'Test Pilot', desc: 'Pass your first Module Unit Test', unit: 'unit tests', target: 1, current: () => unitsPassedCount() },
+    { id: 'perfect_unit', cat: 'cert', icon: '🌠', name: 'Perfect Unit', desc: 'Score 100% on any Unit Test', unit: 'perfect tests', target: 1, current: () => perfectUnitCount() },
+    { id: 'unit_champion', cat: 'cert', icon: '🥇', name: 'Unit Champion', desc: 'Pass all 6 Module Unit Tests', unit: 'unit tests', target: 6, current: () => unitsPassedCount() },
+    { id: 'graduate', cat: 'cert', icon: '🎓', name: 'AI Grandmaster', desc: 'Pass the Final Exam and earn your certificate', unit: 'certificate', target: 1, current: () => activeCertificate() ? 1 : 0 }
 ];
 const BADGE_MAP = new Map(BADGES.map(b => [b.id, b]));
 const badgeProgress = b => {
@@ -798,7 +661,8 @@ const REWARD_TYPES = [
     { key: 'border', label: 'Avatar Borders', single: 'Avatar Border' },
     { key: 'accent', label: 'Theme Accents', single: 'Theme Accent' },
     { key: 'chat', label: 'Chat Badges', single: 'Chat Badge' },
-    { key: 'bg', label: 'Site-Wide Backgrounds', single: 'Background' }
+    { key: 'bg', label: 'Site-Wide Backgrounds', single: 'Background' },
+    { key: 'cursor', label: 'Cursor Effects', single: 'Cursor Effect' }
 ];
 // "colors" are used by borders (two-color ring), "anim" animates a border,
 // "rgb" is used by theme accents, and "bg" names a background from theme.js
@@ -837,7 +701,16 @@ const REWARDS = [
     { id: 'bg_reward_circuit', type: 'bg', badge: 'explorer', icon: '🌌', name: 'Living Circuit', bg: 'bg_circuit' },
     { id: 'chat_networker', type: 'chat', badge: 'networker', icon: '🤝', name: 'Networker' },
     { id: 'title_builder', type: 'title', badge: 'world_builder', icon: '🏷️', name: 'World Builder' },
-    { id: 'bg_reward_rain', type: 'bg', badge: 'curious_mind', icon: '🌌', name: 'Data Rain', bg: 'bg_data_rain' }
+    { id: 'bg_reward_rain', type: 'bg', badge: 'curious_mind', icon: '🌌', name: 'Data Rain', bg: 'bg_data_rain' },
+
+    { id: 'chat_testpilot', type: 'chat', badge: 'test_pilot', icon: '📝', name: 'Test Pilot' },
+    { id: 'title_perfect', type: 'title', badge: 'perfect_unit', icon: '🏷️', name: 'Flawless Scholar' },
+    { id: 'accent_champion', type: 'accent', badge: 'unit_champion', icon: '🎨', name: 'Champion Gold', rgb: '250,204,21' },
+
+    // The ultimate rewards: managed from their own panel on the Profile page
+    { id: 'title_ai_grandmaster', type: 'title', badge: 'graduate', icon: '👑', name: 'AI Grandmaster', ultimate: true },
+    { id: 'bg_reward_grandmaster', type: 'bg', badge: 'graduate', icon: '🌈', name: 'Grandmaster Holo-Matrix', bg: 'bg_grandmaster', ultimate: true },
+    { id: 'cursor_grandmaster', type: 'cursor', badge: 'graduate', icon: '✨', name: 'Quantum Particle Cursor', ultimate: true }
 ];
 const REWARD_MAP = new Map(REWARDS.map(r => [r.id, r]));
 const rewardUnlocked = r => badgeProgress(BADGE_MAP.get(r.badge)).done;
@@ -915,6 +788,17 @@ function renderDashboardRewards() {
     $('#dash-view-rewards').textContent = Portal.getActiveUser() ? 'Equip Rewards on Profile' : 'Create a Profile to Equip Rewards';
 }
 
+function renderCertification() {
+    const status = $('#cert-status');
+    if (!status) return;
+    const n = unitsPassedCount(), cert = activeCertificate();
+    status.textContent = cert ? `🏆 Course completed with ${cert.score}% on the Final Exam.` : allUnitsPassed() ? 'All Unit Tests passed. The Final Exam is unlocked!' : `${n} of 6 Module Unit Tests passed. Pass all six to unlock the Final Exam.`;
+    $('#cert-meter').innerHTML = meterHTML({ current: n, target: 6, pct: Math.round((n / 6) * 100) }, 'Unit tests passed');
+    $('#cert-units').innerHTML = MODULES.map(m => `<a class="unit-chip${unitPassed(m.id) ? ' done' : ''}" href="#module-${m.id}-test">${unitPassed(m.id) ? '✓' : '📝'} Module ${m.id}${unitRecord(m.id).attempts ? ` · ${unitRecord(m.id).best}%` : ''}</a>`).join('');
+    $('#cert-actions').innerHTML = (cert ? '<button type="button" class="btn-cyan-primary" data-view-cert>🎓 View Certificate</button>' : '')
+        + `<a class="btn-cyan-secondary" href="#final-exam">${cert ? 'Final Exam Page' : allUnitsPassed() ? 'Take the Final Exam' : 'See Final Exam Requirements'}</a>`;
+}
+
 function updateDashboardStats() {
     const doneLessons = lessonsDoneCount();
     const doneModules = modulesDoneCount();
@@ -929,14 +813,18 @@ function updateDashboardStats() {
     $('#dashboard-modules-count').textContent = `${doneModules} / 6`;
     $('#dashboard-lessons-count').textContent = `${doneLessons} of ${LESSON_ORDER.length} lessons complete`;
     renderDashboardRewards();
+    renderCertification();
     Portal.renderDashboardBoard();
     const cont = $('#dash-continue');
-    if (cont) cont.textContent = doneLessons >= LESSON_ORDER.length ? 'Review a Lesson' : 'Continue Learning';
+    if (cont) {
+        const step = nextStepHash();
+        cont.textContent = step === '#final-exam' ? 'Take the Final Exam' : step.endsWith('test') ? 'Take Next Unit Test' : activeCertificate() ? 'Review a Lesson' : 'Continue Learning';
+    }
 }
 
 // ---- Router (hash based, so the back button and deep links work)
-const VIEWS = { home: 'home-page-view', modules: 'modules-grid-view', lesson: 'modules-page-view', dashboard: 'dashboard-page-view', chatbot: 'chatbot-page-view', profile: 'profile-page' };
-const ALIASES = { 'modules-grid': 'modules', 'profile-page': 'profile', 'profile-page-view': 'profile', 'references-page-view': 'references' };
+const VIEWS = { home: 'home-page-view', modules: 'modules-grid-view', lesson: 'modules-page-view', dashboard: 'dashboard-page-view', chatbot: 'chatbot-page-view', profile: 'profile-page', final: 'final-exam-view' };
+const ALIASES = { 'final-exam': 'final', 'modules-grid': 'modules', 'profile-page': 'profile', 'profile-page-view': 'profile', 'references-page-view': 'references' };
 
 function showView(id) {
     Object.entries(VIEWS).forEach(([key, domId]) => { const el = document.getElementById(domId); if (el) el.classList.toggle('is-active', key === id); });
@@ -946,6 +834,7 @@ function showView(id) {
     $('#nav-toggle').setAttribute('aria-expanded', 'false');
     if (id === 'modules') renderModulesGrid();
     if (id === 'dashboard') updateDashboardStats();
+    if (id === 'final') renderFinalExam();
     window.scrollTo({ top: 0, behavior: 'auto' });
     updateReadProgress();
     if (PortalTheme.visit(id === 'lesson' ? 'modules' : id)) checkRewards();
@@ -953,7 +842,7 @@ function showView(id) {
 }
 
 // ---- Page-entry animations: staggered cards, filling progress bars, counting numbers
-const STAGGER_TARGETS = '.stat-card, .panel, .achv, .next-reward, .profile-card-container, .reward-card, .shop-item, .directory-row, .chat-shell, .paradigm-row-card, .footer-section, .lesson-tabs button';
+const STAGGER_TARGETS = '.stat-card, .panel, .achv, .next-reward, .profile-card-container, .reward-card, .shop-item, .directory-row, .chat-shell, .paradigm-row-card, .footer-section, .lesson-tabs button, .exam-panel, .final-banner';
 
 function countUp(el) {
     const match = el.textContent.match(/^(\d+)(.*)$/);
@@ -993,7 +882,8 @@ function animateView(view) {
 
 function route() {
     const hash = (location.hash || '#home').slice(1);
-    const m = hash.match(/^module-(\d)(?:-(\d))?$/);
+    const m = hash.match(/^module-(\d)(?:-(\d|test))?$/);
+    if (m && m[2] === 'test') { openUnitTest(parseInt(m[1], 10)); return; }
     if (m) { openLesson(parseInt(m[1], 10), parseInt(m[2] || '1', 10)); return; }
     const id = ALIASES[hash] || hash;
     if (id === 'references') { location.replace('references.html'); return; }
@@ -1006,7 +896,7 @@ window.showPage = function (id) {
 };
 window.navigateToModule = function (moduleId) {
     if (moduleId > maxUnlocked()) {
-        toast(`Module ${moduleId} is locked. Complete Module ${moduleId - 1} first to unlock it.`, 'warn');
+        toast(lockedMessage(moduleId), 'warn');
         return;
     }
     location.hash = `#module-${moduleId}-1`;
@@ -1014,21 +904,19 @@ window.navigateToModule = function (moduleId) {
 
 function openLesson(modId, subId) {
     if (!LESSONS[modId] || !LESSONS[modId].subs[subId]) { showPage('modules'); return; }
-    if (modId > maxUnlocked()) { toast(`Module ${modId} is locked. Finish the previous module first.`, 'warn'); showPage('modules'); return; }
-    const mod = LESSONS[modId], sub = mod.subs[subId];
-    const tabs = Object.keys(mod.subs).map(k => `
-        <button type="button" id="btn-lesson-${k}" class="${parseInt(k, 10) === subId ? 'active' : ''}" data-lesson="${modId}.${k}">${lessonDone(modId, k) ? '✓ ' : ''}Lesson ${modId}.${k}</button>`).join('');
+    if (modId > maxUnlocked()) { toast(lockedMessage(modId), 'warn'); showPage('modules'); return; }
+    const sub = LESSONS[modId].subs[subId];
     const idx = LESSON_ORDER.findIndex(([m, s]) => m === modId && s === subId);
     const prev = LESSON_ORDER[idx - 1], next = LESSON_ORDER[idx + 1];
     const pager = `
         <div class="lesson-pager">
             ${prev ? `<button type="button" class="btn-ghost" data-lesson="${prev[0]}.${prev[1]}">← Lesson ${prev[0]}.${prev[1]}</button>` : '<span></span>'}
-            ${next ? `<button type="button" class="btn-ghost" data-lesson="${next[0]}.${next[1]}">Lesson ${next[0]}.${next[1]} →</button>` : ''}
+            ${subId === 3 ? `<button type="button" class="btn-ghost" data-lesson="${modId}.test">Module ${modId} Unit Test →</button>`
+                : next ? `<button type="button" class="btn-ghost" data-lesson="${next[0]}.${next[1]}">Lesson ${next[0]}.${next[1]} →</button>` : ''}
         </div>`;
 
     $('#active-module-content').innerHTML = `
-        <div class="lesson-top"><span class="kicker">Module ${modId} Overview</span><h1>${esc(mod.title)}</h1></div>
-        <div class="lesson-tabs" role="tablist">${tabs}</div>
+        ${moduleHeaderHTML(modId, subId)}
         <div class="lesson-kicker">${esc(sub.title)}</div>
         <div class="lesson-body">${sub.html()}</div>
         <div class="arcade-launch">
@@ -1043,7 +931,33 @@ function openLesson(modId, subId) {
     afterLessonRender(`${modId}.${subId}`);
 }
 
+function moduleTabsHTML(modId, active) {
+    const lessonTabs = [1, 2, 3].map(k => `
+        <button type="button" id="btn-lesson-${k}" class="${k === active ? 'active' : ''}"${k === active ? ' aria-current="page"' : ''} data-lesson="${modId}.${k}">${lessonDone(modId, k) ? '✓ ' : ''}Lesson ${modId}.${k}</button>`).join('');
+    const icon = unitPassed(modId) ? '✓' : unitTestOpen(modId) ? '📝' : '🔒';
+    return lessonTabs + `
+        <button type="button" id="btn-unit-test" class="unit-tab${active === 'test' ? ' active' : ''}"${active === 'test' ? ' aria-current="page"' : ''} data-lesson="${modId}.test">${icon} Unit Test</button>`;
+}
+const moduleHeaderHTML = (modId, active) => `
+    <div class="lesson-top"><span class="kicker">Module ${modId} Overview</span><h1>${esc(LESSONS[modId].title)}</h1></div>
+    <nav class="lesson-tabs" aria-label="Module ${modId} sections">${moduleTabsHTML(modId, active)}</nav>`;
+function refreshModuleTabs(modId) {
+    const bar = $('#active-module-content .lesson-tabs');
+    if (bar) bar.innerHTML = moduleTabsHTML(modId, 'test');
+}
+
+function openUnitTest(modId) {
+    if (!LESSONS[modId]) { showPage('modules'); return; }
+    if (modId > maxUnlocked()) { toast(lockedMessage(modId), 'warn'); showPage('modules'); return; }
+    $('#active-module-content').innerHTML = `
+        ${moduleHeaderHTML(modId, 'test')}
+        <div id="unit-test-root">${unitIntroHTML(modId)}</div>
+        <div class="lesson-pager"><button type="button" class="btn-ghost" data-lesson="${modId}.3">← Lesson ${modId}.3</button></div>`;
+    showView('lesson');
+}
+
 function afterLessonRender(key) {
+    LessonLayouts.apply(key, $('#active-module-content'));
     $$('.simulator-box[data-sim]').forEach(updateSim);            // show correct starting values
     if (key === '1.1') {
         const video = $('#lesson-video-1-1'), box = $('.simulator-box[data-sim="1.1"]');
@@ -1390,27 +1304,31 @@ function finishGame(o) {
         .slice(0, 5)
         .map((c, i) => `<div class="lb-mini-row${me && c.id === me.id ? ' me' : ''}"><span>#${i + 1} <strong>${esc(c.username)}</strong>${me && c.id === me.id ? ' (You)' : ''}</span><b>${(c.scores && c.scores[gameKey]) || 0} pts</b></div>`).join('');
 
+    const testReady = passed && moduleLessonsComplete(modId) && !unitPassed(modId);
     const nextIdx = LESSON_ORDER.findIndex(([m, s]) => m === modId && s === subId) + 1;
     const next = LESSON_ORDER[nextIdx];
     stage.innerHTML = `
         <div class="quiz-game-card ${theme}" style="max-width:480px;">
             <h1 class="summary-title">${title} Complete!</h1>
             <div class="summary-banner ${passed ? 'pass' : 'fail'}">${passed ? `✅ Lesson ${modId}.${subId} complete!` : '⚠️ Score 4 out of 5 or better to complete this lesson.'}</div>
-            ${result.unlocked ? `<div class="summary-banner pass">🔓 Module ${result.unlocked} unlocked!</div>` : ''}
+            ${testReady ? `<div class="summary-banner pass">📝 All three lessons done. Pass the Module ${modId} Unit Test to ${modId < 6 ? 'unlock the next module' : 'qualify for the Final Exam'}!</div>` : ''}
             ${newRewards.length ? `<div class="summary-banner reward">🎁 New rewards: ${newRewards.map(r => `${esc(r.name)} (${esc(rewardTypeName(r))})`).join(', ')}</div>` : ''}
             <div class="summary-rows">
                 <div><span>Quiz Score</span><strong>${quizScore} / ${total}</strong></div>
                 <div><span>${esc(arcadeLabel)}</span><strong>${arcadeScore} pts</strong></div>
                 <div><span>Best Answer Streak</span><strong>🔥 ${bestStreak} in a row</strong></div>
-                <div><span>XP Earned</span><strong style="color:#00f2fe;">+${xp} XP 🌟</strong></div>
+                <div><span>XP Earned</span><strong style="color:var(--text-accent);">+${xp} XP 🌟</strong></div>
             </div>
             ${saved ? '' : '<p class="canvas-instructions" style="margin:0 0 6px;">Create a profile to save XP and join the leaderboard.</p>'}
             <div class="lb-mini"><h4>🏆 Top Players</h4>${rows || '<p class="empty-note">No scores yet. You set the benchmark!</p>'}</div>
             <div class="btn-row">
                 ${passed ? '' : '<button type="button" class="btn-continue-shop secondary" id="g-retry">Try Again</button>'}
-                <button type="button" class="btn-continue-shop" id="g-done">${passed && next ? 'Back to Lessons' : 'Continue to Modules'}</button>
+                <button type="button" class="btn-continue-shop${testReady ? ' secondary' : ''}" id="g-done">${passed && next ? 'Back to Lessons' : 'Continue to Modules'}</button>
+                ${testReady ? '<button type="button" class="btn-continue-shop" id="g-test">Take Unit Test →</button>' : ''}
             </div>
         </div>`;
+    const testBtn = $('#g-test', stage);
+    if (testBtn) testBtn.onclick = () => { closeModal(modal); location.hash = `#module-${modId}-test`; };
     const retryBtn = $('#g-retry', stage);
     if (retryBtn) retryBtn.onclick = () => { closeModal(modal); retry(); };
     $('#g-done', stage).onclick = () => {
@@ -2064,13 +1982,18 @@ const Portal = (() => {
         const u = getActiveUser();
         if (!u) return false;
         const snap = progressSnapshot();
-        if (JSON.stringify(snap) === JSON.stringify({ badges: u.badges, modulesDone: u.modulesDone, lessonsDone: u.lessonsDone })) return false;
+        const certMissing = !!savedCertificates()[u.id] && !validCertificate(u.certificate);
+        if (!certMissing && JSON.stringify(snap) === JSON.stringify({ badges: u.badges, modulesDone: u.modulesDone, lessonsDone: u.lessonsDone })) return false;
         persist(u);
         return true;
     }
 
     async function persist(user) {
-        if (user.id === localStorage.getItem(ID_KEY)) Object.assign(user, progressSnapshot());
+        if (user.id === localStorage.getItem(ID_KEY)) {
+            Object.assign(user, progressSnapshot());
+            const cert = savedCertificates()[user.id];
+            if (cert && !validCertificate(user.certificate)) user.certificate = cert;
+        }
         PortalSecurity.validateUserMetrics(user);
         const i = dir.findIndex(u => u.id === user.id);
         if (i >= 0) dir[i] = user; else dir.push(user);
@@ -2145,7 +2068,9 @@ const Portal = (() => {
         const r = user && user.equipped ? REWARD_MAP.get(user.equipped[type]) : null;
         if (!r || r.type !== type) return null;
         const me = getActiveUser();
-        return me && me.id === user.id && !rewardUnlocked(r) ? null : r;
+        if (me && me.id === user.id) return rewardUnlocked(r) ? r : null;
+        // Another player's ultimate reward only shows if their profile carries a certificate
+        return r.ultimate && !validCertificate(user.certificate) ? null : r;
     }
 
     function toggleReward(id) {
@@ -2163,7 +2088,7 @@ const Portal = (() => {
         persist(user);
         toast(`${reward.name} ${on ? 'unequipped' : 'equipped'}.`, 'success');
         checkRewards();
-        $(`#reward-locker [data-reward="${id}"]`)?.focus({ preventScroll: true });
+        $(`#active-profile-view [data-reward="${id}"]`)?.focus({ preventScroll: true });
     }
 
     // Backgrounds are stored in user.background; every other reward type in user.equipped
@@ -2173,9 +2098,10 @@ const Portal = (() => {
         const locker = $('#reward-locker');
         if (!locker) return;
         $('#locker-count').textContent = `${REWARDS.filter(rewardUnlocked).length} / ${REWARDS.length} unlocked`;
-        locker.innerHTML = REWARD_TYPES.map(type => `
-            <h3 class="locker-group-title">${type.label} <small>${REWARDS.filter(r => r.type === type.key && rewardUnlocked(r)).length} / ${REWARDS.filter(r => r.type === type.key).length}</small></h3>
-            <div class="reward-grid">${REWARDS.filter(r => r.type === type.key).map(r => {
+        const regular = REWARDS.filter(r => !r.ultimate);     // ultimate rewards have their own panel
+        locker.innerHTML = REWARD_TYPES.filter(type => regular.some(r => r.type === type.key)).map(type => `
+            <h3 class="locker-group-title">${type.label} <small>${regular.filter(r => r.type === type.key && rewardUnlocked(r)).length} / ${regular.filter(r => r.type === type.key).length}</small></h3>
+            <div class="reward-grid">${regular.filter(r => r.type === type.key).map(r => {
                 const badge = BADGE_MAP.get(r.badge), p = badgeProgress(badge);
                 const on = p.done && isEquipped(user, r);
                 const preview = {
@@ -2199,6 +2125,55 @@ const Portal = (() => {
             }).join('')}</div>`).join('');
     }
 
+    // ---- Ultimate reward panel (passing the Final Exam) ---------------------
+    function renderUltimate(user) {
+        const panel = $('#ultimate-panel');
+        if (!panel) return;
+        const list = REWARDS.filter(r => r.ultimate);
+        const owned = !!certificateFor(user);
+        const allOn = owned && list.every(r => isEquipped(user, r));
+        panel.classList.toggle('unlocked', owned);
+        panel.innerHTML = `
+            <div class="locker-header">
+                <h2 class="vault-heading">👑 Ultimate Grandmaster Reward</h2>
+                <span class="ultimate-state">${owned ? '✓ Permanently Unlocked' : '🔒 Locked'}</span>
+            </div>
+            <p class="profile-subtext">${owned ? 'You earned it. Switch each Grandmaster effect on or off.' : 'Pass the Final Exam with 80% or higher to unlock all three, permanently.'}</p>
+            <ul class="ultimate-list">${list.map(r => {
+                const on = owned && isEquipped(user, r);
+                const about = { title: 'A holographic site title shown on your profile and the leaderboards.', bg: 'An animated holographic matrix background that restyles every page.', cursor: 'A glowing particle trail that follows your mouse. Hidden on touch screens and with reduced motion.' }[r.type];
+                return `<li class="${on ? 'on' : ''}">
+                    <span class="ultimate-icon" aria-hidden="true">${r.icon}</span>
+                    <div><h4>${r.type === 'title' ? `Title: <span class="title-pill ultimate">${esc(r.name)}</span>` : esc(r.name)}</h4><p>${about}</p></div>
+                    <button type="button" class="toggle-switch" role="switch" aria-checked="${on}" aria-label="${esc(r.name)}" ${owned ? `data-reward="${r.id}"` : 'disabled'}><span></span></button>
+                </li>`;
+            }).join('')}</ul>
+            ${owned
+                ? `<div class="exam-actions"><button type="button" class="btn-cyan-primary" data-ultimate-all="${allOn ? 'off' : 'on'}">${allOn ? 'Unequip All' : '⚡ Equip All Three'}</button><button type="button" class="btn-cyan-secondary" data-view-cert>🎓 View Certificate</button></div>`
+                : '<div class="exam-actions"><a class="btn-cyan-secondary" href="#final-exam">See Final Exam Requirements</a></div>'}`;
+    }
+
+    function setUltimate(on) {
+        const user = getActiveUser();
+        if (!user || !certificateFor(user)) return;
+        user.background = on ? 'bg_grandmaster' : 'bg_default';
+        user.equipped = { ...user.equipped, title: on ? 'title_ai_grandmaster' : '', cursor: on ? 'cursor_grandmaster' : '' };
+        if (on) store.set('usedBackground', true);
+        persist(user);
+        toast(on ? 'Grandmaster set equipped.' : 'Grandmaster set unequipped.', 'success');
+        checkRewards();
+        $('[data-ultimate-all]')?.focus({ preventScroll: true });
+    }
+
+    function addXP(xp) {
+        store.set('localXP', store.get('localXP', 0) + xp);
+        const u = getActiveUser();
+        if (!u) return false;
+        u.xp = (Number(u.xp) || 0) + xp;
+        persist(u);
+        return true;
+    }
+
     // Applies the equipped border, title, chat badge and accent to the profile header
     function applyRewards(user) {
         const border = getEquipped(user, 'border'), title = getEquipped(user, 'title');
@@ -2209,6 +2184,7 @@ const Portal = (() => {
         const titleEl = $('#dash-title'), chatEl = $('#dash-chat-badge');
         titleEl.hidden = !title;
         titleEl.textContent = title ? title.name : '';
+        titleEl.classList.toggle('ultimate', !!title?.ultimate);
         chatEl.hidden = !chat;
         chatEl.textContent = chat ? `${chat.icon} ${chat.name}` : '';
         const view = $('#active-profile-view');
@@ -2231,7 +2207,7 @@ const Portal = (() => {
 
     const flairHTML = u => {
         const title = getEquipped(u, 'title'), chat = getEquipped(u, 'chat');
-        return (title ? `<span class="title-pill">${esc(title.name)}</span>` : '') + (chat ? `<span class="chat-badge">${chat.icon} ${esc(chat.name)}</span>` : '');
+        return (title ? `<span class="title-pill${title.ultimate ? ' ultimate' : ''}">${esc(title.name)}</span>` : '') + (chat ? `<span class="chat-badge">${chat.icon} ${esc(chat.name)}</span>` : '');
     };
 
     function boardRow(u, rank, cat, me) {
@@ -2309,6 +2285,7 @@ const Portal = (() => {
                         <span class="profile-rank-pill">${rankTitle(num(u.xp))}</span>
                         <div class="profile-flair-row">${flair || '<span class="meter-label">No title equipped</span>'}</div>
                         <p>${esc(u.bio || 'AI Learning Cadet')}</p>
+                        ${validCertificate(u.certificate) ? '<span class="grad-ribbon">🎓 Course Graduate</span>' : ''}
                     </div>
                 </div>
                 <div class="inspect-stats">
@@ -2376,6 +2353,8 @@ const Portal = (() => {
         // While the cloud profile is still loading, keep the background saved on this device
         if (user) PortalTheme.set(user.background || 'bg_default');
         else if (!localStorage.getItem(ID_KEY)) PortalTheme.set('bg_default');
+        if (user) PortalCursor.set(!!getEquipped(user, 'cursor'));
+        else if (!localStorage.getItem(ID_KEY)) PortalCursor.set(false);
         if (activeView) {
             const theme = PortalTheme.current();
             // classList (not className) keeps the equipped accent class
@@ -2400,6 +2379,7 @@ const Portal = (() => {
 
         applyRewards(user);
         renderRewardLocker(user);
+        renderUltimate(user);
 
         // shop buttons show owned items
         $$('#shop-grid [data-buy]').forEach(b => {
@@ -2478,6 +2458,7 @@ const Portal = (() => {
             const buyBtn = e.target.closest('[data-buy]'); if (buyBtn) return buy(buyBtn.dataset.buy);
             const eq = e.target.closest('[data-equip]'); if (eq) return equip(eq.dataset.equip);
             const rw = e.target.closest('[data-reward]'); if (rw) return toggleReward(rw.dataset.reward);
+            const all = e.target.closest('[data-ultimate-all]'); if (all) return setUltimate(all.dataset.ultimateAll === 'on');
             const av = e.target.closest('#edit-avatar-picker .avatar-pick');
             if (av) { const u = getActiveUser(); if (u) { u.avatar = av.dataset.avatar; persist(u); } }
         });
@@ -2493,7 +2474,7 @@ const Portal = (() => {
         initSync();
     }
 
-    return { bind, getActiveUser, getDirectory: () => dir, award, getEquipped, syncProfile, refresh: refreshUI, renderDashboardBoard };
+    return { bind, getActiveUser, getDirectory: () => dir, award, addXP, getEquipped, syncProfile, refresh: refreshUI, renderDashboardBoard };
 })();
 
 // ============================================================================
@@ -2515,9 +2496,9 @@ const Chatbot = (() => {
         { k: ['unsupervised', 'cluster'], a: `Unsupervised learning looks for hidden patterns in unlabeled data. A store might use it to group shoppers with similar buying habits into segments.` },
         { k: ['reinforcement'], a: `Reinforcement learning is trial and error. An agent takes actions, earns rewards for good moves and penalties for bad ones, and gradually learns a winning strategy. It's how many game-playing and robot-control systems learn.` },
         { k: ['neural network', 'neuron', 'hidden layer', 'activation', 'weights', 'deep learning'], a: `A neural network is layers of simple "neurons". Each neuron weighs its inputs, adds a bias, and passes the result through an activation function. Hidden layers build complex features from simple ones, and the network learns by adjusting its weights and biases to reduce its errors. See Lesson 1.2.` },
-        { k: ['computer vision', 'cnn', 'convolution', 'image recognition'], a: `Computer vision teaches computers to understand images and video. Convolutional Neural Networks (CNNs) slide small filters across pixels: early layers find edges, middle layers find textures, and deep layers assemble whole objects. Lesson 1.3 has a resolution simulator you can try.` },
+        { k: ['computer vision', 'cnn', 'convolution', 'image recognition'], a: `Computer vision teaches computers to understand images and video. Convolutional Neural Networks (CNNs) slide small filters across pixels: early layers find edges, middle layers find textures, and deep layers assemble whole objects. Lesson 1.3 walks through it with tabs and a step-by-step view.` },
         { k: ['hallucinat'], a: `A hallucination is when an AI states something false or made-up in a confident tone. Language models predict likely words; they don't check facts. Always verify AI claims, especially citations, against trusted primary sources.` },
-        { k: ['prompt', 'prompting', 'prompt engineering'], a: `A strong prompt has four parts: a Role ("Act as an AP Biology tutor"), a clear Task verb (summarize, compare, debug), Context and audience, and Format/Constraints (length, structure, tone). Vague prompts make the model guess. Try the Prompt Architecture simulator in Lesson 2.1!` },
+        { k: ['prompt', 'prompting', 'prompt engineering'], a: `A strong prompt has four parts: a Role ("Act as an AP Biology tutor"), a clear Task verb (summarize, compare, debug), Context and audience, and Format/Constraints (length, structure, tone). Vague prompts make the model guess. Lesson 2.1 has flip cards for each part and shows a prompt leveling up.` },
         { k: ['chain-of-thought', 'chain of thought', 'step by step', 'few-shot', 'few shot', 'zero-shot'], a: `Chain-of-Thought prompting asks the model to reason step by step, which helps on math, logic, and debugging. Few-shot prompting gives 2 to 5 worked examples, and zero-shot gives none. Self-critique asks the AI to review its own draft. See Lesson 2.2.` },
         { k: ['temperature'], a: `Temperature controls randomness. Low (0.0 to 0.3) gives consistent, factual output, which is good for code and facts. High (0.9 to 1.5) is more creative but more likely to invent facts. Lesson 2.3 has a slider to explore it.` },
         { k: ['cite', 'citation', 'apa', 'mla', 'plagiar', 'homework', 'cheat', 'academic'], a: `When AI is allowed on an assignment, be transparent: cite the tool, model version, date accessed, and the prompt used (MLA and APA both have formats), keep a prompt and verification log, and write the final work yourself. Check your teacher's or competition's policy first. See Lesson 3.1.` },
@@ -2534,7 +2515,8 @@ const Chatbot = (() => {
         { k: ['rlhf', 'alignment', 'reward model'], a: `RLHF (Reinforcement Learning from Human Feedback): people rank model answers, a reward model learns those preferences, and the AI is fine-tuned to be helpful, honest, and harmless. A KL penalty prevents reward hacking. See Lesson 6.2.` },
         { k: ['agent', 'multimodal', 'human-in-the-loop', 'hitl'], a: `AI agents plan multi-step tasks and use tools; multimodal models handle text, images, audio, and code. Human-in-the-loop design keeps people approving high-impact actions. See Lesson 6.3.` },
         { k: ['xp', 'badge', 'level up', 'points', 'shop', 'leaderboard'], a: `You earn XP for every correct quiz answer plus a bonus for completing a lesson for the first time. Spend XP in the Profile shop on avatars and backgrounds. Badges on the Dashboard (for lessons, modules, minigames, and perfect quiz scores) (for lessons, minigames, combos, and exploring) automatically unlock titles, animated avatar borders, theme accents, chat badges, and site-wide backgrounds that you can equip on your Profile. Click any player on a leaderboard to see their stats. Your best arcade scores appear on the leaderboard.` },
-        { k: ['unlock', 'locked', 'pass', 'module'], a: `Each lesson ends with an arcade quiz. Answer 4 out of 5 correctly to complete the lesson. Finish all three lessons in a module to unlock the next one.` },
+        { k: ['unit test', 'final exam', 'certificate', 'grandmaster', 'exam'], a: `Each module ends with a Unit Test, and you need 80% or higher to pass. After passing all six, the Final Exam unlocks. Score 80% or higher on it to earn your Certificate of Completion and the Grandmaster title, background, and cursor effect.` },
+        { k: ['unlock', 'locked', 'pass', 'module'], a: `Each lesson ends with an arcade quiz. Answer 4 out of 5 correctly to complete the lesson. After all three lessons, pass the module's Unit Test with 80% or higher to unlock the next module.` },
         { k: ['game', 'arcade', 'combo', 'streak', 'boss'], a: `Lessons use eight quiz games: Rocket Space Defender, Block Blast, Pirate Cannon, Cyber Shield Defense, Neon Hover Runner, Vault Code Breaker, Glitch Boss Battle, and Data Packet Catcher. Back-to-back right answers multiply your score up to x3 and unlock power-ups.` },
         { k: ['video'], a: `Lesson 1.1 has a video before the spam-classifier simulator. Watch it and the simulator unlocks!` }
     ];
@@ -2651,6 +2633,7 @@ const Chatbot = (() => {
 // ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
     renderModulesGrid();
+    saveMaxUnlocked();
     syncRewards();   // on first run, records already-earned rewards without announcing them
     Portal.bind();
     Chatbot.bind();
@@ -2671,10 +2654,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (e.target.closest('#nav-profile-btn')) return showPage('profile');
-        if (e.target.closest('#dash-continue')) {
-            const next = LESSON_ORDER.find(([m, s]) => !lessonDone(m, s) && m <= maxUnlocked()) || LESSON_ORDER[0];
-            location.hash = `#module-${next[0]}-${next[1]}`;
-        }
+        if (e.target.closest('#dash-continue')) location.hash = nextStepHash();
     });
 
     document.addEventListener('input', e => {
