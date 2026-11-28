@@ -128,6 +128,219 @@ const UNIT_BANK = {
     ]
 };
 
+// ============================================================================
+// A2. WRITTEN RESPONSES (FRQs)
+//     Each prompt can contain {option|option} slots. One option is picked at random
+//     every time, so two students (or two attempts) rarely see the same wording.
+//     rubric: [what a full answer explains, [words that show it]]. Each point is worth 1.
+// ============================================================================
+const FRQ_POINTS = 3, FRQ_MIN_WORDS = 15, FRQ_PER_UNIT = 2, FRQ_ON_FINAL = 3;
+const FRQ_BANK = {
+    1: [
+        { id: 'f1a', lesson: '1.1', concept: 'Choosing a learning type', prompt: 'A {school|hospital|streaming service} wants to use machine learning to {sort incoming messages by topic|predict which items people will like|flag unusual activity}. Explain whether supervised, unsupervised, or reinforcement learning fits best, and why.',
+            rubric: [['Names a specific learning type (supervised, unsupervised, or reinforcement)', ['supervised', 'unsupervised', 'reinforcement']], ['Explains the role of labels, or of rewards and penalties', ['label', 'reward', 'penalt', 'correct answer', 'tagged']], ['Connects the choice to the data or the goal in the scenario', ['because', 'since', 'so that', 'pattern', 'group', 'cluster', 'predict']]],
+            sample: 'Supervised learning fits because the past examples already have labels (the right category), so the model can learn the pattern between inputs and labels and predict labels for new messages.' },
+        { id: 'f1b', lesson: '1.1', concept: 'Rules versus learning', prompt: 'Explain how a machine learning {spam filter|photo tagger|movie recommender} is different from a program built only from hand-written rules. Give one advantage of the ML approach.',
+            rubric: [['Explains that ML learns patterns from examples or data', ['learn', 'example', 'training data', 'data', 'pattern']], ['Contrasts this with fixed rules written by a programmer', ['rule', 'hand-written', 'hard-coded', 'programmer', 'if ']], ['Gives an advantage such as adapting to change or handling complex cases', ['adapt', 'change', 'complex', 'new', 'scale', 'improv', 'update']]],
+            sample: 'A rule-based program only follows if-then rules a programmer wrote, while an ML model learns patterns from many labeled examples. That lets it adapt when spammers change tactics and handle cases nobody wrote a rule for.' },
+        { id: 'f1c', lesson: '1.2', concept: 'How a network learns', prompt: 'Describe how a neural network gets better at {recognizing handwritten digits|predicting house prices|identifying bird songs} during training. Mention what changes inside the network.',
+            rubric: [['Says the network makes a prediction and measures its error (loss)', ['error', 'loss', 'wrong', 'mistake', 'compare', 'predict']], ['Says the weights and/or biases are adjusted', ['weight', 'bias']], ['Mentions repetition over many examples or rounds (epochs)', ['repeat', 'many example', 'epoch', 'over and over', 'iterat', 'again', 'thousands']]],
+            sample: 'The network makes a prediction, compares it to the correct answer to measure the error, then adjusts its weights and biases slightly to reduce that error. Repeating this over many examples and epochs makes it more accurate.' },
+        { id: 'f1d', lesson: '1.2', concept: 'Neurons and layers', prompt: 'Explain what a single artificial neuron does with its inputs, and why networks stack neurons into {hidden layers|many layers|deep layers}.',
+            rubric: [['Neuron multiplies inputs by weights and adds them (plus a bias)', ['weight', 'sum', 'add', 'bias', 'multipl']], ['Mentions the activation function', ['activation']], ['Explains that layers build complex features or patterns from simple ones', ['complex', 'feature', 'layer', 'build', 'combine', 'deeper']]],
+            sample: 'A neuron multiplies each input by a weight, adds them together with a bias, and passes the total through an activation function. Stacking neurons in hidden layers lets later layers combine simple features into complex patterns.' },
+        { id: 'f1e', lesson: '1.3', concept: 'How CNNs see', prompt: 'A computer vision model learns to recognize {cats|stop signs|ripe fruit} in photos. Explain how a convolutional neural network (CNN) builds up from pixels to a whole object.',
+            rubric: [['Describes filters sliding across the image (convolution)', ['filter', 'slide', 'kernel', 'convolution', 'scan']], ['Early layers detect simple features like edges', ['edge', 'line', 'simple', 'corner', 'color']], ['Deeper layers combine features into shapes, parts, or whole objects', ['shape', 'object', 'part', 'texture', 'deeper', 'combine', 'whole']]],
+            sample: 'A CNN slides small filters across the pixels. Early layers detect simple features like edges and colors, middle layers combine them into textures and shapes, and deep layers recognize whole objects like a cat.' }
+    ],
+    2: [
+        { id: 'f2a', lesson: '2.1', concept: 'Strong prompts', prompt: 'Rewrite this weak prompt into a strong one, then explain what you added: "{help with my essay|explain photosynthesis|make a study plan}".',
+            rubric: [['Adds a role for the AI', ['role', 'act as', 'you are', 'as a ', 'tutor', 'expert', 'teacher']], ['States a clear task and context or audience', ['task', 'context', 'audience', 'grade', 'student', 'level', 'for my']], ['Sets a format or constraints (length, structure, tone)', ['format', 'bullet', 'word', 'length', 'tone', 'steps', 'table', 'paragraph', 'constraint']]],
+            sample: 'Strong version: "Act as a biology tutor. Explain photosynthesis to a 9th grader in 5 bullet points under 100 words." I added a role, the audience and context, and format constraints so the AI does not have to guess.' },
+        { id: 'f2b', lesson: '2.2', concept: 'Chain-of-thought', prompt: 'A student asks an AI to solve a {multi-step math word problem|logic puzzle|tricky coding bug}. Explain what chain-of-thought prompting is and why it helps here.',
+            rubric: [['Defines chain-of-thought as asking the AI to reason step by step', ['step by step', 'step-by-step', 'steps', 'reason', 'show its work', 'walk through']], ['Explains it improves accuracy on multi-step problems', ['accura', 'mistake', 'error', 'correct', 'better answer', 'multi-step']], ['Mentions the reasoning can be checked or verified', ['check', 'verify', 'see where', 'follow', 'catch', 'review']]],
+            sample: 'Chain-of-thought prompting asks the AI to reason step by step. On a multi-step problem that reduces mistakes, and because each step is written out, the student can check where the reasoning goes wrong.' },
+        { id: 'f2c', lesson: '2.2', concept: 'Few-shot prompting', prompt: 'You want an AI to write {product descriptions|quiz questions|haiku about science} in one specific style. Explain how few-shot prompting would help, compared with zero-shot.',
+            rubric: [['Explains few-shot means giving a few worked examples in the prompt', ['example', 'sample', 'few-shot', 'few shot', 'show it']], ['Contrasts with zero-shot (no examples)', ['zero-shot', 'zero shot', 'no example', 'without example']], ['Says examples steer the style, format, or consistency', ['style', 'format', 'consistent', 'pattern', 'match', 'copy the']]],
+            sample: 'Few-shot prompting puts 2 to 5 examples of the style in the prompt, while zero-shot gives none. The examples show the model the pattern, so its output matches the format and style more consistently.' },
+        { id: 'f2d', lesson: '2.3', concept: 'Temperature', prompt: 'Explain what the temperature setting controls, and what value you would choose for {writing a factual study guide|generating code|brainstorming story ideas}. Justify your choice.',
+            rubric: [['Says temperature controls randomness or creativity', ['random', 'creativ', 'variety', 'predictab']], ['Chooses an appropriate low or high value for the task', ['low', 'high', '0.', '1.', 'zero']], ['Justifies with a trade-off (consistency/accuracy vs. creativity/made-up facts)', ['accura', 'consistent', 'fact', 'invent', 'made-up', 'hallucin', 'creative', 'reliab', 'variety']]],
+            sample: 'Temperature controls how random the output is. For a factual study guide I would pick a low value like 0.2 so the answers are consistent and less likely to invent facts. High values are better for brainstorming.' },
+        { id: 'f2e', lesson: '2.3', concept: 'Hallucinations', prompt: 'An AI gives you a confident answer with a {statistic|quote from a famous person|citation to a research paper}. Explain why it might be wrong and how you would check it.',
+            rubric: [['Explains hallucination: models predict likely words and can invent facts', ['hallucin', 'predict', 'make up', 'made up', 'invent', 'not check', 'confident']], ['Describes verifying with trusted or primary sources', ['source', 'verify', 'check', 'look up', 'search', 'official', 'primary']], ['Gives a concrete verification action', ['google', 'library', 'database', 'website', 'paper', 'cross', 'compare', 'find the original']]],
+            sample: 'Language models predict likely words rather than checking facts, so they can hallucinate a fake statistic. I would verify it by finding the original source on an official website or database and cross-checking with another trusted source.' }
+    ],
+    3: [
+        { id: 'f3a', lesson: '3.1', concept: 'Using AI honestly', prompt: 'Your teacher allows AI for {brainstorming an essay|checking your code|studying for a test}. Describe how to use it honestly and how you would show your teacher what you did.',
+            rubric: [['Checks or follows the teacher/school policy', ['policy', 'teacher', 'allow', 'rule', 'permission']], ['Cites or discloses the AI tool use (tool, prompt, date)', ['cite', 'citation', 'disclose', 'mention', 'credit', 'prompt', 'log']], ['Keeps the final work their own and verifies AI output', ['own word', 'myself', 'my own', 'verify', 'check', 'rewrite', 'not copy']]],
+            sample: 'First I would follow my teacher\'s policy. I would cite the AI tool, the date and the prompts I used, keep a short log, and write the final work in my own words after verifying anything the AI suggested.' },
+        { id: 'f3b', lesson: '3.2', concept: 'Data bias', prompt: 'A {hiring|loan approval|face recognition} model works well for some groups of people but poorly for others. Explain how bias could have entered the system and one way to reduce it.',
+            rubric: [['Says the training data was unrepresentative or reflected past prejudice', ['data', 'training', 'represent', 'historical', 'past', 'underrepresent', 'missing']], ['Explains the model learns and repeats those patterns', ['learn', 'repeat', 'amplif', 'copy', 'pattern', 'reflect']], ['Gives a fix: diverse data, audits, testing by group, or human review', ['divers', 'audit', 'test', 'balance', 'subgroup', 'human review', 'more data', 'fair']]],
+            sample: 'If the training data mostly came from one group or reflected past unfair decisions, the model learns and repeats that pattern. Collecting more diverse data and auditing accuracy for each subgroup helps reduce the bias.' },
+        { id: 'f3c', lesson: '3.2', concept: 'Protecting privacy', prompt: 'A friend wants to paste {their medical records|a classmate\'s home address and phone number|their login passwords} into a public chatbot for help. Explain the risk and what they should do instead.',
+            rubric: [['Identifies it as personal or sensitive information (PII)', ['pii', 'personal', 'private', 'sensitive', 'identif']], ['Explains it could be stored, logged, used in training, or leaked', ['store', 'log', 'train', 'leak', 'saved', 'shared', 'see it']], ['Suggests a safer alternative (remove details, anonymize, ask a trusted person)', ['remove', 'anonym', 'redact', 'leave out', 'instead', 'fake', 'trusted', 'don\'t', 'do not']]],
+            sample: 'That is personally identifiable information. Public chatbots may store or log what you type, and it could be used in training or leaked. They should remove or replace the personal details, or ask a trusted adult instead.' },
+        { id: 'f3d', lesson: '3.3', concept: 'Spotting deepfakes', prompt: 'A video of a {famous athlete|world leader|school principal} saying something shocking is spreading online. Explain how you would decide whether it might be a deepfake before sharing it.',
+            rubric: [['Looks for visual or audio clues (blinking, lip-sync, warped edges, voice)', ['blink', 'lip', 'sync', 'edge', 'warp', 'lighting', 'voice', 'glitch', 'unnatural']], ['Checks the source or content credentials (C2PA)', ['source', 'c2pa', 'credential', 'original', 'who posted', 'account']], ['Cross-checks with reputable news before sharing', ['news', 'reputable', 'cross', 'fact-check', 'fact check', 'other source', 'before sharing', 'not share']]],
+            sample: 'I would look for clues like unnatural blinking, mismatched lip-sync and warped edges, check who posted it and whether it has C2PA content credentials, and cross-check with reputable news sites before sharing.' },
+        { id: 'f3e', lesson: '3.3', concept: 'Responsible sharing', prompt: 'Explain why sharing AI-generated {images|audio clips|news stories} without labeling them can cause harm, and what responsible creators should do.',
+            rubric: [['Explains harm: misinformation, deception, or damaged reputations', ['misinform', 'mislead', 'fake', 'decei', 'trust', 'reputation', 'harm', 'confus']], ['Says creators should label or disclose AI content', ['label', 'disclose', 'watermark', 'tag', 'credential', 'say it is ai']], ['Mentions consent or respecting real people', ['consent', 'permission', 'real people', 'impersonat', 'respect']]],
+            sample: 'Unlabeled AI content can spread misinformation and damage real people\'s reputations. Creators should clearly label or watermark AI content and never impersonate real people without their consent.' }
+    ],
+    4: [
+        { id: 'f4a', lesson: '4.1', concept: 'Cleaning data', prompt: 'You are given a dataset of {student test scores|weather readings|store sales} that has missing values and a few impossible numbers. Describe how you would clean it before training a model, and why it matters.',
+            rubric: [['Handles missing values (drop or fill/impute)', ['missing', 'drop', 'remove', 'fill', 'impute', 'average', 'mean', 'median']], ['Handles outliers or impossible values', ['outlier', 'impossible', 'error', 'wrong value', 'typo', 'unrealistic']], ['Explains garbage in, garbage out: bad data makes a bad model', ['garbage', 'bad data', 'accura', 'wrong prediction', 'quality', 'mislead']]],
+            sample: 'I would fill missing values with the median or drop those rows, and remove impossible outliers like a score of 900%. Garbage in, garbage out: bad data teaches the model wrong patterns and lowers its accuracy.' },
+        { id: 'f4b', lesson: '4.2', concept: 'Overfitting', prompt: 'A model scores {99%|98%|97%} on its training data but only {58%|61%|64%} on new data. Explain what is happening and two ways to fix it.',
+            rubric: [['Identifies overfitting / memorizing the training data', ['overfit', 'memoriz']], ['Explains it fails to generalize to new data', ['general', 'new data', 'unseen', 'test']], ['Gives fixes: more data, simpler model, fewer epochs/early stopping, regularization, validation', ['more data', 'simpl', 'fewer epoch', 'early stop', 'regulari', 'validation', 'dropout', 'less training']]],
+            sample: 'The model is overfitting: it memorized the training data instead of learning general patterns, so it fails on unseen test data. Fixes include collecting more data, using a simpler model, and stopping training earlier.' },
+        { id: 'f4c', lesson: '4.2', concept: 'Train and test sets', prompt: 'Explain why we split data into a training set and a separate test set when building a {fraud detector|weather predictor|plant disease classifier}. What could go wrong if we skipped the test set?',
+            rubric: [['Training set is used to learn; test set is held out', ['train', 'held out', 'held-out', 'separate', 'never seen', 'unseen']], ['Test set measures performance on new data', ['measure', 'evaluat', 'new data', 'real world', 'perform', 'generaliz']], ['Without it, overfitting goes unnoticed / scores look misleadingly good', ['overfit', 'mislead', 'too good', 'not know', 'unnoticed', 'false', 'fail']]],
+            sample: 'The model learns from the training set, while the test set stays separate so we can measure how it performs on data it has never seen. Without a test set we would not notice overfitting and would trust a misleadingly high score.' },
+        { id: 'f4d', lesson: '4.3', concept: 'Feature engineering', prompt: 'You are predicting {bus delays|cafeteria lunch demand|bike rentals} from raw timestamps. Describe one new feature you would create and why it would help the model.',
+            rubric: [['Proposes a specific engineered feature', ['rush', 'hour', 'weekend', 'weekday', 'holiday', 'season', 'day of', 'time of']], ['Explains how it relates to the target', ['because', 'busier', 'more', 'demand', 'traffic', 'relat', 'affect']], ['Says useful features improve accuracy or reduce noise', ['accura', 'noise', 'improv', 'easier', 'better', 'pattern', 'signal']]],
+            sample: 'I would turn the timestamp into an is_rush_hour feature. Delays are much more common during rush hour, so this gives the model a clear signal that improves accuracy compared with a raw timestamp.' },
+        { id: 'f4e', lesson: '4.3', concept: 'Choosing features', prompt: 'A dataset for predicting {student grades|house prices|app downloads} has {80|120|200} columns, many of them random noise. Explain why removing useless columns can make the model better.',
+            rubric: [['Noise or irrelevant features can mislead the model', ['noise', 'irrelevant', 'useless', 'mislead', 'random', 'confus']], ['Mentions overfitting or the curse of dimensionality', ['overfit', 'dimension', 'too many']], ['Notes benefits like faster training, simpler model, or better accuracy', ['faster', 'simpl', 'accura', 'efficien', 'better', 'general']]],
+            sample: 'Irrelevant noise columns can mislead the model into finding fake patterns and overfitting, which is part of the curse of dimensionality. Removing them makes the model simpler, faster to train and more accurate.' }
+    ],
+    5: [
+        { id: 'f5a', lesson: '5.1', concept: 'Explainable AI', prompt: 'A {bank\'s loan|school\'s admissions|hospital\'s triage} model rejects someone, and nobody can explain why. Explain why that is a problem and what explainable AI (XAI) adds.',
+            rubric: [['Black-box decisions can hide errors or unfairness', ['black box', 'black-box', 'hidden', 'unfair', 'bias', 'error', 'trust']], ['XAI shows which inputs or features drove the decision', ['feature', 'input', 'factor', 'reason', 'shap', 'explain', 'why']], ['People need accountability or a way to appeal', ['appeal', 'accountab', 'challenge', 'human', 'right', 'contest', 'review']]],
+            sample: 'A black-box decision could hide bias or errors and nobody can trust it. Explainable AI shows which factors drove the decision, so mistakes can be caught and the person can understand and appeal it.' },
+        { id: 'f5b', lesson: '5.1', concept: 'Fairness audits', prompt: 'Describe how you would audit a {facial recognition|resume screening|predictive grading} system for fairness before it is used.',
+            rubric: [['Test accuracy or outcomes separately for different groups', ['group', 'subgroup', 'demographic', 'separately', 'each', 'compare']], ['Look for disparate impact or unequal error rates', ['disparate', 'unequal', 'differ', 'gap', 'error rate', 'bias']], ['Document results (model card) and fix issues or add human oversight', ['model card', 'document', 'report', 'fix', 'retrain', 'human', 'oversight']]],
+            sample: 'I would test the model\'s accuracy separately for each demographic group and compare error rates to find disparate impact. Then I would document the results in a model card and retrain or add human review before launch.' },
+        { id: 'f5c', lesson: '5.2', concept: 'Copyright and licenses', prompt: 'A student wants to use {song lyrics|artwork|code} they found online to build an AI project. Explain why "it was online" does not mean it is free to use, and what they should check.',
+            rubric: [['Being publicly visible does not remove copyright', ['copyright', 'own', 'creator', 'author', 'permission', 'not free']], ['Check the license (MIT, Apache, Creative Commons, public domain)', ['license', 'licence', 'mit', 'apache', 'creative commons', 'public domain', 'cc']], ['Give credit/attribution or transform the work', ['credit', 'attribut', 'cite', 'transform', 'fair use']]],
+            sample: 'Things online are still copyrighted by their creators unless they say otherwise. The student should check the license, like MIT or Creative Commons, follow its terms, and give credit to the creator.' },
+        { id: 'f5d', lesson: '5.3', concept: 'Guardrails', prompt: 'A company launches a {homework helper|customer service|game companion} chatbot. Describe layered guardrails that keep it safe, and why one system prompt is not enough.',
+            rubric: [['Input filters catch malicious prompts or injection', ['input', 'filter', 'injection', 'jailbreak', 'malicious']], ['Output filters block harmful or private content', ['output', 'block', 'harmful', 'private', 'moderat']], ['Red teaming or testing, and why one layer can be bypassed', ['red team', 'test', 'bypass', 'layer', 'single', 'one prompt', 'trick']]],
+            sample: 'Use layers: input filters to catch prompt injection and jailbreaks, output filters to block harmful or private content, and red teaming to find weaknesses. A single system prompt can be tricked, so multiple layers are needed.' },
+        { id: 'f5e', lesson: '5.3', concept: 'Prompt injection', prompt: 'An AI assistant reads {web pages|emails|uploaded documents} for the user. Explain what a prompt injection attack is and one way to defend against it.',
+            rubric: [['Defines prompt injection: hidden instructions in content trick the AI', ['hidden', 'instruction', 'trick', 'inject', 'malicious', 'override']], ['Explains the risk (ignoring rules, leaking data, unsafe actions)', ['leak', 'ignore', 'rule', 'data', 'action', 'harm', 'private']], ['Gives a defense: treat content as data, filters, limit permissions, human approval', ['filter', 'data not', 'as data', 'permission', 'approval', 'human', 'sandbox', 'separate', 'check']]],
+            sample: 'Prompt injection is when a web page or document contains hidden instructions that trick the AI into ignoring its rules, for example to leak private data. A defense is to treat that content as data, filter it, and require human approval for actions.' }
+    ],
+    6: [
+        { id: 'f6a', lesson: '6.1', concept: 'Precision and recall', prompt: 'A model screens {patients for a rare disease|emails for phishing|parts for factory defects}. Explain precision and recall in this situation, and which one matters more here.',
+            rubric: [['Defines precision (of flagged items, how many were right)', ['precision']], ['Defines recall (of real positives, how many were caught)', ['recall']], ['Argues which matters more using the cost of misses vs. false alarms', ['miss', 'false alarm', 'false positive', 'false negative', 'cost', 'dangerous', 'catch']]],
+            sample: 'Precision is how many flagged patients really have the disease; recall is how many sick patients were caught. Recall matters more here because missing a sick patient (a false negative) is far more dangerous than a false alarm.' },
+        { id: 'f6b', lesson: '6.1', concept: 'Misleading accuracy', prompt: 'A model that always predicts "{healthy|safe|not fraud}" scores 99% accuracy. Explain why that number is misleading and what metric would reveal the problem.',
+            rubric: [['Explains the positive class is rare (imbalanced data)', ['rare', 'imbalanc', '1%', 'few', 'most']], ['Notes it never catches a single real positive', ['never', 'miss', 'catch', 'zero', 'useless', 'all']], ['Names a better metric: recall, precision, or F1', ['recall', 'precision', 'f1', 'confusion']]],
+            sample: 'Only about 1% of cases are positive, so always guessing the majority scores 99% while catching zero real cases. Recall (or F1) would reveal the problem because it measures how many positives were caught.' },
+        { id: 'f6c', lesson: '6.2', concept: 'RLHF', prompt: 'Explain how reinforcement learning from human feedback (RLHF) helps make a chatbot more {helpful|honest|safe}.',
+            rubric: [['People rank or rate model answers', ['rank', 'rate', 'human', 'people', 'feedback', 'prefer']], ['A reward model learns those preferences', ['reward model', 'reward', 'learn', 'prefer']], ['The AI is fine-tuned toward helpful, honest, harmless answers', ['fine-tun', 'tune', 'train', 'helpful', 'honest', 'harmless', 'better']]],
+            sample: 'People rank several model answers, a reward model learns what humans prefer, and the chatbot is fine-tuned with reinforcement learning to produce answers that score well: more helpful, honest and harmless.' },
+        { id: 'f6d', lesson: '6.2', concept: 'Reward hacking', prompt: 'During training, an AI finds a way to get a high reward score {without actually being helpful|by giving very long answers|by flattering the user}. Explain what this is and how developers prevent it.',
+            rubric: [['Identifies reward hacking: gaming the score instead of the real goal', ['reward hack', 'game', 'gaming', 'trick', 'exploit', 'loophole', 'shortcut']], ['Explains the score and the real goal can differ', ['goal', 'real', 'actual', 'not really', 'misalign', 'intended']], ['Mentions a prevention such as a KL penalty, better reward design, or human review', ['kl', 'penalty', 'human', 'review', 'better reward', 'test', 'monitor', 'constraint']]],
+            sample: 'That is reward hacking: the AI exploits a loophole to raise its score without reaching the real goal. Developers prevent it with a KL penalty that keeps the model close to its original behavior, better reward design, and human review.' },
+        { id: 'f6e', lesson: '6.3', concept: 'Agents and oversight', prompt: 'An AI agent can {book travel and pay for it|send emails for you|edit files on your computer}. Explain how an agent differs from a normal chatbot and where a human should stay in the loop.',
+            rubric: [['Agents plan multiple steps and use tools to take actions', ['plan', 'step', 'tool', 'action', 'act']], ['Identifies high-impact or irreversible actions as risky', ['high-impact', 'irreversib', 'money', 'pay', 'delete', 'send', 'risk', 'mistake']], ['Human approves or reviews before those actions', ['approv', 'confirm', 'human', 'review', 'check', 'permission']]],
+            sample: 'A chatbot only replies, but an agent plans multi-step tasks and uses tools to take real actions. For high-impact steps like paying money or sending emails, a human should review and approve before the agent acts.' }
+    ]
+};
+
+// Picks one option for every {a|b|c} slot
+const fillVariants = text => text.replace(/\{([^{}]+)\}/g, (_, opts) => { const list = opts.split('|'); return list[Math.floor(Math.random() * list.length)]; });
+const makeFrq = f => ({ type: 'frq', id: f.id, lesson: f.lesson, concept: f.concept, q: fillVariants(f.prompt), points: FRQ_POINTS, rubric: f.rubric.map(([desc, terms]) => ({ desc, terms })), sample: f.sample });
+// n random prompts from a module, spreading them across different lessons when possible
+function pickFrqs(m, n) {
+    const pool = shuffle([...FRQ_BANK[m]]), picked = [];
+    while (picked.length < n && pool.length) {
+        const i = pool.findIndex(f => !picked.some(p => p.lesson === f.lesson));
+        picked.push(pool.splice(i >= 0 ? i : 0, 1)[0]);
+    }
+    return picked.map(makeFrq);
+}
+
+// ============================================================================
+// A3. FRQ GRADER
+//     To use your own AI model, put its URL in FRQ_GRADER_CONFIG.endpoint. The site POSTs:
+//       { task: 'grade_frq', question, rubric: [string], sampleAnswer, maxPoints, answer, lesson, concept }
+//     and expects JSON back:
+//       { score: number (0..maxPoints), feedback: string, points?: [{ met: boolean, note: string }] }
+//     Until then (or if the call fails) a built-in rubric check gives a provisional score.
+//     Every response is logged on this account (store key 'frqLog') so it can be regraded later
+//     with PortalFRQ.regrade() once the AI grader is live.
+// ============================================================================
+const FRQ_GRADER_CONFIG = {
+    endpoint: '',            // e.g. 'https://scrappy-grader.YOUR-NAME.workers.dev'  (leave '' for the built-in rubric)
+    timeoutMs: 25000
+};
+
+const PortalFRQ = (() => {
+    const countWords = s => (String(s).trim().match(/[A-Za-z0-9'’-]+/g) || []).length;
+
+    function rubricGrade(item, answer) {
+        const text = ' ' + answer.toLowerCase().replace(/\s+/g, ' ') + ' ';
+        const points = item.rubric.map(r => ({ met: r.terms.some(term => text.includes(term)), note: r.desc }));
+        let score = Math.round((points.filter(p => p.met).length / item.rubric.length) * item.points);
+        const words = countWords(answer);
+        const unique = new Set(answer.toLowerCase().match(/[a-z']+/g) || []).size;
+        let caution = '';
+        // A list of keywords is not an explanation
+        if (words < 25 && score > 1) { score -= 1; caution = 'Add more explanation in full sentences to earn every point.'; }
+        if (unique < words * 0.4) { score = Math.min(score, 1); caution = 'Your answer repeats itself a lot. Explain the idea in your own words.'; }
+        return { score, points, caution, gradedBy: 'rubric', feedback: caution };
+    }
+
+    async function aiGrade(item, answer) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), FRQ_GRADER_CONFIG.timeoutMs);
+        try {
+            const res = await fetch(FRQ_GRADER_CONFIG.endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ task: 'grade_frq', question: item.q, rubric: item.rubric.map(r => r.desc), sampleAnswer: item.sample, maxPoints: item.points, answer, lesson: item.lesson, concept: item.concept }),
+                signal: ctrl.signal
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            const score = Math.round(Number(data.score));
+            if (!Number.isFinite(score)) throw new Error('No score in reply');
+            const points = Array.isArray(data.points) ? data.points.slice(0, 6).map(p => ({ met: !!p.met, note: String(p.note || '') })) : [];
+            return { score: clamp(score, 0, item.points), points, feedback: String(data.feedback || ''), gradedBy: 'ai' };
+        } finally { clearTimeout(timer); }
+    }
+
+    function logEntry(entry) {
+        const list = store.get('frqLog', []);
+        list.push(entry);
+        store.set('frqLog', list.slice(-80));
+    }
+
+    async function grade(item, answer, examId) {
+        let result = null;
+        if (FRQ_GRADER_CONFIG.endpoint) {
+            try { result = await aiGrade(item, answer); } catch (err) { console.warn('FRQ grader unavailable, using the built-in rubric.', err); }
+        }
+        if (!result) result = rubricGrade(item, answer);
+        logEntry({ exam: examId, frq: item.id, lesson: item.lesson, question: item.q, answer: answer.slice(0, 1500), score: result.score, max: item.points, gradedBy: result.gradedBy, at: new Date().toISOString() });
+        return { item, answer, ...result, max: item.points };
+    }
+
+    // Sends rubric-graded answers to the AI grader (once it exists) and records the AI's score beside them
+    async function regrade() {
+        if (!FRQ_GRADER_CONFIG.endpoint) return { regraded: 0, note: 'Set FRQ_GRADER_CONFIG.endpoint first.' };
+        const list = store.get('frqLog', []);
+        let regraded = 0;
+        for (const e of list) {
+            if (e.gradedBy !== 'rubric' || e.aiScore !== undefined) continue;
+            const src = Object.values(FRQ_BANK).flat().find(f => f.id === e.frq);
+            if (!src) continue;
+            try {
+                const r = await aiGrade({ ...makeFrq(src), q: e.question }, e.answer);
+                e.aiScore = r.score; e.aiFeedback = r.feedback; regraded++;
+            } catch { break; }
+        }
+        store.set('frqLog', list);
+        return { regraded };
+    }
+
+    return { grade, regrade, countWords, log: () => store.get('frqLog', []), config: FRQ_GRADER_CONFIG };
+})();
+window.PortalFRQ = PortalFRQ;
+
 // Short lesson names, used when a lesson-game question appears on the Final Exam
 const topicOf = key => { const [m, s] = key.split('.'); return LESSONS[m].subs[s].title.replace(/^[\d.]+\s*/, ''); };
 
@@ -139,12 +352,13 @@ function makeItem(lessonKey, concept, question, correct, wrong) {
 const unitPool = key => UNIT_BANK[key].map(([concept, q, right, ...wrong]) => makeItem(key, concept, q, right, wrong));
 const gamePool = key => QUIZ[key].map(([q, right, ...wrong]) => makeItem(key, topicOf(key), q, right, wrong));
 
-// All 12 questions for the module, in random order
-const buildUnitTest = m => shuffle([1, 2, 3].flatMap(s => unitPool(`${m}.${s}`)));
+// All 12 questions for the module in random order, then 2 random written responses
+const buildUnitTest = m => [...shuffle([1, 2, 3].flatMap(s => unitPool(`${m}.${s}`))), ...pickFrqs(m, FRQ_PER_UNIT)];
 
-// A fresh random exam: every module gives 5 questions, drawn from all three of its lessons
+// A fresh random exam: every module gives 5 questions, drawn from all three of its lessons,
+// then written responses from 3 different random modules
 function buildFinalExam() {
-    return shuffle(MODULES.flatMap(mod => {
+    const mcq = shuffle(MODULES.flatMap(mod => {
         const lessons = shuffle([1, 2, 3]);
         return lessons.flatMap((s, i) => {
             const take = Math.floor(FINAL_PER_MODULE / 3) + (i < FINAL_PER_MODULE % 3 ? 1 : 0);
@@ -152,7 +366,13 @@ function buildFinalExam() {
             return shuffle([...unitPool(key), ...gamePool(key)]).slice(0, take);
         });
     }));
+    const frq = shuffle(MODULES.map(mod => mod.id)).slice(0, FRQ_ON_FINAL).flatMap(m => pickFrqs(m, 1));
+    return [...mcq, ...frq];
 }
+// Points available: 1 per multiple-choice question, FRQ_POINTS per written response
+const pointsFor = (mcq, frq) => mcq + frq * FRQ_POINTS;
+const UNIT_POINTS = m => pointsFor([1, 2, 3].reduce((n, s) => n + UNIT_BANK[`${m}.${s}`].length, 0), FRQ_PER_UNIT);
+const FINAL_POINTS = () => pointsFor(MODULES.length * FINAL_PER_MODULE, FRQ_ON_FINAL);
 
 // ============================================================================
 // B. PROGRESS RECORDS
@@ -177,18 +397,34 @@ function saveAttempt(record, correct, total) {
 // ============================================================================
 // C. SHARED ASSESSMENT FORM
 // ============================================================================
-function renderAssessment(root, items, { submitLabel, onGrade }) {
-    root.innerHTML = `
-        <form class="exam-form" novalidate>
-            <ol class="exam-list">${items.map((item, i) => `
+// items: multiple-choice questions, optionally followed by written responses (type 'frq').
+// onGrade receives { earned, total, mcqCorrect, mcqTotal, frqEarned, frqMax, missed, frq }.
+function renderAssessment(root, items, { submitLabel, onGrade, examId }) {
+    const mcqItem = (item, i) => `
                 <li class="exam-question" data-q="${i}">
                     <fieldset>
                         <legend><span class="exam-num">${i + 1}</span> ${esc(item.q)}</legend>
                         ${item.options.map((o, j) => `
                         <label class="exam-option"><input type="radio" name="q${i}" value="${j}"><span>${esc(o)}</span></label>`).join('')}
                     </fieldset>
-                </li>`).join('')}
+                </li>`;
+    const frqItem = (item, i) => `
+                <li class="exam-question exam-frq" data-q="${i}">
+                    <label class="frq-label" for="frq-${i}"><span class="exam-num">${i + 1}</span> <span>${esc(item.q)}</span> <span class="frq-points">${item.points} pts</span></label>
+                    <textarea id="frq-${i}" name="q${i}" rows="5" maxlength="1500" placeholder="Explain in your own words, in full sentences..." spellcheck="true"></textarea>
+                    <div class="frq-meta"><span data-wc="${i}">0 words</span> · at least ${FRQ_MIN_WORDS} words</div>
+                </li>`;
+    const firstFrq = items.findIndex(it => it.type === 'frq');
+    const mcqCount = firstFrq < 0 ? items.length : firstFrq;
+    root.innerHTML = `
+        <form class="exam-form" novalidate>
+            ${firstFrq >= 0 ? `<h3 class="exam-part">Part A · Multiple Choice <small>${mcqCount} questions · 1 point each</small></h3>` : ''}
+            <ol class="exam-list">${items.slice(0, mcqCount).map(mcqItem).join('')}
             </ol>
+            ${firstFrq >= 0 ? `<h3 class="exam-part">Part B · Written Response <small>${items.length - mcqCount} questions · ${FRQ_POINTS} points each</small></h3>
+            <p class="exam-part-note">Answer in your own words. Each response is scored against a rubric of ${FRQ_POINTS} key ideas, so explain your reasoning instead of listing keywords.</p>
+            <ol class="exam-list" start="${mcqCount + 1}">${items.slice(mcqCount).map((it, k) => frqItem(it, mcqCount + k)).join('')}
+            </ol>` : ''}
             <div class="exam-submit-bar">
                 <span class="exam-count" aria-live="polite">0 of ${items.length} answered</span>
                 <div class="meter"><div style="width:0%"></div></div>
@@ -197,33 +433,71 @@ function renderAssessment(root, items, { submitLabel, onGrade }) {
             </div>
         </form>`;
     const form = $('form', root);
-    const answers = () => items.map((_, i) => { const c = $(`input[name="q${i}"]:checked`, form); return c ? +c.value : null; });
+    const answers = () => items.map((item, i) => {
+        if (item.type === 'frq') { const v = $(`#frq-${i}`, form).value.trim(); return PortalFRQ.countWords(v) >= FRQ_MIN_WORDS ? v : null; }
+        const c = $(`input[name="q${i}"]:checked`, form); return c ? +c.value : null;
+    });
     const firstBlank = () => answers().indexOf(null);
-    form.addEventListener('change', () => {
-        const n = answers().filter(a => a !== null).length;
+    const refresh = () => {
+        const all = answers(), n = all.filter(a => a !== null).length;
         $('.exam-count', form).textContent = `${n} of ${items.length} answered`;
         $('.meter > div', form).style.width = (n / items.length) * 100 + '%';
-        $$('.exam-question', form).forEach((li, i) => { if (answers()[i] !== null) li.classList.remove('missing'); });
+        $$('.exam-question', form).forEach(li => { if (all[+li.dataset.q] !== null) li.classList.remove('missing'); });
         $('[data-jump]', form).hidden = n === 0 || n === items.length;
-    });
+        $$('[data-wc]', form).forEach(el => {
+            const w = PortalFRQ.countWords($(`#frq-${el.dataset.wc}`, form).value);
+            el.textContent = `${w} word${w === 1 ? '' : 's'}`;
+            el.classList.toggle('ok', w >= FRQ_MIN_WORDS);
+        });
+    };
+    form.addEventListener('change', refresh);
+    form.addEventListener('input', refresh);
     const jump = () => {
         const li = $(`.exam-question[data-q="${firstBlank()}"]`, form);
         if (!li) return;
         li.classList.add('missing');
         li.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        $('input', li).focus({ preventScroll: true });
+        $('input, textarea', li).focus({ preventScroll: true });
     };
     $('[data-jump]', form).addEventListener('click', jump);
     let graded = false;
-    form.addEventListener('submit', e => {
+    form.addEventListener('submit', async e => {
         e.preventDefault();
         if (graded) return;
         const picked = answers();
-        if (picked.includes(null)) { toast('Please answer every question before submitting.', 'warn'); jump(); return; }
+        if (picked.includes(null)) {
+            const blank = items[firstBlank()];
+            toast(blank.type === 'frq' ? `Each written response needs at least ${FRQ_MIN_WORDS} words.` : 'Please answer every question before submitting.', 'warn');
+            jump(); return;
+        }
         graded = true;
-        const missed = items.filter((item, i) => picked[i] !== item.correct);
-        onGrade(items.length - missed.length, items.length, missed);
+        const btn = $('button[type="submit"]', form);
+        btn.disabled = true; btn.textContent = 'Grading written responses...';
+        $$('textarea', form).forEach(t => { t.readOnly = true; });
+        const mcq = items.map((item, i) => [item, i]).filter(([item]) => item.type !== 'frq');
+        const missed = mcq.filter(([item, i]) => picked[i] !== item.correct).map(([item]) => item);
+        const frq = await Promise.all(items.map((item, i) => [item, i]).filter(([item]) => item.type === 'frq').map(([item, i]) => PortalFRQ.grade(item, picked[i], examId)));
+        if (!document.body.contains(form)) return;          // the student left the page while grading
+        const mcqCorrect = mcq.length - missed.length;
+        const frqEarned = frq.reduce((n, r) => n + r.score, 0), frqMax = frq.reduce((n, r) => n + r.max, 0);
+        onGrade({ earned: mcqCorrect + frqEarned, total: mcq.length + frqMax, mcqCorrect, mcqTotal: mcq.length, frqEarned, frqMax, missed, frq });
     });
+}
+
+// Feedback for each written response
+function frqHTML(results) {
+    if (!results.length) return '';
+    const provisional = results.some(r => r.gradedBy !== 'ai');
+    return `<h3>Written Responses</h3>
+        ${provisional ? '<p class="frq-note">Scored by the built-in rubric check. These answers are saved so the AI grader can review them once it is connected.</p>' : '<p class="frq-note">Scored by the AI grader.</p>'}
+        <ul class="frq-results">${results.map(r => `
+            <li>
+                <div class="frq-head"><strong>Lesson ${r.item.lesson}: ${esc(r.item.concept)}</strong><span class="frq-score ${r.score === r.max ? 'full' : r.score === 0 ? 'zero' : ''}">${r.score} / ${r.max}</span></div>
+                <p class="frq-q">${esc(r.item.q)}</p>
+                <blockquote class="frq-answer">${esc(r.answer)}</blockquote>
+                ${r.points.length ? `<ul class="frq-points-list">${r.points.map(p => `<li class="${p.met ? 'met' : 'miss'}">${p.met ? '✓' : '○'} ${esc(p.note)}</li>`).join('')}</ul>` : ''}
+                ${r.feedback ? `<p class="frq-feedback">${esc(r.feedback)}</p>` : ''}
+            </li>`).join('')}</ul>`;
 }
 
 // Missed concepts grouped by lesson. Correct answers are not shown, so a retake still tests understanding.
@@ -242,13 +516,13 @@ function missedHTML(missed) {
         </li>`).join('')}</ul>`;
 }
 
-function resultHTML({ percent, passed, correct, total }) {
+function resultHTML({ percent, passed, g }) {
     return `
         <div class="exam-result ${passed ? 'pass' : 'fail'}" role="status" tabindex="-1">
             <div class="score-ring" style="--score:${percent}"><span>${percent}%</span></div>
             <div>
                 <h2>${passed ? '✅ Passed!' : '📚 Not passed yet'}</h2>
-                <p>You answered <strong>${correct} of ${total}</strong> correctly. Passing requires ${PASS_PERCENT}% (${neededToPass(total)} of ${total}).</p>
+                <p>You earned <strong>${g.earned} of ${g.total} points</strong>: ${g.mcqCorrect}/${g.mcqTotal} multiple choice${g.frqMax ? ` and ${g.frqEarned}/${g.frqMax} on written responses` : ''}. Passing requires ${PASS_PERCENT}% (${neededToPass(g.total)} of ${g.total} points).</p>
             </div>
         </div>`;
 }
@@ -282,13 +556,13 @@ function celebrate(big) {
 // ============================================================================
 function unitIntroHTML(m) {
     const record = unitRecord(m);
-    const total = [1, 2, 3].reduce((n, s) => n + UNIT_BANK[`${m}.${s}`].length, 0);
+    const mcq = [1, 2, 3].reduce((n, s) => n + UNIT_BANK[`${m}.${s}`].length, 0), total = UNIT_POINTS(m);
     const open = unitTestOpen(m);
     return `
         <div class="exam-panel">
             <span class="game-tag">📝 Module ${m} Unit Test</span>
             <h2>Show What You Know</h2>
-            <p>${total} questions covering lessons ${m}.1, ${m}.2, and ${m}.3. Score <strong>${PASS_PERCENT}% or higher</strong> (${neededToPass(total)} of ${total}) to pass the module${m < 6 ? ` and unlock Module ${m + 1}` : ''}. You can retake it as many times as you need.</p>
+            <p>${mcq} multiple-choice questions plus ${FRQ_PER_UNIT} randomly chosen written responses, covering lessons ${m}.1, ${m}.2, and ${m}.3. Score <strong>${PASS_PERCENT}% or higher</strong> (${neededToPass(total)} of ${total} points) to pass the module${m < 6 ? ` and unlock Module ${m + 1}` : ''}. You can retake it as many times as you need.</p>
             <ul class="exam-checklist">${[1, 2, 3].map(s => `<li class="${lessonDone(m, s) ? 'done' : ''}">${lessonDone(m, s) ? '✅' : '⬜'} <a href="#module-${m}-${s}">Lesson ${m}.${s}: ${esc(topicOf(`${m}.${s}`))}</a></li>`).join('')}</ul>
             ${record.attempts ? `<p class="exam-best">Best score: <strong>${record.best}%</strong> · Attempts: ${record.attempts}${record.passed ? ' · <span class="pass-text">Passed ✓</span>' : ''}</p>` : ''}
             ${open
@@ -302,9 +576,11 @@ function startUnitTest(m) {
     if (!root || !unitTestOpen(m)) return;
     renderAssessment(root, buildUnitTest(m), {
         submitLabel: 'Submit Unit Test',
-        onGrade(correct, total, missed) {
+        examId: `unit-${m}`,
+        onGrade(g) {
+            const { missed } = g;
             const before = maxUnlocked();
-            const { next, percent, passed, firstPass } = saveAttempt(unitRecord(m), correct, total);
+            const { next, percent, passed, firstPass } = saveAttempt(unitRecord(m), g.earned, g.total);
             store.set('unitTests', { ...unitRecords(), [m]: next });
             const xp = firstPass ? UNIT_XP : 0;
             if (xp) Portal.addXP(xp);
@@ -314,12 +590,13 @@ function startUnitTest(m) {
             const finalReady = allUnitsPassed() && !activeCertificate();
             root.innerHTML = `
                 <div class="exam-panel">
-                    ${resultHTML({ percent, passed, correct, total })}
+                    ${resultHTML({ percent, passed, g })}
                     ${xp ? `<div class="summary-banner pass">🌟 +${xp} bonus XP for passing the Module ${m} Unit Test</div>` : ''}
                     ${unlocked ? `<div class="summary-banner pass">🔓 Module ${unlocked} unlocked!</div>` : ''}
                     ${rewards.length ? `<div class="summary-banner reward">🎁 New rewards: ${rewards.map(r => esc(r.name)).join(', ')}</div>` : ''}
                     ${passed ? '' : `<p class="exam-advice">Review the lessons below, then retake the test. ${next.passed ? 'Your earlier pass still counts.' : m < 6 ? `Module ${m + 1} stays locked until you reach ${PASS_PERCENT}%.` : `The Final Exam stays locked until you reach ${PASS_PERCENT}%.`}</p>`}
                     ${missedHTML(missed)}
+                    ${frqHTML(g.frq)}
                     <div class="exam-actions">
                         <button type="button" class="${passed ? 'btn-ghost' : 'btn-cyan-primary'}" data-start-unit="${m}">↻ Retake Unit Test</button>
                         ${passed && finalReady ? '<a class="btn-cyan-primary" href="#final-exam">🎓 Go to the Final Exam</a>'
@@ -343,13 +620,13 @@ const finalRecord = () => store.get('finalExam', { best: 0, passed: false, attem
 function renderFinalExam() {
     const root = $('#final-exam-root');
     if (!root) return;
-    const total = MODULES.length * FINAL_PER_MODULE;
+    const total = FINAL_POINTS();
     const cert = activeCertificate(), record = finalRecord(), user = Portal.getActiveUser(), ready = allUnitsPassed() || devMode();
     let action;
     if (cert) {
         action = `<div class="summary-banner pass">🏆 Course completed! You passed the Final Exam with ${cert.score}%.</div>
             <div class="exam-actions"><button type="button" class="btn-cyan-primary" data-view-cert>🎓 View Certificate</button>
-            <a class="btn-cyan-secondary" href="#profile">Equip Grandmaster Rewards</a>
+            <a class="btn-cyan-secondary" href="#profile" data-ptab-target="inventory">Equip Grandmaster Rewards</a>
             <button type="button" class="btn-ghost" data-start-final>Practice the exam again</button></div>`;
     } else if (!ready) {
         action = `<p class="exam-locked">🔒 Pass all six Module Unit Tests to unlock the Final Exam (${unitsPassedCount()} of 6 passed).</p>`;
@@ -363,7 +640,7 @@ function renderFinalExam() {
         <div class="exam-panel">
             <span class="game-tag">🎓 Course Final Exam</span>
             <h2>Earn Your Certificate</h2>
-            <p>${total} randomly drawn questions, ${FINAL_PER_MODULE} from each module. Score <strong>${PASS_PERCENT}% or higher</strong> (${neededToPass(total)} of ${total}) to complete the course, earn your Certificate of Completion, and permanently unlock the <strong>Grandmaster</strong> rewards.</p>
+            <p>${MODULES.length * FINAL_PER_MODULE} randomly drawn multiple-choice questions (${FINAL_PER_MODULE} from each module) plus ${FRQ_ON_FINAL} written responses from randomly chosen modules. Score <strong>${PASS_PERCENT}% or higher</strong> (${neededToPass(total)} of ${total} points) to complete the course, earn your Certificate of Completion, and permanently unlock the <strong>Grandmaster</strong> rewards.</p>
             <ul class="exam-checklist two-col">${MODULES.map(mod => `<li class="${unitPassed(mod.id) ? 'done' : ''}">${unitPassed(mod.id) ? '✅' : '🔒'} <a href="#module-${mod.id}-test">Module ${mod.id} Unit Test${unitRecord(mod.id).attempts ? ` (best ${unitRecord(mod.id).best}%)` : ''}</a></li>`).join('')}</ul>
             <div class="meter" role="progressbar" aria-label="Unit tests passed" aria-valuemin="0" aria-valuemax="6" aria-valuenow="${unitsPassedCount()}"><div style="width:${(unitsPassedCount() / 6) * 100}%"></div></div>
             ${record.attempts ? `<p class="exam-best">Best exam score: <strong>${record.best}%</strong> · Attempts: ${record.attempts}</p>` : ''}
@@ -378,10 +655,12 @@ function startFinalExam() {
     const takerId = user && user.id;
     renderAssessment(root, buildFinalExam(), {
         submitLabel: 'Submit Final Exam',
-        onGrade(correct, total, missed) {
+        examId: 'final',
+        onGrade(g) {
+            const { missed } = g;
             const taker = Portal.getActiveUser();
             if (taker?.id !== takerId) { toast('The active profile changed during the exam. Please start again.', 'warn'); renderFinalExam(); return; }
-            const { next, percent, passed } = saveAttempt(finalRecord(), correct, total);
+            const { next, percent, passed } = saveAttempt(finalRecord(), g.earned, g.total);
             store.set('finalExam', next);
             const alreadyCertified = !!activeCertificate();
             let rewards = [];
@@ -393,13 +672,15 @@ function startFinalExam() {
             const newCert = passed && !alreadyCertified && !!activeCertificate();
             root.innerHTML = `
                 <div class="exam-panel">
-                    ${resultHTML({ percent, passed, correct, total })}
+                    ${resultHTML({ percent, passed, g })}
                     ${newCert ? `<div class="summary-banner pass">🏆 Course complete! +${FINAL_XP} bonus XP</div>
-                        <div class="summary-banner reward">👑 Ultimate rewards unlocked: ${rewards.map(r => esc(r.name)).join(', ')}</div>` : ''}
+                        <div class="summary-banner reward">👑 Ultimate rewards unlocked: ${rewards.map(r => esc(r.name)).join(', ')}</div>
+                        <div class="summary-banner pass">🕹️ The Arcade is now open! Replay any game you have finished from the <a href="#arcade">Arcade page</a>.</div>` : ''}
                     ${passed ? '' : `<p class="exam-advice">Review the concepts below, then retake the exam. Each attempt draws a new set of questions.</p>`}
                     ${missedHTML(missed)}
+                    ${frqHTML(g.frq)}
                     <div class="exam-actions">
-                        ${passed ? '<button type="button" class="btn-cyan-primary" data-view-cert>🎓 View Certificate</button><a class="btn-cyan-secondary" href="#profile">Equip Grandmaster Rewards</a>' : '<button type="button" class="btn-cyan-primary" data-start-final>↻ Retake Final Exam</button>'}
+                        ${passed ? '<button type="button" class="btn-cyan-primary" data-view-cert>🎓 View Certificate</button><a class="btn-cyan-secondary" href="#profile" data-ptab-target="inventory">Equip Grandmaster Rewards</a>' : '<button type="button" class="btn-cyan-primary" data-start-final>↻ Retake Final Exam</button>'}
                         <a class="btn-ghost" href="#modules">All Modules</a>
                     </div>
                 </div>`;

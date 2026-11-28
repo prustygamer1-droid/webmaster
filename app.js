@@ -633,9 +633,10 @@ const BADGES = [
 
     { id: 'tower_guardian', cat: 'arcade', icon: '🛡️', name: 'Tower Guardian', desc: 'Finish Cyber Shield Defense (Lesson 2.1 or 4.2)', unit: 'games', target: 1, current: playedGame('defense') },
     { id: 'neon_racer', cat: 'arcade', icon: '🛹', name: 'Neon Racer', desc: 'Finish Neon Hover Runner (Lesson 1.1)', unit: 'games', target: 1, current: playedGame('runner') },
-    { id: 'vault_cracker', cat: 'arcade', icon: '🔐', name: 'Vault Cracker', desc: 'Finish Vault Code Breaker (Lesson 1.3)', unit: 'games', target: 1, current: playedGame('vault') },
+    // id kept from the old Vault game so badges already earned still count
+    { id: 'vault_cracker', cat: 'arcade', icon: '⛰️', name: 'Summit Seeker', desc: 'Finish Sky Climb (Lesson 1.3 or 4.1)', unit: 'games', target: 1, current: () => playedGame('climb')() || playedGame('vault')() },
     { id: 'data_diver', cat: 'arcade', icon: '📦', name: 'Data Diver', desc: 'Finish Data Packet Catcher (Lesson 3.1)', unit: 'games', target: 1, current: playedGame('catcher') },
-    { id: 'boss_slayer', cat: 'arcade', icon: '⚔️', name: 'Boss Slayer', desc: 'Defeat the Glitch Overlord (Lesson 2.2)', unit: 'bosses', target: 1, current: () => store.get('bossDefeated', false) ? 1 : 0 },
+    { id: 'boss_slayer', cat: 'arcade', icon: '⚔️', name: 'Boss Slayer', desc: 'Defeat True God Scrappy (Lesson 2.2, 5.1 or 6.3)', unit: 'bosses', target: 1, current: () => store.get('bossDefeated', false) ? 1 : 0 },
     { id: 'arcade_legend', cat: 'arcade', icon: '👑', name: 'Arcade Legend', desc: 'Finish all 8 different minigames', unit: 'games', target: 8, current: gamesPlayedCount },
 
     { id: 'hot_streak', cat: 'combo', icon: '🔥', name: 'Hot Streak', desc: 'Answer 3 quiz questions correctly in a row', unit: 'in a row', target: 3, current: () => store.get('bestStreak', 0) },
@@ -691,9 +692,9 @@ const REWARDS = [
     { id: 'border_singularity', type: 'border', badge: 'quiz_grandmaster', icon: '⭕', name: 'Singularity', colors: ['#ffffff', '#6366f1'], anim: 'spin' },
     { id: 'chat_warden', type: 'chat', badge: 'tower_guardian', icon: '🛡️', name: 'Firewall Warden' },
     { id: 'bg_reward_synthwave', type: 'bg', badge: 'neon_racer', icon: '🌌', name: 'Synthwave Sunset', bg: 'bg_synthwave' },
-    { id: 'title_vault', type: 'title', badge: 'vault_cracker', icon: '🏷️', name: 'Master Decryptor' },
+    { id: 'title_vault', type: 'title', badge: 'vault_cracker', icon: '🏷️', name: 'Sky Climber' },
     { id: 'chat_wrangler', type: 'chat', badge: 'data_diver', icon: '📦', name: 'Data Wrangler' },
-    { id: 'title_slayer', type: 'title', badge: 'boss_slayer', icon: '🏷️', name: 'Glitch Slayer' },
+    { id: 'title_slayer', type: 'title', badge: 'boss_slayer', icon: '🏷️', name: 'Godslayer' },
     { id: 'border_flame', type: 'border', badge: 'boss_slayer', icon: '⭕', name: 'Overlord Flame', colors: ['#fb923c', '#ef4444'], anim: 'flicker' },
     { id: 'bg_reward_plasma', type: 'bg', badge: 'arcade_legend', icon: '🌌', name: 'Plasma Core', bg: 'bg_plasma' },
     { id: 'border_spectrum', type: 'border', badge: 'arcade_legend', icon: '⭕', name: 'Hyperspectrum', colors: ['#00f2fe', '#f472b6'], anim: 'rainbow' },
@@ -788,7 +789,7 @@ function renderDashboardRewards() {
                 <span class="meter-label">${p.current} / ${p.target} ${esc(b.unit)}</span>
             </div>`).join('')
         : '<p class="empty-note">🏆 Every profile reward is unlocked. Legendary work!</p>';
-    $('#dash-view-rewards').textContent = Portal.getActiveUser() ? 'Equip Rewards on Profile' : 'Create a Profile to Equip Rewards';
+    $('#dash-view-rewards').textContent = Portal.getActiveUser() ? 'Open My Inventory' : 'Create a Profile to Equip Rewards';
 }
 
 function renderCertification() {
@@ -826,7 +827,7 @@ function updateDashboardStats() {
 }
 
 // ---- Router (hash based, so the back button and deep links work)
-const VIEWS = { home: 'home-page-view', modules: 'modules-grid-view', lesson: 'modules-page-view', dashboard: 'dashboard-page-view', chatbot: 'chatbot-page-view', profile: 'profile-page', final: 'final-exam-view' };
+const VIEWS = { home: 'home-page-view', modules: 'modules-grid-view', lesson: 'modules-page-view', dashboard: 'dashboard-page-view', chatbot: 'chatbot-page-view', profile: 'profile-page', final: 'final-exam-view', arcade: 'arcade-view' };
 const ALIASES = { 'final-exam': 'final', 'modules-grid': 'modules', 'profile-page': 'profile', 'profile-page-view': 'profile', 'references-page-view': 'references' };
 
 function showView(id) {
@@ -838,6 +839,7 @@ function showView(id) {
     if (id === 'modules') renderModulesGrid();
     if (id === 'dashboard') updateDashboardStats();
     if (id === 'final') renderFinalExam();
+    if (id === 'arcade') renderArcade();
     window.scrollTo({ top: 0, behavior: 'auto' });
     updateReadProgress();
     if (PortalTheme.visit(id === 'lesson' ? 'modules' : id)) checkRewards();
@@ -1194,7 +1196,7 @@ function makeModal() {
     label();
     mute.onclick = () => { FX.toggleMute(); label(); mute.blur(); };
     $('.quiz-exit', modal).onclick = () => {
-        if (confirm('Exit this challenge? Your progress in it will be lost.')) closeModal(modal);
+        if (confirm('Exit this challenge? Your progress in it will be lost.')) { arcadeRun = null; closeModal(modal); }
     };
     return { modal, stage: $('.quiz-stage', modal) };
 }
@@ -1223,7 +1225,81 @@ function showInstructionsModal(title, rulesHTML, onStart) {
     $('#btn-start-mission', stage).focus();
 }
 
+// Set while a game was launched from the Arcade page (replays never change lesson progress or XP)
+let arcadeRun = null;
+
+// ---- ARCADE: unlimited replays of finished games once the Final Exam is passed
+const arcadeOpen = () => !!activeCertificate() || devMode();
+const lessonsFor = key => Object.keys(GAME_ROTATION).filter(l => GAME_ROTATION[l] === key);
+const gameBlurb = key => (GAMES[key].rules.match(/<strong>Objective:<\/strong>\s*([^<]*)/) || [])[1] || '';
+
+function renderArcade() {
+    const root = $('#arcade-root');
+    if (!root) return;
+    const played = store.get('gamesPlayed', {}), me = Portal.getActiveUser();
+    const best = key => !me ? '—' : key === 'boss' ? (Portal.bossTime(me) ? Portal.fmtTime(Portal.bossTime(me)) : 'Not defeated') : `${Number(me.scores[key]) || 0} pts`;
+    const open = arcadeOpen();
+    const cards = GAME_KEYS.map(k => {
+        const ready = open && (played[k] || devMode());
+        const where = lessonsFor(k).map(l => `Lesson ${l}`).join(' or ');
+        return `
+            <div class="arcade-card${ready ? '' : ' locked'}">
+                <span class="arcade-ico" aria-hidden="true">${GAMES[k].icon}</span>
+                <h3>${esc(GAMES[k].name)}</h3>
+                <p>${esc(gameBlurb(k))}</p>
+                <div class="arcade-best"><span>${k === 'boss' ? 'Fastest defeat' : 'High score'}</span><strong>${esc(best(k))}</strong></div>
+                ${ready ? `<button type="button" class="btn-cyan-primary" data-arcade-play="${k}">▶ Play</button>`
+                    : `<p class="arcade-lock">🔒 ${open ? `Finish it once in ${where}` : 'Pass the Final Exam'}</p>`}
+            </div>`;
+    }).join('');
+    root.innerHTML = (open ? '' : `
+        <div class="final-banner">
+            <div><h3>🔒 The Arcade opens after the Final Exam</h3><p>Pass all six Unit Tests and the Final Exam (${unitsPassedCount()} of 6 Unit Tests passed). Then replay any game you have finished, as often as you like.</p></div>
+            <a class="btn-cyan-secondary" href="#final-exam">See Final Exam</a>
+        </div>`) + `
+        <p class="arcade-note">🕹️ Arcade runs use questions from every module. High scores and boss times count on the leaderboards; XP still comes from lessons.</p>
+        <div class="arcade-grid">${cards}</div>`;
+}
+
+function launchArcadeGame(key) {
+    if (!arcadeOpen() || !(store.get('gamesPlayed', {})[key] || devMode())) { toast('That game is still locked.', 'warn'); return; }
+    // Each run draws its questions from a random lesson, so every module comes up
+    const [m, s] = LESSON_ORDER[Math.floor(Math.random() * LESSON_ORDER.length)];
+    arcadeRun = { game: key };
+    const def = GAMES[key];
+    showInstructionsModal(def.name, `${def.rules}<p><strong>Arcade run:</strong> questions come from Lesson ${m}.${s}. Streaks still multiply your score up to x3.</p>`, () => def.run(m, s));
+}
+
+// Results screen for an Arcade replay
+function finishArcadeRun({ modal, stage, gameKey, title, quizScore, total, arcadeLabel, arcadeScore, bestStreak, retry, theme }) {
+    const saved = Portal.award(gameKey, arcadeScore, 0);
+    checkRewards();
+    const me = Portal.getActiveUser();
+    const rows = Portal.topFor(gameKey, 5)
+        .map(({ u: c, text }, i) => `<div class="lb-mini-row${me && c.id === me.id ? ' me' : ''}"><span>#${i + 1} <strong>${esc(c.username)}</strong>${me && c.id === me.id ? ' (You)' : ''}</span><b>${esc(text)}</b></div>`).join('');
+    stage.innerHTML = `
+        <div class="quiz-game-card ${theme}" style="max-width:480px;">
+            <h1 class="summary-title">${title} · Arcade Run</h1>
+            <div class="summary-banner pass">🕹️ Arcade run complete! Your best score is saved to the leaderboard.</div>
+            <div class="summary-rows">
+                <div><span>Quiz Score</span><strong>${quizScore} / ${total}</strong></div>
+                <div><span>${esc(arcadeLabel)}</span><strong>${arcadeScore} pts</strong></div>
+                <div><span>Best Answer Streak</span><strong>🔥 ${bestStreak} in a row</strong></div>
+            </div>
+            ${devMode() ? '<p class="canvas-instructions" style="margin:0 0 6px;">🛠 Developer Mode: this run was not saved.</p>' : saved ? '' : '<p class="canvas-instructions" style="margin:0 0 6px;">Create a profile to join the leaderboard.</p>'}
+            <div class="lb-mini"><h4>🏆 Top Players</h4>${rows || '<p class="empty-note">No scores yet.</p>'}</div>
+            <div class="btn-row">
+                <button type="button" class="btn-continue-shop secondary" id="g-retry">↻ Play Again</button>
+                <button type="button" class="btn-continue-shop" id="g-done">Back to Arcade</button>
+            </div>
+        </div>`;
+    $('#g-retry', stage).onclick = () => { closeModal(modal); retry(); };
+    $('#g-done', stage).onclick = () => { arcadeRun = null; closeModal(modal); showPage('arcade'); renderArcade(); };
+    FX.play('win');
+}
+
 window.startArcadeQuiz = function (modId, subId) {
+    arcadeRun = null;
     const def = GAMES[gameFor(modId, subId)];
     showInstructionsModal(def.name, `${def.rules}
         <p><strong>Streaks:</strong> Back-to-back right answers multiply your score up to x3.
@@ -1287,12 +1363,15 @@ function askQuestion({ stage, q, index, total, badge, theme = '', combo, onResul
 
 // ---- Shared results screen: marks lesson complete, awards XP, shows leaderboard
 function finishGame(o) {
-    const { modal, stage, modId, subId, gameKey, title, quizScore, total, arcadeLabel, arcadeScore, bestStreak = 0, retry, theme = '' } = o;
+    const { modal, stage, modId, subId, gameKey, title, quizScore, total, arcadeLabel, arcadeScore, bestStreak = 0, retry, theme = '', xpMult = 1 } = o;
+    const arcade = !!arcadeRun;
     const passed = quizScore >= 4;
-    const result = passed ? completeLesson(modId, subId) : { first: false, unlocked: null };
-    const xp = quizScore * 20 + (result.first ? 50 : 0);
+    // Arcade replays keep high scores but never change lesson progress or give XP
+    const result = passed && !arcade ? completeLesson(modId, subId) : { first: false, unlocked: null };
+    const xp = arcade ? 0 : (quizScore * 20 + (result.first ? 50 : 0)) * xpMult;     // xpMult: the Double XP shop upgrade
     // Record all progress first, so the profile re-render in award() sees the new badges
     markPlayed(gameKey);
+    if (arcade) return finishArcadeRun({ modal, stage, gameKey, title, quizScore, total, arcadeLabel, arcadeScore, bestStreak, retry, theme });
     if (quizScore === total) {
         const perfect = store.get('perfectQuizzes', {});
         perfect[`${modId}.${subId}`] = true;
@@ -1302,10 +1381,9 @@ function finishGame(o) {
     const newRewards = checkRewards();
 
     const me = Portal.getActiveUser();
-    const rows = [...Portal.getDirectory()]
-        .sort((a, b) => ((b.scores && b.scores[gameKey]) || 0) - ((a.scores && a.scores[gameKey]) || 0))
-        .slice(0, 5)
-        .map((c, i) => `<div class="lb-mini-row${me && c.id === me.id ? ' me' : ''}"><span>#${i + 1} <strong>${esc(c.username)}</strong>${me && c.id === me.id ? ' (You)' : ''}</span><b>${(c.scores && c.scores[gameKey]) || 0} pts</b></div>`).join('');
+    // Same ranking as the main leaderboard (the boss board ranks by fastest defeat time)
+    const rows = Portal.topFor(gameKey, 5)
+        .map(({ u: c, text }, i) => `<div class="lb-mini-row${me && c.id === me.id ? ' me' : ''}"><span>#${i + 1} <strong>${esc(c.username)}</strong>${me && c.id === me.id ? ' (You)' : ''}</span><b>${esc(text)}</b></div>`).join('');
 
     const testReady = passed && moduleLessonsComplete(modId) && !unitPassed(modId);
     const nextIdx = LESSON_ORDER.findIndex(([m, s]) => m === modId && s === subId) + 1;
@@ -1349,18 +1427,174 @@ function finishGame(o) {
 
 // ----------------------------------------------------------------------------
 // MINIGAME 1: ROCKET SPACE SHOOTER
+// Mini Scrappy flies the rocket. Rocks come in four kinds with different durability.
+// Flow: question -> Rocket Armory (spend credits) -> 30-second wave -> next question.
 // ----------------------------------------------------------------------------
+const ROCK_TYPES = {
+    rock: { hp: 1, pts: 20, size: [30, 42], speed: 1, fill: ['#94a3b8', '#475569'], edge: '#64748b' },
+    boulder: { hp: 3, pts: 60, size: [44, 56], speed: 0.85, fill: ['#d97706', '#78350f'], edge: '#92400e' },
+    iron: { hp: 6, pts: 120, size: [50, 62], speed: 0.65, fill: ['#e2e8f0', '#334155'], edge: '#94a3b8' },
+    crystal: { hp: 2, pts: 40, size: [34, 40], speed: 1.1, fill: ['#c4b5fd', '#6d28d9'], edge: '#a78bfa' }
+};
+const ROCKET_UPGRADES = [
+    { k: 'power', icon: '🔥', name: 'Laser Power', desc: '+1 damage per level (cracks tough rocks faster)', costs: [90, 200] },
+    { k: 'rapid', icon: '⚡', name: 'Rapid Fire', desc: 'Shoot faster each level', costs: [80, 180] },
+    { k: 'spread', icon: '🔫', name: 'Spread Cannons', desc: 'Lv 1: double laser · Lv 2: triple spread', costs: [75, 160] },
+    { k: 'speed', icon: '🚀', name: 'Thrusters', desc: 'Fly faster each level', costs: [50, 120] },
+    { k: 'missile', icon: '🎯', name: 'Homing Missiles', desc: 'Auto-launches seeking missiles (faster at Lv 2)', costs: [160, 260] },
+    { k: 'deflector', icon: '🛡️', name: 'Deflector Shield', desc: 'Blocks 1 crash per wave, per level', costs: [90, 180] },
+    { k: 'plating', icon: '🔩', name: 'Hull Plating', desc: 'Crashes do 40% less damage', costs: [80] },
+    { k: 'magnet', icon: '🧲', name: 'Gem Magnet', desc: 'Pulls crystal gems (+15 credits each) to your ship', costs: [70] },
+    { k: 'xp', icon: '🎓', name: 'Double XP', desc: 'Doubles the XP you earn from this lesson', costs: [200] },
+    { k: 'mult', icon: '🌟', name: '2x Score', desc: 'Doubles every point you score', costs: [125] }
+];
+
+// The rocket with a glass cockpit and mini Scrappy at the controls
+function drawScrappyRocket(ctx, cx, cy, now, { mood = 'happy', tilt = 0, shield = 0, thrust = 1 }) {
+    ctx.save();
+    ctx.translate(cx, cy); ctx.rotate(tilt);
+    // Engine flames
+    const flame = (12 + Math.sin(now * 0.04) * 5) * thrust;
+    ctx.save(); ctx.shadowColor = '#fb923c'; ctx.shadowBlur = 14;
+    ctx.fillStyle = '#f97316'; ctx.beginPath(); ctx.moveTo(-7, 20); ctx.lineTo(0, 22 + flame); ctx.lineTo(7, 20); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#fde68a'; ctx.beginPath(); ctx.moveTo(-3.5, 20); ctx.lineTo(0, 20 + flame * 0.6); ctx.lineTo(3.5, 20); ctx.closePath(); ctx.fill();
+    ctx.restore();
+    // Fins
+    ctx.fillStyle = '#2563eb'; ctx.strokeStyle = '#0b1020'; ctx.lineWidth = 1.5;
+    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(s * 11, 4); ctx.lineTo(s * 24, 20); ctx.lineTo(s * 22, 24); ctx.lineTo(s * 8, 18); ctx.closePath(); ctx.fill(); ctx.stroke(); });
+    // Fuselage
+    const body = ctx.createLinearGradient(-14, 0, 14, 0);
+    body.addColorStop(0, '#cbd5e1'); body.addColorStop(0.45, '#ffffff'); body.addColorStop(1, '#94a3b8');
+    ctx.fillStyle = body;
+    ctx.beginPath(); ctx.moveTo(0, -30); ctx.quadraticCurveTo(16, -14, 13, 12); ctx.lineTo(9, 20); ctx.lineTo(-9, 20); ctx.lineTo(-13, 12); ctx.quadraticCurveTo(-16, -14, 0, -30); ctx.closePath(); ctx.fill(); ctx.stroke();
+    // Nose cone and stripe
+    ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(0, -30); ctx.quadraticCurveTo(7, -24, 8.5, -20); ctx.lineTo(-8.5, -20); ctx.quadraticCurveTo(-7, -24, 0, -30); ctx.fill();
+    ctx.fillStyle = '#2563eb'; ctx.fillRect(-12, 9, 24, 3);
+    ctx.fillStyle = '#334155'; ctx.fillRect(-7, 18, 14, 4);
+    // Glass cockpit with mini Scrappy inside
+    ctx.save();
+    ctx.beginPath(); ctx.arc(0, -5, 10.5, 0, Math.PI * 2); ctx.clip();
+    const glass = ctx.createRadialGradient(-3, -9, 1, 0, -5, 11);
+    glass.addColorStop(0, '#bae6fd'); glass.addColorStop(1, '#0c4a6e');
+    ctx.fillStyle = glass; ctx.fillRect(-12, -17, 24, 24);
+    ctx.translate(0, -3); ctx.scale(0.5, 0.5);
+    drawScrappyHead(ctx, 0, 0, mood);
+    ctx.restore();
+    ctx.strokeStyle = '#0b1020'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, -5, 10.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.45)'; ctx.beginPath(); ctx.ellipse(-4, -10, 3.5, 2, -0.6, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    // Deflector bubble
+    if (shield > 0) {
+        ctx.save(); ctx.globalAlpha = 0.45 + 0.15 * Math.sin(now / 200);
+        ctx.strokeStyle = '#60a5fa'; ctx.shadowColor = '#60a5fa'; ctx.shadowBlur = 14; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(cx, cy - 3, 32, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+    }
+}
+
+// A rock: a lumpy shape per type, with cracks that grow as it takes damage and a health bar
+function drawRock(ctx, a, now) {
+    const T = ROCK_TYPES[a.type], r = a.size / 2;
+    ctx.save();
+    ctx.translate(a.x + r, a.y + r);
+    if (a.type === 'crystal') { ctx.shadowColor = '#a78bfa'; ctx.shadowBlur = 16; }
+    ctx.rotate(a.rot);
+    const g = ctx.createRadialGradient(-r * 0.35, -r * 0.35, 2, 0, 0, r * 1.1);
+    g.addColorStop(0, T.fill[0]); g.addColorStop(1, T.fill[1]);
+    ctx.fillStyle = g; ctx.strokeStyle = T.edge; ctx.lineWidth = 2;
+    ctx.beginPath();
+    a.shape.forEach((k, p) => { const ang = (p / a.shape.length) * Math.PI * 2; p === 0 ? ctx.moveTo(Math.cos(ang) * r * k, Math.sin(ang) * r * k) : ctx.lineTo(Math.cos(ang) * r * k, Math.sin(ang) * r * k); });
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.shadowBlur = 0;
+    if (a.type === 'crystal') {
+        ctx.strokeStyle = 'rgba(237,233,254,.7)'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(-r * 0.5, -r * 0.2); ctx.lineTo(0, -r * 0.6); ctx.lineTo(r * 0.45, -r * 0.1); ctx.lineTo(0, r * 0.5); ctx.closePath(); ctx.stroke();
+    } else if (a.type === 'iron') {
+        // Metal bands and rivets
+        ctx.strokeStyle = 'rgba(15,23,42,.55)'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(-r * 0.85, -r * 0.2); ctx.lineTo(r * 0.85, -r * 0.2); ctx.moveTo(-r * 0.75, r * 0.35); ctx.lineTo(r * 0.75, r * 0.35); ctx.stroke();
+        ctx.fillStyle = '#f1f5f9'; [-0.5, 0, 0.5].forEach(k => { ctx.beginPath(); ctx.arc(k * r, -r * 0.2, 2, 0, Math.PI * 2); ctx.arc(k * r, r * 0.35, 2, 0, Math.PI * 2); ctx.fill(); });
+    } else {
+        // Craters
+        ctx.fillStyle = 'rgba(15,23,42,.3)';
+        [[-0.3, -0.2, 0.22], [0.3, 0.25, 0.16], [0.15, -0.4, 0.1]].forEach(([dx, dy, k]) => { ctx.beginPath(); ctx.arc(dx * r, dy * r, k * r, 0, Math.PI * 2); ctx.fill(); });
+    }
+    // Cracks: one more line for each point of damage
+    const dmg = a.max - a.hp;
+    if (dmg > 0) {
+        ctx.strokeStyle = a.type === 'crystal' ? '#faf5ff' : 'rgba(2,6,23,.75)'; ctx.lineWidth = 1.8;
+        for (let i = 0; i < Math.min(dmg, 5); i++) {
+            const ang = a.crack[i];
+            ctx.beginPath(); ctx.moveTo(0, 0);
+            ctx.lineTo(Math.cos(ang) * r * 0.45, Math.sin(ang) * r * 0.45 + 3);
+            ctx.lineTo(Math.cos(ang + 0.3) * r * 0.85, Math.sin(ang + 0.3) * r * 0.85);
+            ctx.stroke();
+        }
+    }
+    ctx.restore();
+    if (now - a.hitAt < 90) { ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(a.x + r, a.y + r, r * 0.85, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+    // Health bar for tough rocks once they are damaged
+    if (a.max > 1 && a.hp < a.max) {
+        const w = a.size * 0.8;
+        ctx.fillStyle = 'rgba(2,6,23,.7)'; ctx.fillRect(a.x + r - w / 2, a.y - 8, w, 4);
+        ctx.fillStyle = a.hp / a.max > 0.5 ? '#4ade80' : a.hp / a.max > 0.25 ? '#fbbf24' : '#f87171';
+        ctx.fillRect(a.x + r - w / 2, a.y - 8, w * a.hp / a.max, 4);
+    }
+}
+
 function runRocketGame(modId, subId) {
     const { modal, stage } = makeModal();
     const questions = prepareQuiz(modId, subId);
-    const S = { q: 0, credits: 0, quiz: 0, score: 0, speed: false, dbl: false, rapid: false, triple: false, mult: 1, combo: createCombo() };
+    const S = { q: 0, credits: 0, quiz: 0, score: 0, novas: 0, xpMult: 1, report: null, combo: createCombo(), lv: Object.fromEntries(ROCKET_UPGRADES.map(u => [u.k, 0])) };
+    FX.preload(['armorHit', 'crash', 'shopBuy', 'orb', 'emp', 'shieldBlock']);
 
     function ask() {
         if (S.q >= questions.length) return finish();
         askQuestion({
             stage, q: questions[S.q], index: S.q, total: questions.length, badge: `Credits: ${S.credits} 💰`, combo: S.combo,
-            onResult: ok => { if (ok) { S.credits += 100 + (S.combo.streak - 1) * 25; S.quiz++; } wave(); }
+            onResult: ok => {
+                const gain = ok ? 100 + (S.combo.streak - 1) * 25 : 0;
+                if (ok) S.quiz++;
+                S.credits += gain;
+                shop(gain);
+            }
         });
+    }
+
+    function shop(gain) {
+        const maxed = u => S.lv[u.k] >= u.costs.length;
+        const upBtn = u => {
+            const lvl = S.lv[u.k], max = u.costs.length;
+            return `<button type="button" class="shop-btn" data-up="${u.k}" ${maxed(u) ? 'disabled' : ''}>
+                ${u.icon} ${u.name}${max > 1 ? ` <em>Lv ${lvl}/${max}</em>` : ''} ${maxed(u) ? '✅' : `(${u.costs[lvl]} 💰)`}<small>${u.desc}</small></button>`;
+        };
+        stage.innerHTML = `
+            <div class="quiz-game-card">
+                <h2 class="shop-title">🛠️ Rocket Armory</h2>
+                ${gain ? `<p class="round-intro">✅ Correct! +${gain} credits${S.combo.streak > 1 ? ` (🔥 ${S.combo.streak} streak bonus)` : ''}</p>` : '<p class="round-intro">❌ No credits this time. Right answers (and crystal gems) earn credits.</p>'}
+                ${S.report ? `<p class="canvas-instructions">Last wave: ${S.report}</p>` : ''}
+                <p class="shop-credits">Your Credits: <strong class="credit-highlight">${S.credits} 💰</strong></p>
+                <div class="armory-grid">${ROCKET_UPGRADES.map(upBtn).join('')}
+                    <button type="button" class="shop-btn" data-nova ${S.novas >= 2 ? 'disabled' : ''}>💥 Nova Bomb <em>${S.novas}/2</em> (80 💰)<small>Press B to blast every rock on screen</small></button>
+                </div>
+                <button type="button" class="btn-continue-shop" id="skip-shop">Launch Wave ${S.q + 1} →</button>
+            </div>`;
+        const spend = cost => {
+            if (S.credits < cost) { toast(`Not enough credits. You need ${cost} 💰.`, 'warn'); return false; }
+            S.credits -= cost; FX.sample('shopBuy');
+            return true;
+        };
+        $$('[data-up]', stage).forEach(b => b.onclick = () => {
+            const u = ROCKET_UPGRADES.find(x => x.k === b.dataset.up);
+            if (maxed(u) || !spend(u.costs[S.lv[u.k]])) return;
+            S.lv[u.k]++;
+            if (u.k === 'xp') S.xpMult = 2;
+            toast(`${u.name} installed!`, 'success');
+            shop(gain);
+        });
+        $('[data-nova]', stage).onclick = () => { if (S.novas < 2 && spend(80)) { S.novas++; shop(gain); } };
+        const go = $('#skip-shop', stage);
+        go.onclick = wave;
+        setTimeout(() => { if (document.body.contains(go)) go.focus({ preventScroll: true }); }, 400);
     }
 
     function wave() {
@@ -1374,18 +1608,24 @@ function runRocketGame(modId, subId) {
                     <span id="g-score" class="quiz-credits">Score: ${S.score}</span>
                 </div>
                 <canvas id="spaceCanvas" width="640" height="360"></canvas>
-                <p class="canvas-instructions">Arrows / A-D to move · Up / W / Space to shoot · On touch, drag to steer (auto-fire)</p>
+                <div class="game-buttons"><button type="button" class="game-btn" id="g-nova">💥 Nova Bomb (B)</button></div>
+                <p class="canvas-instructions">Arrows / A-D to move · Up / W / Space to shoot · B: Nova Bomb · On touch, drag to steer (auto-fire)</p>
             </div>`;
         const canvas = $('#spaceCanvas', stage), ctx = canvas.getContext('2d');
         const card = $('.quiz-game-card', stage), juice = canvasJuice(), chain = createChain(2500);
+        const L = S.lv;
         const freeTriple = S.combo.streak >= 3;          // streak power-up for this wave
         if (freeTriple) { juice.text(canvas.width / 2, 120, 'STREAK BONUS: TRIPLE BULLETS', '#fbbf24'); FX.play('power'); }
-        const player = { x: canvas.width / 2 - 18, y: canvas.height - 45, w: 36, h: 36, speed: S.speed ? 9 : 5.5 };
-        let bullets = [], asteroids = [], particles = [], keys = {}, lastShoot = 0, timeLeft = 30, shield = 100, animId, ended = false, pointerDown = false;
-        const stars = Array.from({ length: 45 }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2 + 1, speed: Math.random() * 1.8 + 0.5 }));
+        const player = { x: canvas.width / 2 - 20, y: canvas.height - 56, w: 40, h: 44, speed: [5.5, 7.5, 9.5][L.speed] };
+        const dmg = 1 + L.power, fireGap = [320, 220, 150][L.rapid], spread = freeTriple ? 2 : L.spread;
+        const crashDmg = L.plating ? 12 : 20, missileGap = [0, 2400, 1500][L.missile];
+        let bullets = [], missiles = [], asteroids = [], gems = [], keys = {}, lastShoot = 0, lastMissile = 0, timeLeft = 30, shield = 100, animId, ended = false, pointerDown = false;
+        let deflect = L.deflector, last = 0, hurtUntil = 0, tilt = 0, nova = 0, smashed = 0, toughSmashed = 0, gemCount = 0;
+        const stars = makeStars(70, canvas.width, canvas.height);
 
         const onDown = e => {
             if (['ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown', 'Space'].includes(e.code)) e.preventDefault();
+            if (e.code === 'KeyB' && !e.repeat) novaBomb();
             keys[e.code] = true;
         };
         const onUp = e => { keys[e.code] = false; };
@@ -1399,6 +1639,7 @@ function runRocketGame(modId, subId) {
         canvas.addEventListener('pointermove', e => { if (pointerDown) steer(e); });
         const pointerUp = () => { pointerDown = false; };
         window.addEventListener('pointerup', pointerUp);
+        $('#g-nova', stage).onclick = e => { novaBomb(); e.currentTarget.blur(); };
 
         const timer = setInterval(() => {
             timeLeft--;
@@ -1418,492 +1659,192 @@ function runRocketGame(modId, subId) {
             if (ended) return;
             cleanup();
             if (msg) toast(msg, 'warn');
-            shop();
-        }
-        function explode(x, y, color) {
-            for (let i = 0; i < 18; i++) {
-                const a = Math.random() * Math.PI * 2, sp = 1.5 + Math.random() * 4.5;
-                particles.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, alpha: 1, decay: 0.02 + Math.random() * 0.025, color, size: 2 + Math.random() * 3.5 });
-            }
+            S.report = `${smashed} rocks smashed (${toughSmashed} tough) · ${gemCount} gems · shield ${shield}%`;
+            S.q++;
+            ask();
         }
         const hud = () => {
-            const sc = $('#g-score', stage), sh = $('#g-shield', stage);
+            const sc = $('#g-score', stage), sh = $('#g-shield', stage), nb = $('#g-nova', stage);
             if (sc) sc.textContent = `Score: ${S.score}`;
             if (sh) sh.textContent = `🛡️ ${shield}%`;
+            if (nb) { nb.textContent = `💥 Nova Bomb (B) ×${S.novas}`; nb.disabled = !S.novas; }
         };
+        hud();
+
+        // Rock spawns: tougher rocks show up more often in later waves
+        function spawnRock() {
+            const r = Math.random(), w = S.q;
+            const type = r < 0.08 ? 'crystal' : r < 0.08 + Math.min(0.22, w * 0.05) ? 'iron' : r < 0.3 + w * 0.06 ? 'boulder' : 'rock';
+            const T = ROCK_TYPES[type], size = rand(T.size[0], T.size[1]);
+            asteroids.push({
+                type, x: Math.random() * (canvas.width - size), y: -size, size, hp: T.hp, max: T.hp, hitAt: -1e9,
+                speed: (1.8 + Math.random() * 2.2) * T.speed, drift: rand(-0.4, 0.4), rot: Math.random() * Math.PI, rotSpeed: (Math.random() - 0.5) * 0.035,
+                shape: Array.from({ length: 9 }, () => rand(0.78, 1.05)), crack: Array.from({ length: 5 }, () => Math.random() * Math.PI * 2)
+            });
+        }
+        function hitRock(a, n, now) {
+            a.hp -= n; a.hitAt = now;
+            const cx = a.x + a.size / 2, cy = a.y + a.size / 2;
+            if (a.hp > 0) { juice.burst(cx, cy + a.size / 3, ROCK_TYPES[a.type].edge, 5); FX.sample('armorHit'); return false; }
+            a.dead = true; smashed++;
+            if (a.max > 2) toughSmashed++;
+            const pts = Math.round(ROCK_TYPES[a.type].pts * (L.mult ? 2 : 1) * S.combo.mult * chain.hit());
+            S.score += pts;
+            juice.burst(cx, cy, ROCK_TYPES[a.type].fill[0], 14 + a.max * 3);
+            juice.text(cx, a.y, a.max > 2 ? `SMASHED! +${pts}` : `+${pts}`, a.max > 2 ? '#fbbf24' : '#67e8f9');
+            juice.shake(a.max > 2 ? 9 : chain.count % 5 === 0 ? 12 : 3);
+            if (a.type === 'iron') FX.sample('crash'); else FX.play('hit');
+            if (a.type === 'crystal') gems.push({ x: cx, y: cy, vy: 1.4 });
+            hud();
+            return true;
+        }
+        function novaBomb() {
+            if (ended || !S.novas || nova > 0) return;
+            S.novas--; nova = 500;
+            FX.sample('emp'); FX.flash('rgba(167,139,250,.3)'); juice.shake(16);
+            asteroids.forEach(a => { if (!a.dead) hitRock(a, 4, performance.now()); });
+            hud();
+        }
 
         function loop(now) {
             if (ended) return;
             if (!document.body.contains(canvas)) { cleanup(); return; }
-            chain.tick(16.67);
+            const ms = last ? Math.min(50, now - last) : 16;
+            last = now;
+            const dt = ms / 16.67;                        // same speed on 60Hz and 144Hz screens
+            chain.tick(ms);
             ctx.save();
             juice.offset(ctx);
-            const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            bg.addColorStop(0, '#060919'); bg.addColorStop(0.5, '#0b1329'); bg.addColorStop(1, '#02040a');
-            ctx.fillStyle = bg; ctx.fillRect(-12, -12, canvas.width + 24, canvas.height + 24);
+            spaceBackdrop(ctx, canvas.width, canvas.height, [], dt, now);
             ctx.fillStyle = '#38bdf8';
-            stars.forEach(s => { s.y += s.speed; if (s.y > canvas.height) s.y = 0; ctx.globalAlpha = s.size > 2 ? 0.9 : 0.4; ctx.fillRect(s.x, s.y, s.size, s.size); });
+            stars.forEach(s => { s.y += s.speed * 1.6 * dt; if (s.y > canvas.height) s.y = 0; ctx.globalAlpha = s.size > 2 ? 0.9 : 0.4; ctx.fillRect(s.x, s.y, s.size, s.size); });
             ctx.globalAlpha = 1;
 
-            if ((keys.ArrowLeft || keys.KeyA) && player.x > 0) player.x -= player.speed;
-            if ((keys.ArrowRight || keys.KeyD) && player.x < canvas.width - player.w) player.x += player.speed;
+            let move = 0;
+            if ((keys.ArrowLeft || keys.KeyA) && player.x > 0) { player.x -= player.speed * dt; move = -1; }
+            if ((keys.ArrowRight || keys.KeyD) && player.x < canvas.width - player.w) { player.x += player.speed * dt; move = 1; }
+            player.x = clamp(player.x, 0, canvas.width - player.w);
+            tilt += (move * 0.18 - tilt) * 0.2 * dt;
 
-            if ((keys.ArrowUp || keys.KeyW || keys.Space || pointerDown) && now - lastShoot > (S.rapid ? 150 : 320)) {
-                const cx = player.x + player.w / 2 - 2;
+            const firing = keys.ArrowUp || keys.KeyW || keys.Space || pointerDown;
+            if (firing && now - lastShoot > fireGap) {
+                const cx = player.x + player.w / 2, top = player.y - 4;
+                const color = ['#00f2fe', '#a78bfa', '#f472b6'][L.power];
                 FX.play('shoot');
-                if (S.triple || freeTriple) {
-                    bullets.push({ x: player.x + 2, y: player.y, w: 4, h: 14, color: '#38bdf8' }, { x: cx, y: player.y - 6, w: 4, h: 14, color: '#00f2fe' }, { x: player.x + player.w - 6, y: player.y, w: 4, h: 14, color: '#38bdf8' });
-                } else if (S.dbl) {
-                    bullets.push({ x: player.x + 6, y: player.y, w: 4, h: 14, color: '#00f2fe' }, { x: player.x + player.w - 10, y: player.y, w: 4, h: 14, color: '#00f2fe' });
-                } else bullets.push({ x: cx, y: player.y, w: 4, h: 14, color: '#00f2fe' });
+                const shots = spread >= 2 ? [[-12, -0.9], [0, 0], [12, 0.9]] : spread === 1 ? [[-8, 0], [8, 0]] : [[0, 0]];
+                shots.forEach(([dx, vx]) => bullets.push({ x: cx + dx - 2, y: top, w: 4 + L.power, h: 14, vx, color }));
                 lastShoot = now;
             }
+            if (missileGap && now - lastMissile > missileGap && asteroids.some(a => !a.dead)) {
+                missiles.push({ x: player.x + player.w / 2, y: player.y, vx: 0, vy: -4, trail: [] });
+                lastMissile = now;
+            }
 
-            // ship
-            ctx.save();
-            ctx.translate(player.x + player.w / 2, player.y + player.h / 2);
-            const flame = 12 + Math.sin(now * 0.04) * 5;
-            ctx.fillStyle = '#ff7b00'; ctx.beginPath(); ctx.moveTo(-5, 16); ctx.lineTo(0, 16 + flame); ctx.lineTo(5, 16); ctx.closePath(); ctx.fill();
-            ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.moveTo(0, -20); ctx.lineTo(14, 12); ctx.lineTo(6, 16); ctx.lineTo(-6, 16); ctx.lineTo(-14, 12); ctx.closePath(); ctx.fill();
-            ctx.fillStyle = '#2563eb';
-            ctx.beginPath(); ctx.moveTo(-14, 12); ctx.lineTo(-21, 19); ctx.lineTo(-6, 14); ctx.closePath(); ctx.fill();
-            ctx.beginPath(); ctx.moveTo(14, 12); ctx.lineTo(21, 19); ctx.lineTo(6, 14); ctx.closePath(); ctx.fill();
-            ctx.fillStyle = '#00f2fe'; ctx.beginPath(); ctx.arc(0, -2, 4.5, 0, Math.PI * 2); ctx.fill();
+            ctx.save(); ctx.shadowBlur = 12;
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                const b = bullets[i]; b.y -= 9.5 * dt; b.x += b.vx * dt;
+                ctx.fillStyle = b.color; ctx.shadowColor = b.color; ctx.fillRect(b.x, b.y, b.w, b.h);
+                if (b.y < -20) bullets.splice(i, 1);
+            }
             ctx.restore();
 
-            ctx.shadowBlur = 12;
-            for (let i = bullets.length - 1; i >= 0; i--) {
-                const b = bullets[i]; b.y -= 9.5;
-                ctx.fillStyle = b.color; ctx.shadowColor = b.color; ctx.fillRect(b.x, b.y, b.w, b.h);
-                if (b.y < 0) bullets.splice(i, 1);
-            }
-            ctx.shadowBlur = 0;
+            // Homing missiles steer toward the nearest rock
+            missiles.forEach(m => {
+                let best = null, bd = 1e9;
+                asteroids.forEach(a => { if (a.dead) return; const d = Math.hypot(a.x + a.size / 2 - m.x, a.y + a.size / 2 - m.y); if (d < bd) { bd = d; best = a; } });
+                if (best) {
+                    const ang = Math.atan2(best.y + best.size / 2 - m.y, best.x + best.size / 2 - m.x);
+                    m.vx += Math.cos(ang) * 0.5 * dt; m.vy += Math.sin(ang) * 0.5 * dt;
+                }
+                const sp = Math.hypot(m.vx, m.vy) || 1; m.vx = m.vx / sp * 6.5; m.vy = m.vy / sp * 6.5;
+                m.x += m.vx * dt; m.y += m.vy * dt;
+                m.trail.push({ x: m.x, y: m.y }); if (m.trail.length > 8) m.trail.shift();
+                m.trail.forEach((p, i) => { ctx.globalAlpha = i / 16; ctx.fillStyle = '#fb923c'; ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2); ctx.fill(); });
+                ctx.globalAlpha = 1;
+                ctx.save(); ctx.translate(m.x, m.y); ctx.rotate(Math.atan2(m.vy, m.vx) + Math.PI / 2);
+                ctx.fillStyle = '#e2e8f0'; ctx.fillRect(-2.5, -7, 5, 12); ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(-2.5, -7); ctx.lineTo(0, -11); ctx.lineTo(2.5, -7); ctx.fill();
+                ctx.restore();
+            });
+            missiles = missiles.filter(m => !m.gone && m.y > -30 && m.y < canvas.height + 30 && m.x > -30 && m.x < canvas.width + 30);
 
-            if (Math.random() < 0.042) asteroids.push({ x: Math.random() * (canvas.width - 45), y: -40, size: 32 + Math.random() * 18, speed: 1.8 + Math.random() * 2.2, rot: Math.random() * Math.PI, rotSpeed: (Math.random() - 0.5) * 0.035 });
-
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i]; p.x += p.vx; p.y += p.vy; p.alpha -= p.decay;
-                if (p.alpha <= 0) { particles.splice(i, 1); continue; }
-                ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size);
-            }
-            ctx.globalAlpha = 1;
+            if (Math.random() < 0.042 * dt) spawnRock();
 
             for (let i = asteroids.length - 1; i >= 0; i--) {
-                const a = asteroids[i]; a.y += a.speed; a.rot += a.rotSpeed;
-                ctx.save();
-                ctx.translate(a.x + a.size / 2, a.y + a.size / 2); ctx.rotate(a.rot);
-                ctx.fillStyle = '#475569'; ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
-                ctx.beginPath();
-                for (let p = 0; p < 7; p++) {
-                    const ang = (p / 7) * Math.PI * 2, r = (a.size / 2) * (0.8 + Math.sin(p * 3) * 0.2);
-                    p === 0 ? ctx.moveTo(Math.cos(ang) * r, Math.sin(ang) * r) : ctx.lineTo(Math.cos(ang) * r, Math.sin(ang) * r);
-                }
-                ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
-
-                let dead = false;
-                for (let j = bullets.length - 1; j >= 0; j--) {
+                const a = asteroids[i];
+                a.y += a.speed * dt; a.x += a.drift * dt; a.rot += a.rotSpeed * dt;
+                if (a.x < 0 || a.x > canvas.width - a.size) a.drift *= -1;
+                drawRock(ctx, a, now);
+                const box = { x: a.x + a.size * 0.1, y: a.y + a.size * 0.1, w: a.size * 0.8, h: a.size * 0.8 };
+                for (let j = bullets.length - 1; j >= 0 && !a.dead; j--) {
                     const b = bullets[j];
-                    if (b.x < a.x + a.size && b.x + b.w > a.x && b.y < a.y + a.size && b.y + b.h > a.y) {
-                        explode(a.x + a.size / 2, a.y + a.size / 2, '#38bdf8');
-                        bullets.splice(j, 1);
-                        const pts = Math.round(20 * S.mult * S.combo.mult * chain.hit());
-                        S.score += pts;
-                        juice.text(a.x + a.size / 2, a.y, `+${pts}`, '#67e8f9');
-                        juice.shake(chain.count % 5 === 0 ? 12 : 3);
-                        FX.play('hit');
-                        dead = true; hud();
-                        break;
+                    if (b.x < box.x + box.w && b.x + b.w > box.x && b.y < box.y + box.h && b.y + b.h > box.y) { bullets.splice(j, 1); hitRock(a, dmg, now); }
+                }
+                missiles.forEach(m => {
+                    if (a.dead || m.gone) return;
+                    if (m.x > box.x && m.x < box.x + box.w && m.y > box.y && m.y < box.y + box.h) {
+                        m.gone = true; juice.burst(m.x, m.y, '#fb923c', 10); hitRock(a, 2 + L.power, now);
+                    }
+                });
+                const ship = { x: player.x + 6, y: player.y + 4, w: player.w - 12, h: player.h - 8 };
+                if (!a.dead && overlap(ship, box)) {
+                    a.dead = true;
+                    juice.burst(a.x + a.size / 2, a.y + a.size / 2, '#ef4444', 18);
+                    if (deflect > 0) {
+                        deflect--; FX.sample('shieldBlock'); juice.text(player.x + 20, player.y - 10, 'DEFLECTED!', '#93c5fd');
+                    } else {
+                        const hurt = Math.round(crashDmg * (a.max > 2 ? 1.5 : 1));
+                        S.score = Math.max(0, S.score - 15);
+                        shield = Math.max(0, shield - hurt);
+                        hurtUntil = now + 700;
+                        chain.reset(); juice.shake(18); FX.shake(card, 10); FX.play('explode');
+                        hud();
+                        if (shield <= 0) { ctx.restore(); endWave('Your ship was destroyed!'); return; }
                     }
                 }
-                if (!dead && player.x < a.x + a.size && player.x + player.w > a.x && player.y < a.y + a.size && player.y + player.h > a.y) {
-                    explode(a.x + a.size / 2, a.y + a.size / 2, '#ef4444');
-                    S.score = Math.max(0, S.score - 15);
-                    shield = Math.max(0, shield - 20);
-                    chain.reset(); juice.shake(18); FX.shake(card, 10); FX.play('explode');
-                    dead = true; hud();
-                    if (shield <= 0) { ctx.restore(); endWave('Your ship was destroyed!'); return; }
-                }
-                if (dead || a.y > canvas.height) asteroids.splice(i, 1);
+                if (a.dead || a.y > canvas.height) asteroids.splice(i, 1);
             }
-            juice.draw(ctx);
+
+            // Crystal gems: catch them for credits
+            for (let i = gems.length - 1; i >= 0; i--) {
+                const g = gems[i], pcx = player.x + player.w / 2, pcy = player.y + player.h / 2;
+                if (L.magnet && Math.hypot(pcx - g.x, pcy - g.y) < 170) { g.x += (pcx - g.x) * 0.08 * dt; g.y += (pcy - g.y) * 0.08 * dt; }
+                else g.y += g.vy * dt;
+                ctx.save(); ctx.translate(g.x, g.y); ctx.rotate(now / 300);
+                ctx.shadowColor = '#c4b5fd'; ctx.shadowBlur = 12; ctx.fillStyle = '#a78bfa';
+                ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(6, 0); ctx.lineTo(0, 8); ctx.lineTo(-6, 0); ctx.closePath(); ctx.fill();
+                ctx.fillStyle = '#ede9fe'; ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(3, -1); ctx.lineTo(-3, -1); ctx.closePath(); ctx.fill();
+                ctx.restore();
+                if (Math.hypot(pcx - g.x, pcy - g.y) < 26) {
+                    gems.splice(i, 1); gemCount++; S.credits += 15;
+                    juice.text(g.x, g.y - 12, '+15 💰', '#c4b5fd'); FX.sample('orb');
+                } else if (g.y > canvas.height + 10) gems.splice(i, 1);
+            }
+
+            const mood = now < hurtUntil ? 'worried' : firing ? 'focus' : 'happy';
+            drawScrappyRocket(ctx, player.x + player.w / 2, player.y + player.h / 2, now, { mood, tilt, shield: deflect, thrust: move ? 1.25 : 1 });
+            if (nova > 0) {
+                nova -= ms;
+                const k = 1 - nova / 500;
+                ctx.save(); ctx.globalAlpha = Math.max(0, 1 - k); ctx.strokeStyle = '#c4b5fd'; ctx.lineWidth = 6; ctx.shadowColor = '#a78bfa'; ctx.shadowBlur = 20;
+                ctx.beginPath(); ctx.arc(player.x + player.w / 2, player.y, k * 700, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+            }
+            juice.draw(ctx, dt);
             if (chain.count >= 3) { ctx.font = '800 16px Orbitron, sans-serif'; ctx.fillStyle = '#fbbf24'; ctx.fillText(`HIT CHAIN x${chain.count}`, 14, 26); }
+            // Small legend in the corner for the gem total and deflector charges
+            ctx.font = '700 11px Inter, sans-serif'; ctx.textAlign = 'right'; ctx.fillStyle = '#c4b5fd';
+            ctx.fillText(`Credits ${S.credits}${deflect ? ` · Deflector ×${deflect}` : ''}`, 630, 20); ctx.textAlign = 'start';
             ctx.restore();
             animId = requestAnimationFrame(loop);
         }
         animId = requestAnimationFrame(loop);
     }
 
-    function shop() {
-        const last = S.q >= questions.length - 1;
-        const items = [
-            ['speed', '🚀 Faster Ship', 50, S.speed], ['dbl', '🔫 Double Laser', 75, S.dbl],
-            ['rapid', '⚡ Rapid Fire', 100, S.rapid], ['triple', '💥 Triple Bullets', 150, S.triple]
-        ];
-        stage.innerHTML = `
-            <div class="quiz-game-card">
-                <h2 class="shop-title">🛠️ Rocket Armory Upgrades</h2>
-                <p class="shop-credits">Your Credits: <strong class="credit-highlight">${S.credits} 💰</strong></p>
-                <div class="armory-grid">
-                    ${items.map(([k, n, c, own]) => `<button type="button" class="shop-btn" data-buy="${k}" data-cost="${c}" ${own ? 'disabled' : ''}>${n} (${c} 💰) ${own ? '✅' : ''}</button>`).join('')}
-                    <button type="button" class="shop-btn full" data-buy="mult" data-cost="125" ${S.mult > 1 ? 'disabled' : ''}>🌟 2x Score Multiplier (125 💰) ${S.mult > 1 ? '✅' : ''}</button>
-                </div>
-                <button type="button" class="btn-continue-shop" id="skip-shop">${last ? 'Finish →' : 'Continue to Next Question →'}</button>
-            </div>`;
-        $$('[data-buy]', stage).forEach(b => b.onclick = () => {
-            const cost = parseInt(b.dataset.cost, 10), k = b.dataset.buy;
-            if (S.credits < cost) { toast('Not enough credits for that upgrade.', 'warn'); return; }
-            S.credits -= cost;
-            if (k === 'mult') S.mult = 2; else S[k] = true;
-            toast('Upgrade purchased!', 'success');
-            shop();
-        });
-        $('#skip-shop', stage).onclick = () => { S.q++; ask(); };
-    }
-
     function finish() {
-        finishGame({ modal, stage, modId, subId, gameKey: 'rocket', title: '🚀 Rocket Challenge', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Arcade Score', arcadeScore: S.score, bestStreak: S.combo.best, retry: () => runRocketGame(modId, subId) });
+        finishGame({ modal, stage, modId, subId, gameKey: 'rocket', title: '🚀 Rocket Challenge', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Arcade Score', arcadeScore: S.score, bestStreak: S.combo.best, xpMult: S.xpMult, retry: () => runRocketGame(modId, subId) });
     }
     ask();
 }
 
-// ----------------------------------------------------------------------------
-// MINIGAME 2: BLOCK BLAST GRID PUZZLE
-// ----------------------------------------------------------------------------
-function runBlockBlastGame(modId, subId) {
-    const { modal, stage } = makeModal();
-    const questions = prepareQuiz(modId, subId);
-    const S = { q: 0, quiz: 0, score: 0, chain: 0, combo: createCombo() };
-    const grid = Array.from({ length: 8 }, () => Array(8).fill(null));
-    const colors = ['#00f2fe', '#38bdf8', '#a855f7', '#ec4899', '#f59e0b', '#22c55e', '#6366f1'];
-    const shapes = [[[1, 1], [1, 1]], [[1, 1, 1]], [[1], [1], [1]], [[1, 0], [1, 1]], [[1, 1, 1], [0, 0, 1]], [[1]]];
-    let tray = [], sel = 0;
-
-    function ask() {
-        if (S.q >= questions.length) return finish();
-        askQuestion({
-            stage, q: questions[S.q], index: S.q, total: questions.length, badge: `Grid Score: ${S.score} 🧱`, combo: S.combo,
-            onResult: ok => {
-                if (ok) S.quiz++;
-                tray = Array.from({ length: 6 }, () => ({ shape: shapes[Math.floor(Math.random() * shapes.length)], color: colors[Math.floor(Math.random() * colors.length)] }));
-                if (ok && S.combo.streak >= 3) { tray.unshift({ shape: [[1]], color: '#fbbf24', bomb: true }); FX.play('power'); }
-                S.chain = 0;
-                sel = 0;
-                board();
-            }
-        });
-    }
-
-    const fits = (shape, r0, c0) => shape.every((row, sr) => row.every((v, sc) => !v || (r0 + sr < 8 && c0 + sc < 8 && grid[r0 + sr][c0 + sc] === null)));
-    const baseStyle = (r, c) => {
-        const col = grid[r][c];
-        return col ? `background:${col};border:1px solid ${col};box-shadow:0 0 10px ${col}88;` : 'background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);';
-    };
-
-    function board() {
-        let cells = '';
-        for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) cells += `<div class="bb-cell" data-r="${r}" data-c="${c}" style="${baseStyle(r, c)}"></div>`;
-        const trayHTML = tray.length ? tray.map((p, i) => {
-            let mini = '';
-            for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) {
-                const on = p.shape[r] && p.shape[r][c] === 1;
-                mini += `<i style="background:${on ? p.color : 'transparent'};${on ? `box-shadow:0 0 6px ${p.color}` : ''}"></i>`;
-            }
-            return `<div class="tray-piece${i === sel ? ' selected' : ''}${p.bomb ? ' bomb' : ''}" data-i="${i}" role="button" tabindex="0"><div class="mini">${mini}</div>${p.bomb ? '💣 Neon Bomb' : `Piece #${i + 1}`}</div>`;
-        }).join('') : 'Tray empty. Press Next Question to earn more pieces!';
-        const last = S.q >= questions.length - 1;
-        stage.innerHTML = `
-            <div class="quiz-game-card canvas-card" style="max-width:680px;">
-                <div class="quiz-header-row"><span class="quiz-counter">Wave ${S.q + 1} · Block Grid Arena</span>${comboPill(S.combo)}${S.chain >= 2 ? `<span class="combo-pill">💥 CLEAR CHAIN x${S.chain}</span>` : ''}<span class="quiz-credits">Grid Score: ${S.score} 🧱</span></div>
-                <p class="canvas-instructions" style="margin:0 0 10px;">Pick a piece, then hover over the grid to see the <strong>ghost outline</strong>. Click to place it.</p>
-                <div class="bb-grid" id="bb-grid">${cells}</div>
-                <div class="bb-tray">${trayHTML}</div>
-                <button type="button" id="bb-next" class="btn-continue-shop" style="margin-top:16px;">${last ? 'Finish →' : 'Next Question →'}</button>
-            </div>`;
-        $$('.tray-piece', stage).forEach(p => {
-            const pick = () => { sel = parseInt(p.dataset.i, 10); board(); };
-            p.onclick = pick;
-            p.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } };
-        });
-        const cellEls = $$('.bb-cell', stage);
-        const clearPreview = () => cellEls.forEach(el => { el.style.cssText = baseStyle(+el.dataset.r, +el.dataset.c); });
-        cellEls.forEach(el => {
-            const r = +el.dataset.r, c = +el.dataset.c;
-            el.onmouseenter = () => {
-                const p = tray[sel]; if (!p) return;
-                clearPreview();
-                if (p.bomb) {
-                    blastArea(r, c).forEach(([br, bc]) => { cellEls[br * 8 + bc].style.cssText = 'background:rgba(251,191,36,.35);border:1px dashed #fbbf24;'; });
-                    return;
-                }
-                const ok = fits(p.shape, r, c);
-                p.shape.forEach((row, sr) => row.forEach((v, sc) => {
-                    if (!v) return;
-                    const t = cellEls[(r + sr) * 8 + (c + sc)];
-                    if (t && r + sr < 8 && c + sc < 8 && !grid[r + sr][c + sc]) t.style.cssText = `background:${ok ? p.color + '55' : 'rgba(239,68,68,.35)'};border:1px dashed ${ok ? p.color : '#ef4444'};`;
-                }));
-            };
-            el.onclick = () => place(r, c);
-        });
-        $('#bb-grid', stage).onmouseleave = clearPreview;
-        $('#bb-next', stage).onclick = () => { S.q++; ask(); };
-    }
-
-    function place(r, c) {
-        const p = tray[sel];
-        if (!p) { toast('Select a piece from your tray first.', 'warn'); return; }
-        if (!p.bomb && !fits(p.shape, r, c)) { hype('⚠️ Invalid Placement!'); FX.play('wrong'); return; }
-        const cellEls = $$('.bb-cell', stage);
-        // Burst effects are placed using the current cells, before the board is redrawn
-        const sparkle = (br, bc, color) => FX.burstAt(cellEls[br * 8 + bc], { color, count: 7, power: 4 });
-        if (p.bomb) {
-            let blasted = 0;
-            blastArea(r, c).forEach(([br, bc]) => {
-                sparkle(br, bc, '#fbbf24');
-                if (grid[br][bc]) { blasted++; grid[br][bc] = null; }
-            });
-            S.score += Math.round((50 + blasted * 40) * S.combo.mult);
-            FX.play('explode');
-        } else {
-            p.shape.forEach((row, sr) => row.forEach((v, sc) => { if (v) grid[r + sr][c + sc] = p.color; }));
-            S.score += Math.round(50 * S.combo.mult);
-            FX.play('hit');
-        }
-        tray.splice(sel, 1);
-        sel = 0;
-        const { n, cells } = clearLines();
-        if (n > 0) {
-            S.chain++;
-            recordBest('bestActionCombo', S.chain);
-            S.score += Math.round((n * 200 + (n - 1) * 100) * S.combo.mult * (1 + (S.chain - 1) * 0.25));
-            cells.forEach(([br, bc]) => sparkle(br, bc, '#00f2fe'));
-            hype(S.chain > 1 ? `CHAIN x${S.chain}! 💥` : ['Block Blast!', 'Awesome Combo!', 'Clean Clear!', 'Brilliant!'][Math.floor(Math.random() * 4)]);
-            FX.comboSound(S.chain * 2);
-        } else if (!p.bomb) S.chain = 0;
-        board();
-        if (n > 0 || p.bomb) FX.shake($('#bb-grid', stage), 6 + n * 5);
-    }
-
-    function blastArea(r, c) {
-        const area = [];
-        for (let br = r - 1; br <= r + 1; br++) for (let bc = c - 1; bc <= c + 1; bc++) if (br >= 0 && br < 8 && bc >= 0 && bc < 8) area.push([br, bc]);
-        return area;
-    }
-
-    // Find every full row/column first, then clear them together (so crossings both count)
-    function clearLines() {
-        const rows = [], cols = [];
-        for (let r = 0; r < 8; r++) if (grid[r].every(v => v !== null)) rows.push(r);
-        for (let c = 0; c < 8; c++) if (grid.every(row => row[c] !== null)) cols.push(c);
-        const cells = [];
-        rows.forEach(r => { for (let c = 0; c < 8; c++) cells.push([r, c]); });
-        cols.forEach(c => { for (let r = 0; r < 8; r++) cells.push([r, c]); });
-        cells.forEach(([r, c]) => { grid[r][c] = null; });
-        return { n: rows.length + cols.length, cells };
-    }
-
-    function finish() {
-        finishGame({ modal, stage, modId, subId, gameKey: 'blockblast', title: '🧱 Block Blast', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Grid Score', arcadeScore: S.score, bestStreak: S.combo.best, retry: () => runBlockBlastGame(modId, subId) });
-    }
-    ask();
-}
-
-// ----------------------------------------------------------------------------
-// MINIGAME 3: PIRATE SHIP CANNON LAUNCHER
-// ----------------------------------------------------------------------------
-const CRATE_LAYOUTS = {
-    1: [[500, 235, 38], [550, 235, 38], [600, 235, 38], [525, 190, 38], [575, 190, 38], [550, 145, 38]],
-    2: [[480, 145, 36], [480, 185, 36], [480, 225, 36], [540, 185, 36], [540, 225, 36], [600, 145, 36], [600, 225, 36]],
-    3: [[460, 235, 35], [510, 175, 35], [560, 235, 35], [610, 175, 35], [535, 125, 35]]
-};
-
-function runPirateGame(modId, subId) {
-    const { modal, stage } = makeModal();
-    const questions = prepareQuiz(modId, subId);
-    const S = { q: 0, quiz: 0, score: 0, credits: 50, heavy: false, bomb: false, mult: 1, combo: createCombo() };
-
-    function ask() {
-        if (S.q >= questions.length) return finish();
-        askQuestion({
-            stage, q: questions[S.q], index: S.q, total: questions.length, theme: 'theme-pirate',
-            badge: `${S.credits} 💰 Credits · Level ${S.q + 1}`, combo: S.combo,
-            onResult: ok => { if (ok) { S.credits += 100; S.quiz++; } arena(); }
-        });
-    }
-
-    function arena() {
-        const level = Math.min(S.q + 1, 3);
-        let targets = CRATE_LAYOUTS[level].map(([x, y, s]) => ({ x, y, w: s, h: s }));
-        const maxShots = S.combo.streak >= 3 ? 4 : 3;   // streak power-up: an extra cannonball
-        let shotHits = 0;
-        if (maxShots > 3) FX.play('power');
-        stage.innerHTML = `
-            <div class="quiz-game-card canvas-card theme-pirate" style="max-width:740px;">
-                <div class="quiz-header-row"><span class="quiz-counter" style="color:#ff4757;">⛰️ Hilltop Assault · Level ${S.q + 1}</span>${comboPill(S.combo)}<span id="p-shots" class="quiz-credits">Shots: ${'🔴'.repeat(maxShots)}</span><span id="birds-score" class="quiz-credits">Score: ${S.score}</span></div>
-                <div class="canvas-wrap"><canvas id="birdsCanvas" width="680" height="340"></canvas><div id="shot-feedback"></div></div>
-                <p class="canvas-instructions">Click or touch and drag the cannonball backward to aim, then release to fire at the crates!</p>
-            </div>`;
-        const canvas = $('#birdsCanvas', stage), ctx = canvas.getContext('2d');
-        const cannon = { x: 110, y: 155 }, groundY = 275, gravity = S.heavy ? 0.48 : 0.36;
-        const ball = { x: cannon.x, y: cannon.y, r: 14, vx: 0, vy: 0, launched: false, frames: 0 };
-        let dragging = false, shots = maxShots, ended = false, shake = 0, muzzle = 0, particles = [], floaters = [], animId;
-
-        const pos = e => { const r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * canvas.width / r.width, y: (e.clientY - r.top) * canvas.height / r.height }; };
-        canvas.addEventListener('pointerdown', e => {
-            if (ball.launched || ended) return;
-            const p = pos(e);
-            if (Math.hypot(p.x - ball.x, p.y - ball.y) < 50) { dragging = true; canvas.setPointerCapture(e.pointerId); }
-        });
-        canvas.addEventListener('pointermove', e => {
-            if (!dragging) return;
-            const p = pos(e);
-            let dx = p.x - cannon.x, dy = p.y - cannon.y;
-            const d = Math.hypot(dx, dy);
-            if (d > 85) { dx *= 85 / d; dy *= 85 / d; }
-            ball.x = cannon.x + dx; ball.y = cannon.y + dy;
-        });
-        const release = () => {
-            if (!dragging) return;
-            dragging = false;
-            const dx = cannon.x - ball.x, dy = cannon.y - ball.y;
-            if (Math.hypot(dx, dy) < 12) { ball.x = cannon.x; ball.y = cannon.y; return; }   // ignore accidental taps
-            ball.vx = dx * 0.38; ball.vy = dy * 0.38; ball.launched = true; ball.frames = 0;
-            shots--; muzzle = 10; shake = 6; shotHits = 0; FX.play('explode');
-            const sEl = $('#p-shots', stage); if (sEl) sEl.textContent = 'Shots: ' + '🔴'.repeat(shots) + '⚫'.repeat(maxShots - shots);
-        };
-        canvas.addEventListener('pointerup', release);
-        canvas.addEventListener('pointercancel', release);
-
-        function resetBall() { ball.x = cannon.x; ball.y = cannon.y; ball.vx = ball.vy = 0; ball.launched = false; }
-        function shotOver() {
-            if (targets.length === 0 || shots === 0) {
-                ended = true;
-                if (targets.length === 0) S.score += shots * 50;
-                const fb = $('#shot-feedback', stage);
-                if (fb) { fb.textContent = targets.length === 0 ? 'CRATES SMASHED!' : 'OUT OF CANNONBALLS!'; fb.style.display = 'block'; }
-                const sc = $('#birds-score', stage); if (sc) sc.textContent = `Score: ${S.score}`;
-                setTimeout(() => { cancelAnimationFrame(animId); if (document.body.contains(stage)) shop(); }, 1400);
-            } else resetBall();
-        }
-
-        function loop() {
-            if (!document.body.contains(canvas)) { cancelAnimationFrame(animId); return; }
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.save();
-            if (shake > 0) { shake--; ctx.translate((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8); }
-
-            const sky = ctx.createLinearGradient(0, 0, 0, groundY);
-            sky.addColorStop(0, '#0f172a'); sky.addColorStop(1, '#1e3a8a');
-            ctx.fillStyle = sky; ctx.fillRect(0, 0, canvas.width, groundY);
-            ctx.fillStyle = '#78350f'; ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
-            ctx.strokeStyle = '#451a03'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(canvas.width, groundY); ctx.stroke();
-            ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(0, 180); ctx.quadraticCurveTo(80, 150, 180, groundY); ctx.closePath(); ctx.fill();
-            ctx.strokeStyle = '#334155'; ctx.stroke();
-
-            // cannon barrel points the way the shot will fly (opposite of the drag)
-            const angle = dragging ? Math.atan2(cannon.y - ball.y, cannon.x - ball.x) : 0.2;
-            ctx.save(); ctx.translate(cannon.x, cannon.y); ctx.rotate(angle);
-            ctx.fillStyle = '#334155'; ctx.fillRect(0, -14, 52, 28);
-            ctx.fillStyle = '#1e293b'; ctx.fillRect(44, -16, 8, 32);
-            ctx.restore();
-            ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.arc(cannon.x - 12, cannon.y + 11, 10, 0, Math.PI * 2); ctx.arc(cannon.x + 12, cannon.y + 11, 10, 0, Math.PI * 2); ctx.fill();
-            if (muzzle > 0) { muzzle--; ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(cannon.x + Math.cos(angle) * 55, cannon.y + Math.sin(angle) * 55, 18, 0, Math.PI * 2); ctx.fill(); }
-
-            if (dragging) {
-                let sx = ball.x, sy = ball.y, vx = (cannon.x - ball.x) * 0.38, vy = (cannon.y - ball.y) * 0.38;
-                ctx.strokeStyle = 'rgba(0,242,254,.7)'; ctx.lineWidth = 2.5; ctx.setLineDash([5, 5]);
-                ctx.beginPath(); ctx.moveTo(sx, sy);
-                for (let i = 0; i < 30; i++) { sx += vx; sy += vy; vy += gravity; ctx.lineTo(sx, sy); }
-                ctx.stroke(); ctx.setLineDash([]);
-                ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3.5; ctx.beginPath(); ctx.moveTo(cannon.x, cannon.y); ctx.lineTo(ball.x, ball.y); ctx.stroke();
-            }
-
-            for (let i = targets.length - 1; i >= 0; i--) {
-                const t = targets[i];
-                ctx.fillStyle = '#b45309'; ctx.fillRect(t.x, t.y, t.w, t.h);
-                ctx.strokeStyle = '#78350f'; ctx.lineWidth = 3; ctx.strokeRect(t.x, t.y, t.w, t.h);
-                ctx.beginPath(); ctx.moveTo(t.x, t.y); ctx.lineTo(t.x + t.w, t.y + t.h); ctx.moveTo(t.x + t.w, t.y); ctx.lineTo(t.x, t.y + t.h); ctx.stroke();
-                if (ball.launched && ball.x + ball.r > t.x && ball.x - ball.r < t.x + t.w && ball.y + ball.r > t.y && ball.y - ball.r < t.y + t.h) {
-                    smash(t);
-                    targets.splice(i, 1);
-                    if (S.bomb) {
-                        for (let k = targets.length - 1; k >= 0; k--) if (Math.hypot(targets[k].x - t.x, targets[k].y - t.y) <= 85) { smash(targets[k]); targets.splice(k, 1); }
-                    }
-                    shake = 14;
-                    const sc = $('#birds-score', stage); if (sc) sc.textContent = `Score: ${S.score}`;
-                }
-            }
-
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i]; p.x += p.vx; p.y += p.vy; p.alpha -= 0.035;
-                ctx.globalAlpha = Math.max(0, p.alpha); ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size);
-                if (p.alpha <= 0) particles.splice(i, 1);
-            }
-            for (let i = floaters.length - 1; i >= 0; i--) {
-                const f = floaters[i]; f.y -= 1.25; f.alpha -= 0.025;
-                ctx.globalAlpha = Math.max(0, f.alpha); ctx.fillStyle = '#2ed573'; ctx.font = 'bold 16px Inter, sans-serif'; ctx.fillText(f.text, f.x, f.y);
-                if (f.alpha <= 0) floaters.splice(i, 1);
-            }
-            ctx.globalAlpha = 1;
-
-            ctx.fillStyle = S.heavy ? '#475569' : '#0f172a'; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#94a3b8'; ctx.beginPath(); ctx.arc(ball.x - 4, ball.y - 4, 3.5, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
-
-            if (ball.launched && !ended) {
-                ball.frames++;
-                ball.x += ball.vx; ball.y += ball.vy; ball.vy += gravity;
-                if (ball.y + ball.r >= groundY) {
-                    ball.y = groundY - ball.r; ball.vy = -ball.vy * 0.35; ball.vx *= 0.82;
-                    if (Math.abs(ball.vy) < 0.5) ball.vy = 0;
-                }
-                const settled = (ball.vy === 0 && Math.abs(ball.vx) < 0.2) || ball.x > canvas.width + 40 || ball.x < -40 || ball.frames > 700;
-                if (targets.length === 0 || settled) shotOver();
-            }
-            animId = requestAnimationFrame(loop);
-        }
-        function smash(t) {
-            shotHits++;
-            recordBest('bestActionCombo', shotHits);
-            const pts = Math.round(100 * S.mult * S.combo.mult * (1 + (shotHits - 1) * 0.25));
-            S.score += pts;
-            for (let p = 0; p < 16 + shotHits * 6; p++) particles.push({ x: t.x + t.w / 2, y: t.y + t.h / 2, vx: (Math.random() - 0.5) * 9, vy: (Math.random() - 0.5) * 9, color: Math.random() > 0.5 ? '#f59e0b' : '#ef4444', alpha: 1, size: 3 + Math.random() * 5 });
-            floaters.push({ text: shotHits > 1 ? `CHAIN x${shotHits}! +${pts}` : `+${pts} PTS!`, x: t.x, y: t.y, alpha: 1 });
-            FX.play('hit');
-            if (shotHits >= 3) { FX.comboSound(shotHits); FX.shake($('.quiz-game-card', stage), 6 + shotHits * 2); }
-        }
-        animId = requestAnimationFrame(loop);
-    }
-
-    function shop() {
-        const last = S.q >= questions.length - 1;
-        stage.innerHTML = `
-            <div class="quiz-game-card theme-pirate" style="max-width:580px;">
-                <h2 class="shop-title" style="color:#ff4757;">🏹 Cannon Shop &amp; Upgrades</h2>
-                <p class="shop-credits">Available Credits: <strong class="credit-highlight">${S.credits} 💰</strong></p>
-                <div class="armory-grid">
-                    <button type="button" class="shop-btn" data-buy="heavy" data-cost="40" ${S.heavy ? 'disabled' : ''}>💣 Heavy Iron Ball (40 💰)<small>${S.heavy ? '✅ Owned' : 'Flatter, heavier shots'}</small></button>
-                    <button type="button" class="shop-btn" data-buy="bomb" data-cost="80" ${S.bomb ? 'disabled' : ''}>💥 Explosive Shot (80 💰)<small>${S.bomb ? '✅ Owned' : 'Area splash damage'}</small></button>
-                    <button type="button" class="shop-btn full" data-buy="mult" data-cost="60" ${S.mult > 1 ? 'disabled' : ''}>🌟 2x Multiplier (60 💰)<small>${S.mult > 1 ? '✅ Active' : 'Double points'}</small></button>
-                </div>
-                <button type="button" class="btn-continue-shop" id="skip-shop">${last ? 'Finish →' : 'Continue to Next Question →'}</button>
-            </div>`;
-        $$('[data-buy]', stage).forEach(b => b.onclick = () => {
-            const cost = parseInt(b.dataset.cost, 10), k = b.dataset.buy;
-            if (S.credits < cost) { toast('Not enough credits for that upgrade.', 'warn'); return; }
-            S.credits -= cost;
-            if (k === 'mult') S.mult = 2; else S[k] = true;
-            toast('Upgrade purchased!', 'success');
-            shop();
-        });
-        $('#skip-shop', stage).onclick = () => { S.q++; ask(); };
-    }
-
-    function finish() {
-        const total = S.quiz * 150 + S.score;
-        finishGame({ modal, stage, modId, subId, gameKey: 'pirate', title: '🏴‍☠️ Battle', quizScore: S.quiz, total: questions.length, arcadeLabel: 'Total Arcade Score', arcadeScore: total, bestStreak: S.combo.best, theme: 'theme-pirate', retry: () => runPirateGame(modId, subId) });
-    }
-    ask();
-}
 
 // ============================================================================
 // 7. SECURITY HELPERS, PROFILES, SHOP & GLOBAL LEADERBOARD (Firebase Firestore)
@@ -1924,6 +1865,8 @@ const PortalSecurity = (() => {
             const v = user.scores[g];
             user.scores[g] = (typeof v !== 'number' || Number.isNaN(v) || v < 0) ? 0 : Math.min(v, 50000);
         });
+        // Boss defeat time (ms): anything implausible is dropped
+        if (user.bossTime !== undefined && !(Number(user.bossTime) >= 5000 && Number(user.bossTime) <= 3600000)) delete user.bossTime;
         return user;
     }
     return { containsProfanity, validateUserMetrics };
@@ -1943,12 +1886,13 @@ const SHOP = [
     { key: 'bg_scrappy_console', type: 'bg', name: 'Scrappy on Console BG', desc: 'Arcade workstation setup.', cost: 150, img: 'images/b649ac97-d785-4643-951c-191279da5b6b.jpg' },
     { key: 'avatar_true_god_scrappy', type: 'avatar', name: 'True God Scrappy', desc: 'Ascended mascot form.', cost: 350, img: 'images/generate_image_01 (1).png', tier: 'purple' },
     { key: 'avatar_angry_red_bot', type: 'avatar', name: 'Angry Red Bot', desc: 'Overheated, steaming and furious. Do not poke.', cost: 75, img: 'images/avatar_angry_red_bot.svg' },
-    { key: 'avatar_dj_bot', type: 'avatar', name: 'Neon DJ Bot', desc: 'Drops beats, not packets.', cost: 125, img: 'images/avatar_dj_bot.svg' },
-    { key: 'avatar_icecream_robot', type: 'avatar', name: 'Ice Cream Yellow Robot', desc: 'Brain freeze, but make it cute.', cost: 200, img: 'images/avatar_icecream_robot.svg' },
+    { key: 'avatar_dj_bot', type: 'avatar', name: 'Neon DJ Bot', desc: 'Drops beats, not packets.', cost: 125, img: 'images/avatar_dj_bot.jpg' },
+    { key: 'avatar_icecream_robot', type: 'avatar', name: 'Ice Cream Yellow Robot', desc: 'Brain freeze, but make it cute.', cost: 200, img: 'images/avatar_icecream_robot.jpg' },
     { key: 'avatar_manga_scrappy', type: 'avatar', name: 'Manga Scrappy', desc: 'Hand-inked and screentoned for chapter one.', cost: 300, img: 'images/avatar_manga_scrappy.svg', tier: 'manga' },
-    { key: 'avatar_samurai_scrappy', type: 'avatar', name: 'Samurai Scrappy', desc: 'Kabuto on, blade ready, code sharp.', cost: 450, img: 'images/avatar_samurai_scrappy.svg', tier: 'sakura' },
+    { key: 'avatar_samurai_scrappy', type: 'avatar', name: 'Samurai Scrappy', desc: 'Kabuto on, blade ready, code sharp.', cost: 450, img: 'images/avatar_samurai_scrappy.jpg', tier: 'sakura' },
     { key: 'bg_manga', type: 'bg', name: 'Manga Panels Background', desc: 'Ink, screentone and speed lines. Comic fonts and hard-shadow borders.', cost: 800, img: 'images/bg_manga.svg', tier: 'manga' },
-    { key: 'bg_fuji', type: 'bg', name: 'Mount Fuji Twilight (Animated)', desc: 'Drifting clouds, falling sakura and a shimmering lake. Elegant serif theme.', cost: 900, img: 'images/bg_fuji.svg', tier: 'sakura' }
+    { key: 'bg_fuji', type: 'bg', name: 'Mount Fuji Twilight (Animated)', desc: 'Drifting clouds, falling sakura and a shimmering lake. Elegant serif theme.', cost: 900, img: 'images/bg_fuji.svg', tier: 'sakura' },
+    { key: 'bg_lofi', type: 'bg', name: 'Lofi Scrappy (Animated)', desc: 'Rainy night, fairy lights and Scrappy vibing to beats. Soft rounded study theme.', cost: 850, img: 'images/bg_lofi.svg' }
 ];
 const AVATAR_MAP = Object.fromEntries(SHOP.filter(i => i.type === 'avatar').map(i => [i.key, i.img]));
 const STARTER_AVATARS = ['images/Designer (1).png', 'images/Designer (2).png', 'images/Designer (3).png'];
@@ -1971,6 +1915,8 @@ const Portal = (() => {
         GAME_KEYS.forEach(g => { if (d.scores[g] === undefined) d.scores[g] = 0; });
         if (!Array.isArray(d.unlocks) || !d.unlocks.length) d.unlocks = ['bg_default'];
         d.equipped = d.equipped && typeof d.equipped === 'object' ? d.equipped : {};
+        // These three avatars switched from drawn SVGs to painted art; carry over anyone already wearing one
+        if (typeof d.avatar === 'string') d.avatar = d.avatar.replace(/^images\/(avatar_(?:dj_bot|icecream_robot|samurai_scrappy))\.svg$/, 'images/$1.jpg');
         d.username = String(d.username || 'Cadet');
         return d;
     }
@@ -2132,64 +2078,136 @@ const Portal = (() => {
     // Backgrounds are stored in user.background; every other reward type in user.equipped
     const isEquipped = (user, r) => r.type === 'bg' ? user.background === r.bg : user.equipped[r.type] === r.id;
 
-    function renderRewardLocker(user) {
-        const locker = $('#reward-locker');
-        if (!locker) return;
-        $('#locker-count').textContent = `${REWARDS.filter(rewardUnlocked).length} / ${REWARDS.length} unlocked`;
-        const regular = REWARDS.filter(r => !r.ultimate);     // ultimate rewards have their own panel
-        locker.innerHTML = REWARD_TYPES.filter(type => regular.some(r => r.type === type.key)).map(type => `
-            <h3 class="locker-group-title">${type.label} <small>${regular.filter(r => r.type === type.key && rewardUnlocked(r)).length} / ${regular.filter(r => r.type === type.key).length}</small></h3>
-            <div class="reward-grid">${regular.filter(r => r.type === type.key).map(r => {
-                const badge = BADGE_MAP.get(r.badge), p = badgeProgress(badge);
-                const open = rewardUnlocked(r);
-                const on = open && isEquipped(user, r);
-                const preview = {
-                    title: () => `<span class="title-pill">${esc(r.name)}</span>`,
-                    border: () => `<span class="frame-swatch${frameClass(r)}" style="${frameStyle(r)}"><img src="${esc(user.avatar)}" alt=""></span>`,
-                    accent: () => `<span class="accent-swatch" style="--r-rgb:${r.rgb}"></span>`,
-                    chat: () => `<span class="chat-badge">${r.icon} ${esc(r.name)}</span>`,
-                    bg: () => `<span class="bg-swatch" data-bg="${r.bg}"></span>`
-                }[r.type]();
-                return `
-                    <div class="reward-card${open ? ' unlocked' : ' locked'}${on ? ' equipped' : ''}">
-                        <div class="reward-preview" aria-hidden="true">${preview}</div>
-                        <h4>${esc(r.name)}</h4>
-                        ${open
-                            ? `<p>${p.done ? `Earned with ${badge.icon} ${esc(badge.name)}` : '🛠 Unlocked by Developer Mode'}</p>
-                               <button type="button" class="btn-cyan-secondary" data-reward="${r.id}" aria-pressed="${on}" aria-label="${on ? 'Unequip' : 'Equip'} ${esc(r.name)}">${on ? '✓ Equipped (Remove)' : 'Equip'}</button>`
-                            : `<p>🔒 ${esc(badge.desc)} to earn <strong>${esc(badge.name)}</strong></p>
-                               ${meterHTML(p, `${r.name} progress`)}
-                               <span class="meter-label">${p.current} / ${p.target} ${esc(badge.unit)}</span>`}
-                    </div>`;
-            }).join('')}</div>`).join('');
+    // ---- Profile panels: Unlockable Shop, Inventory, Leaderboard --------------
+    const UNLOCK_CATEGORIES = [
+        { key: 'avatar', label: 'Avatars', icon: '🤖' },
+        { key: 'bg', label: 'Backgrounds', icon: '🌌' },
+        { key: 'border', label: 'Avatar Borders', icon: '⭕' },
+        { key: 'title', label: 'Titles', icon: '🏷️' },
+        { key: 'accent', label: 'Theme Accents', icon: '🎨' },
+        { key: 'chat', label: 'Chat Badges', icon: '💬' },
+        { key: 'cursor', label: 'Effects', icon: '✨' }
+    ];
+    const SOURCE_TAG = { starter: 'Starter', xp: 'XP Item', badge: 'Badge Reward', exam: 'Grandmaster' };
+
+    // Everything that can be owned, in one list. Each entry knows how it is unlocked and equipped.
+    function catalog(user) {
+        const items = [];
+        STARTER_AVATARS.forEach((img, i) => items.push({ id: `starter_${i}`, cat: 'avatar', name: `Starter Bot ${i + 1}`, source: 'starter', img, owned: true, on: user.avatar === img, equip: `data-set-avatar="${esc(img)}"` }));
+        items.push({ id: 'bg_default', cat: 'bg', name: 'Default Dark', source: 'starter', bg: 'bg_default', owned: true, on: !user.background || user.background === 'bg_default', equip: 'data-equip="bg_default"' });
+        SHOP.forEach(s => {
+            const owned = devMode() || user.unlocks.includes(s.key);
+            const on = s.type === 'bg' ? user.background === s.key : user.avatar === s.img;
+            items.push({ id: s.key, cat: s.type === 'bg' ? 'bg' : 'avatar', name: s.name, desc: s.desc, source: 'xp', cost: s.cost, img: s.img, owned, on, equip: `data-equip="${s.key}"` });
+        });
+        REWARDS.forEach(r => {
+            const owned = rewardUnlocked(r);
+            items.push({ id: r.id, cat: r.type, name: r.name, source: r.ultimate ? 'exam' : 'badge', reward: r, bg: r.bg, owned, on: owned && isEquipped(user, r), equip: `data-reward="${r.id}"`, toggles: r.type !== 'bg' });
+        });
+        return items;
     }
 
-    // ---- Ultimate reward panel (passing the Final Exam) ---------------------
-    function renderUltimate(user) {
-        const panel = $('#ultimate-panel');
-        if (!panel) return;
-        const list = REWARDS.filter(r => r.ultimate);
-        const owned = !!certificateFor(user) || devMode();
-        const allOn = owned && list.every(r => isEquipped(user, r));
-        panel.classList.toggle('unlocked', owned);
-        panel.innerHTML = `
-            <div class="locker-header">
-                <h2 class="vault-heading">👑 Ultimate Grandmaster Reward</h2>
-                <span class="ultimate-state">${owned ? '✓ Permanently Unlocked' : '🔒 Locked'}</span>
-            </div>
-            <p class="profile-subtext">${owned ? 'You earned it. Switch each Grandmaster effect on or off.' : 'Pass the Final Exam with 80% or higher to unlock all three, permanently.'}</p>
-            <ul class="ultimate-list">${list.map(r => {
-                const on = owned && isEquipped(user, r);
-                const about = { title: 'A holographic site title shown on your profile and the leaderboards.', bg: 'An animated holographic matrix background that restyles every page.', cursor: 'A glowing particle trail that follows your mouse. Hidden on touch screens and with reduced motion.' }[r.type];
-                return `<li class="${on ? 'on' : ''}">
-                    <span class="ultimate-icon" aria-hidden="true">${r.icon}</span>
-                    <div><h4>${r.type === 'title' ? `Title: <span class="title-pill ultimate">${esc(r.name)}</span>` : esc(r.name)}</h4><p>${about}</p></div>
-                    <button type="button" class="toggle-switch" role="switch" aria-checked="${on}" aria-label="${esc(r.name)}" ${owned ? `data-reward="${r.id}"` : 'disabled'}><span></span></button>
-                </li>`;
-            }).join('')}</ul>
-            ${owned
-                ? `<div class="exam-actions"><button type="button" class="btn-cyan-primary" data-ultimate-all="${allOn ? 'off' : 'on'}">${allOn ? 'Unequip All' : '⚡ Equip All Three'}</button>${certificateFor(user) ? '<button type="button" class="btn-cyan-secondary" data-view-cert>🎓 View Certificate</button>' : ''}</div>`
-                : '<div class="exam-actions"><a class="btn-cyan-secondary" href="#final-exam">See Final Exam Requirements</a></div>'}`;
+    function previewHTML(item, user) {
+        const r = item.reward;
+        if (item.cat === 'avatar') return `<img class="unlock-avatar" src="${esc(item.img)}" alt="" loading="lazy">`;
+        if (item.cat === 'bg') return item.img ? `<img class="unlock-bg" src="${esc(item.img)}" alt="" loading="lazy">` : `<span class="bg-swatch" data-bg="${item.bg}"></span>`;
+        return {
+            border: () => `<span class="frame-swatch${frameClass(r)}" style="${frameStyle(r)}"><img src="${esc(user.avatar)}" alt=""></span>`,
+            title: () => `<span class="title-pill${r.ultimate ? ' ultimate' : ''}">${esc(r.name)}</span>`,
+            accent: () => `<span class="accent-swatch" style="--r-rgb:${r.rgb}"></span>`,
+            chat: () => `<span class="chat-badge">${r.icon} ${esc(r.name)}</span>`,
+            cursor: () => `<span class="cursor-swatch">✨</span>`
+        }[item.cat]();
+    }
+
+    let shopCat = 'all';
+    function renderShop(user) {
+        const root = $('#unlock-shop');
+        if (!root) return;
+        const items = catalog(user).filter(i => i.source !== 'starter');
+        $('#shop-xp').textContent = devMode() ? '🛠 Developer Mode: everything unlocked' : `${num(user.xp)} XP to spend`;
+        const count = cat => { const list = items.filter(i => cat === 'all' || i.cat === cat); return `${list.filter(i => i.owned).length}/${list.length}`; };
+        $('#shop-filters').innerHTML = [{ key: 'all', label: 'All', icon: '' }, ...UNLOCK_CATEGORIES].map(c =>
+            `<button type="button" class="shop-filter${shopCat === c.key ? ' active' : ''}" data-shop-cat="${c.key}" aria-pressed="${shopCat === c.key}">${c.icon} ${c.label} <small>${count(c.key)}</small></button>`).join('');
+
+        const card = item => {
+            let status;
+            if (item.owned) {
+                status = `<span class="unlock-state owned">✓ ${item.source === 'xp' ? 'Owned' : 'Earned'}</span>
+                    <button type="button" class="btn-cyan-secondary" data-ptab="inventory">${item.on ? '✓ Equipped' : 'Equip in Inventory'}</button>`;
+            } else if (item.source === 'xp') {
+                const short = item.cost - num(user.xp);
+                status = `<button type="button" class="btn-cyan-secondary" data-buy="${item.id}">Unlock · ${item.cost} XP</button>
+                    ${short > 0 ? `<span class="unlock-hint">${short} more XP needed</span>` : ''}`;
+            } else if (item.source === 'exam') {
+                status = `<p class="unlock-how">🔒 Pass the Final Exam with 80%+</p><a class="btn-cyan-secondary" href="#final-exam">See Final Exam</a>`;
+            } else {
+                const badge = BADGE_MAP.get(item.reward.badge), p = badgeProgress(badge);
+                status = `<p class="unlock-how">🔒 ${esc(badge.desc)} to earn ${badge.icon} <strong>${esc(badge.name)}</strong></p>
+                    ${meterHTML(p, `${item.name} progress`)}<span class="meter-label">${p.current} / ${p.target} ${esc(badge.unit)}</span>`;
+            }
+            return `
+                <div class="reward-card unlock-card ${item.owned ? 'unlocked' : 'locked'}${item.on ? ' equipped' : ''}">
+                    <span class="unlock-source src-${item.source}">${SOURCE_TAG[item.source]}</span>
+                    <div class="reward-preview" aria-hidden="true">${previewHTML(item, user)}</div>
+                    <h4>${esc(item.name)}</h4>
+                    ${item.desc ? `<p>${esc(item.desc)}</p>` : ''}
+                    ${status}
+                </div>`;
+        };
+        const cats = UNLOCK_CATEGORIES.filter(c => shopCat === 'all' || c.key === shopCat);
+        root.innerHTML = cats.map(c => {
+            // Locked first within a category is noisy; show what you can get soonest: owned last, cheapest first
+            const list = items.filter(i => i.cat === c.key).sort((a, b) => (a.owned - b.owned) || ((a.cost || 0) - (b.cost || 0)));
+            return list.length ? `<h3 class="locker-group-title">${c.icon} ${c.label} <small>${count(c.key)}</small></h3><div class="reward-grid">${list.map(card).join('')}</div>` : '';
+        }).join('');
+    }
+
+    function renderInventory(user) {
+        const root = $('#inventory-grid');
+        if (!root) return;
+        const owned = catalog(user).filter(i => i.owned);
+        $('#inventory-count').textContent = `${owned.length} items`;
+        // Current loadout at a glance
+        const worn = cat => owned.find(i => i.cat === cat && i.on);
+        const slot = (label, item, fallback = 'None') => `<div class="loadout-slot"><span>${label}</span><strong>${item ? esc(item.name) : fallback}</strong></div>`;
+        const avatar = worn('avatar');
+        $('#loadout').innerHTML = `
+            <img class="loadout-avatar" src="${esc(user.avatar)}" alt="">
+            ${slot('Avatar', avatar, 'Custom')}${slot('Background', worn('bg'), 'Default Dark')}${slot('Border', worn('border'))}
+            ${slot('Title', worn('title'))}${slot('Accent', worn('accent'))}${slot('Chat Badge', worn('chat'))}${slot('Effect', worn('cursor'))}
+            ${certificateFor(user) || devMode() ? `<button type="button" class="btn-cyan-primary" data-ultimate-all="${REWARDS.filter(r => r.ultimate).every(r => isEquipped(user, r)) ? 'off' : 'on'}">👑 ${REWARDS.filter(r => r.ultimate).every(r => isEquipped(user, r)) ? 'Unequip' : 'Equip'} Grandmaster Set</button>` : ''}`;
+        // Categories with nothing owned yet collapse into one line at the end
+        const empty = UNLOCK_CATEGORIES.filter(c => !owned.some(i => i.cat === c.key));
+        root.innerHTML = UNLOCK_CATEGORIES.filter(c => !empty.includes(c)).map(c => {
+            const list = owned.filter(i => i.cat === c.key);
+            const body = `<div class="reward-grid">${list.map(item => `
+                    <div class="reward-card unlocked${item.on ? ' equipped' : ''}">
+                        <div class="reward-preview" aria-hidden="true">${previewHTML(item, user)}</div>
+                        <h4>${esc(item.name)}</h4>
+                        <button type="button" class="btn-cyan-secondary" ${item.equip} aria-pressed="${item.on}"${item.on && !item.toggles ? ' disabled' : ''}>${item.on ? (item.toggles ? '✓ Equipped (Remove)' : '✓ Equipped') : 'Equip'}</button>
+                    </div>`).join('')}</div>`;
+            return `<h3 class="locker-group-title">${c.icon} ${c.label} <small>${list.length}</small></h3>${body}`;
+        }).join('') + (empty.length ? `
+            <div class="inventory-empty"><span>Not unlocked yet:</span>${empty.map(c =>
+                `<button type="button" class="shop-filter" data-ptab="shop" data-shop-jump="${c.key}">${c.icon} ${c.label}</button>`).join('')}</div>` : '');
+    }
+
+    // Fast-track buttons at the top of the profile switch panels (remembered for this visit)
+    let profileTab = sessionStorage.getItem('profileTab') || 'shop';
+    function showProfileTab(tab, focus = false) {
+        if (!['shop', 'inventory', 'leaderboard', 'review'].includes(tab)) tab = 'shop';
+        profileTab = tab;
+        try { sessionStorage.setItem('profileTab', tab); } catch { /* storage blocked */ }
+        $$('.profile-tab').forEach(b => {
+            const on = b.dataset.ptab === tab;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-selected', on);
+            b.tabIndex = on ? 0 : -1;
+            if (on && focus) b.focus();
+        });
+        ['shop', 'inventory', 'leaderboard', 'review'].forEach(t => { const p = $(`#ppanel-${t}`); if (p) p.hidden = t !== tab; });
+        if (tab === 'review' && window.Reviews) Reviews.renderEditor();
     }
 
     function setUltimate(on) {
@@ -2238,8 +2256,14 @@ const Portal = (() => {
     const boardCats = () => [
         { key: 'xp', tab: '🌟 Top XP', value: u => num(u.xp), text: v => `${v} XP` },
         { key: 'total', tab: '🏅 Total Score', value: u => totalScore(u), text: v => `${v} pts` },
-        ...GAME_KEYS.map(k => ({ key: k, tab: `${GAMES[k].icon} ${GAMES[k].short}`, value: u => num(u.scores[k]), text: v => `${v} pts` }))
+        ...GAME_KEYS.map(k => k === 'boss'
+            // The boss board ranks the fastest defeat (lower is better); players without a time sit at the bottom
+            ? { key: k, tab: `${GAMES[k].icon} ${GAMES[k].short}`, value: bossTime, text: v => v ? fmtTime(v) : 'Not defeated', asc: true }
+            : { key: k, tab: `${GAMES[k].icon} ${GAMES[k].short}`, value: u => num(u.scores[k]), text: v => `${v} pts` })
     ];
+    // Boss defeat time in ms. Saved values are untrusted, so anything outside 5 s to 1 h is ignored.
+    const bossTime = u => { const t = Number(u && u.bossTime); return Number.isFinite(t) && t >= 5000 && t <= 3600000 ? Math.floor(t) : 0; };
+    const fmtTime = ms => { const s = ms / 1000; return `${Math.floor(s / 60)}:${(s % 60).toFixed(1).padStart(4, '0')}`; };
     // Other players' data comes from the shared database, so never trust its types
     const num = v => Number.isFinite(Number(v)) ? Math.max(0, Math.floor(Number(v))) : 0;
     const totalScore = u => GAME_KEYS.reduce((sum, k) => sum + num(u.scores[k]), 0);
@@ -2260,7 +2284,24 @@ const Portal = (() => {
             </div><div class="dir-side"><div class="dir-scores">${score}</div><span class="dir-view" aria-hidden="true">View profile →</span></div></div>`;
     }
 
-    const ranked = cat => [...dir].sort((a, b) => cat.value(b) - cat.value(a));
+    const ranked = cat => [...dir].sort((a, b) => {
+        if (!cat.asc) return cat.value(b) - cat.value(a);
+        const A = cat.value(a) || Infinity, B = cat.value(b) || Infinity;
+        return A === B ? 0 : A - B;
+    });
+    // Top rows for one game, used by the results screen after a minigame
+    const topFor = (key, n) => ranked(findCat(key)).slice(0, n).map(u => ({ u, text: findCat(key).text(findCat(key).value(u)) }));
+
+    // Saves a boss defeat time if it beats this profile's best. Returns true for a new record.
+    function recordBossTime(ms) {
+        const u = getActiveUser();
+        if (!u || !(ms >= 5000)) return false;
+        const best = bossTime(u);
+        if (best && best <= ms) return false;
+        u.bossTime = Math.round(ms);
+        persist(u);
+        return true;
+    }
     const findCat = key => { const cats = boardCats(); return cats.find(c => c.key === key) || cats[0]; };
 
     function renderDirectory() {
@@ -2334,7 +2375,7 @@ const Portal = (() => {
                 </div>
                 <h3>Arcade High Scores</h3>
                 <ul class="score-list">${GAME_KEYS.map(k => `
-                    <li><span>${GAMES[k].icon} ${GAMES[k].short}</span><div class="score-bar"><div style="--w:${(num(u.scores[k]) / best) * 100}%"></div></div><b>${num(u.scores[k])}</b></li>`).join('')}
+                    <li><span>${GAMES[k].icon} ${GAMES[k].short}</span><div class="score-bar"><div style="--w:${(num(u.scores[k]) / best) * 100}%"></div></div><b>${k === 'boss' && bossTime(u) ? fmtTime(bossTime(u)) : num(u.scores[k])}</b></li>`).join('')}
                 </ul>
                 <h3>Unlocked Badges</h3>
                 ${!shared ? '<p class="empty-note">This cadet has not synced badge progress yet.</p>'
@@ -2422,48 +2463,18 @@ const Portal = (() => {
         $('#dash-rank').textContent = rankTitle(user.xp || 0);
         $('#dash-bio').textContent = user.bio || 'Ready to conquer the AI modules.';
         $('#profile-stats-row').innerHTML = `<div class="p-stat-box"><span class="p-stat-label">TOTAL XP</span><span class="p-stat-num" id="dash-xp">${num(user.xp)}</span></div>`
-            + GAME_KEYS.map(k => `<div class="p-stat-box"><span class="p-stat-label">${GAMES[k].icon} ${GAMES[k].short.toUpperCase()}</span><span class="p-stat-num">${num(user.scores[k])}</span></div>`).join('');
+            + GAME_KEYS.map(k => `<div class="p-stat-box"><span class="p-stat-label">${GAMES[k].icon} ${GAMES[k].short.toUpperCase()}</span><span class="p-stat-num">${k === 'boss' ? (bossTime(user) ? fmtTime(bossTime(user)) : '—') : num(user.scores[k])}</span></div>`).join('');
 
         applyRewards(user);
-        renderRewardLocker(user);
-        renderUltimate(user);
-
-        // shop buttons show owned items
-        $$('#shop-grid [data-buy]').forEach(b => {
-            const owned = user.unlocks.includes(b.dataset.buy);
-            b.disabled = owned && !devMode();
-            b.textContent = devMode() ? '🛠 Try On (Dev)' : owned ? '✅ Owned' : `Unlock (${b.dataset.cost} XP)`;
-        });
-
-        // inventory (Developer Mode lists every shop item)
-        const items = devMode() ? [...new Set(['bg_default', ...SHOP.map(i => i.key)])] : user.unlocks;
-        const inv = $('#user-inventory-list');
-        inv.innerHTML = items.length
-            ? items.map(k => {
-                const name = SHOP.find(i => i.key === k)?.name || (PortalTheme.has(k) ? PortalTheme.BACKGROUNDS[k].name + ' Background' : k);
-                const inUse = user.background === k || (AVATAR_MAP[k] && user.avatar === AVATAR_MAP[k]);
-                return `<div class="inventory-item"><span>✅ ${esc(name)}</span><button type="button" class="btn-cyan-secondary" data-equip="${esc(k)}"${inUse ? ' disabled' : ''}>${inUse ? 'In Use' : 'Equip'}</button></div>`;
-            }).join('')
-            : '<span>No items unlocked yet. Buy something from the vault above!</span>';
-
-        // avatar picker
-        const avatars = [...new Set([...STARTER_AVATARS, ...items.map(k => AVATAR_MAP[k]).filter(Boolean)])];
-        $('#edit-avatar-picker').innerHTML = avatars.map(p => `<button type="button" class="avatar-pick${user.avatar === p ? ' selected' : ''}" data-avatar="${esc(p)}"><img src="${esc(p)}" alt=""></button>`).join('');
+        renderShop(user);
+        renderInventory(user);
+        showProfileTab(profileTab);
 
         renderDirectory();
     }
 
-    function buildShop() {
-        $('#shop-grid').innerHTML = SHOP.map(i => `
-            <div class="shop-item${i.tier ? ' tier-' + i.tier : ''}">
-                <div class="thumb ${i.type === 'bg' ? 'bg' : 'avatar'}"><img src="${esc(i.img)}" alt="${esc(i.name)} preview" loading="lazy"></div>
-                <h4>${esc(i.name)}</h4><p>${esc(i.desc)}</p>
-                <button type="button" class="btn-cyan-secondary" data-buy="${i.key}" data-cost="${i.cost}">Unlock (${i.cost} XP)</button>
-            </div>`).join('');
-    }
-
     function bind() {
-        buildShop();
+
         buildBoardTabs();
         let createAvatar = STARTER_AVATARS[0];
         $$('#create-avatar-picker .avatar-pick').forEach(btn => btn.addEventListener('click', () => {
@@ -2533,13 +2544,43 @@ const Portal = (() => {
 
         $('#btn-switch-profile').addEventListener('click', () => PortalAccount.logOut());
 
+        $('#btn-edit-profile').addEventListener('click', e => {
+            const box = $('#profile-edit'), open = box.hidden;
+            box.hidden = !open;
+            e.currentTarget.setAttribute('aria-expanded', open);
+            e.currentTarget.textContent = open ? 'Close Editor' : 'Edit Profile';
+            if (open) $('#edit-username-input').focus();
+        });
+
         $('#profile-page').addEventListener('click', e => {
+            const tab = e.target.closest('[data-ptab]');
+            if (tab) {
+                const jump = tab.dataset.shopJump;
+                if (jump) { shopCat = jump; const u = getActiveUser(); if (u) renderShop(u); }
+                showProfileTab(tab.dataset.ptab, tab.classList.contains('profile-tab'));
+                if (!tab.classList.contains('profile-tab')) $('.profile-tabs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+            const cat = e.target.closest('[data-shop-cat]');
+            if (cat) { shopCat = cat.dataset.shopCat; const u = getActiveUser(); if (u) renderShop(u); $(`[data-shop-cat="${shopCat}"]`)?.focus(); return; }
             const buyBtn = e.target.closest('[data-buy]'); if (buyBtn) return buy(buyBtn.dataset.buy);
             const eq = e.target.closest('[data-equip]'); if (eq) return equip(eq.dataset.equip);
             const rw = e.target.closest('[data-reward]'); if (rw) return toggleReward(rw.dataset.reward);
             const all = e.target.closest('[data-ultimate-all]'); if (all) return setUltimate(all.dataset.ultimateAll === 'on');
-            const av = e.target.closest('#edit-avatar-picker .avatar-pick');
-            if (av) { const u = getActiveUser(); if (u) { u.avatar = av.dataset.avatar; persist(u); } }
+            const av = e.target.closest('[data-set-avatar]');
+            if (av) { const u = getActiveUser(); if (u) { u.avatar = av.dataset.setAvatar; persist(u); toast('Avatar equipped.', 'success'); } }
+        });
+        // Arrow keys move between the profile tabs
+        $('.profile-tabs')?.addEventListener('keydown', e => {
+            if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+            const order = ['shop', 'inventory', 'leaderboard', 'review'];
+            const i = (order.indexOf(profileTab) + (e.key === 'ArrowRight' ? 1 : order.length - 1)) % order.length;
+            showProfileTab(order[i], true);
+        });
+        // Links elsewhere (dashboard, final exam) can open a specific profile panel
+        document.addEventListener('click', e => {
+            const target = e.target.closest('[data-ptab-target]');
+            if (target) showProfileTab(target.dataset.ptabTarget);
         });
         // Clickable leaderboard rows, with keyboard support
         document.addEventListener('click', e => {
@@ -2553,7 +2594,7 @@ const Portal = (() => {
         initSync();
     }
 
-    return { bind, getActiveUser, getDirectory: () => dir, award, addXP, getEquipped, syncProfile, refresh: refreshUI, renderDashboardBoard };
+    return { bind, getActiveUser, getDirectory: () => dir, award, addXP, getEquipped, syncProfile, refresh: refreshUI, renderDashboardBoard, recordBossTime, topFor, bossTime, fmtTime };
 })();
 
 // ============================================================================
@@ -2594,9 +2635,9 @@ const Chatbot = (() => {
         { k: ['rlhf', 'alignment', 'reward model'], a: `RLHF (Reinforcement Learning from Human Feedback): people rank model answers, a reward model learns those preferences, and the AI is fine-tuned to be helpful, honest, and harmless. A KL penalty prevents reward hacking. See Lesson 6.2.` },
         { k: ['agent', 'multimodal', 'human-in-the-loop', 'hitl'], a: `AI agents plan multi-step tasks and use tools; multimodal models handle text, images, audio, and code. Human-in-the-loop design keeps people approving high-impact actions. See Lesson 6.3.` },
         { k: ['xp', 'badge', 'level up', 'points', 'shop', 'leaderboard'], a: `You earn XP for every correct quiz answer plus a bonus for completing a lesson for the first time. Spend XP in the Profile shop on avatars and backgrounds. Badges on the Dashboard (for lessons, modules, minigames, and perfect quiz scores) (for lessons, minigames, combos, and exploring) automatically unlock titles, animated avatar borders, theme accents, chat badges, and site-wide backgrounds that you can equip on your Profile. Click any player on a leaderboard to see their stats. Your best arcade scores appear on the leaderboard.` },
-        { k: ['unit test', 'final exam', 'certificate', 'grandmaster', 'exam'], a: `Each module ends with a Unit Test, and you need 80% or higher to pass. After passing all six, the Final Exam unlocks. Score 80% or higher on it to earn your Certificate of Completion and the Grandmaster title, background, and cursor effect.` },
+        { k: ['unit test', 'final exam', 'certificate', 'grandmaster', 'exam'], a: `Each module ends with a Unit Test: 12 multiple-choice questions plus 2 randomly chosen written responses (3 points each, scored against a rubric). You need 80% of the points to pass. After passing all six, the Final Exam unlocks, with 30 multiple-choice questions and 3 written responses. Score 80% or higher on it to earn your Certificate of Completion and the Grandmaster title, background, and cursor effect.` },
         { k: ['unlock', 'locked', 'pass', 'module'], a: `Each lesson ends with an arcade quiz. Answer 4 out of 5 correctly to complete the lesson. After all three lessons, pass the module's Unit Test with 80% or higher to unlock the next module.` },
-        { k: ['game', 'arcade', 'combo', 'streak', 'boss'], a: `Lessons use eight quiz games: Rocket Space Defender, Block Blast, Pirate Cannon, Cyber Shield Defense, Neon Hover Runner, Vault Code Breaker, Glitch Boss Battle, and Data Packet Catcher. Back-to-back right answers multiply your score up to x3 and unlock power-ups.` },
+        { k: ['game', 'arcade', 'combo', 'streak', 'boss'], a: `Lessons use eight quiz games: Rocket Space Defender, Block Blast, Pirate Cannon, Cyber Shield Defense, Neon Hover Runner, Sky Climb, the True God Scrappy Boss Battle, and Data Packet Catcher. Back-to-back right answers multiply your score up to x3 and unlock power-ups.` },
         { k: ['video'], a: `Lesson 1.1 has a video before the spam-classifier simulator. Watch it and the simulator unlocks!` }
     ];
     const FALLBACK = `I'm not sure about that one yet. Try asking about machine learning, neural networks, prompts, temperature, citing AI, bias, overfitting, precision and recall, or how XP and badges work.`;
@@ -2794,6 +2835,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lesson) { const [m, s] = lesson.dataset.lesson.split('.'); location.hash = `#module-${m}-${s}`; return; }
         const launch = e.target.closest('[data-launch]');
         if (launch) { const [m, s] = launch.dataset.launch.split('.').map(Number); return startArcadeQuiz(m, s); }
+        const play = e.target.closest('[data-arcade-play]');
+        if (play) return launchArcadeGame(play.dataset.arcadePlay);
         if (e.target.closest('#preview-toggle')) {
             store.set('previewAll', !previewMode());
             renderModulesGrid();

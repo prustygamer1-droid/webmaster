@@ -75,13 +75,15 @@ const PortalTheme = (() => {
     // Entries with "img" use a picture. The others are drawn in style.css ([data-bg="..."]).
     const BACKGROUNDS = {
         bg_default: { name: 'Default Dark', palette: { accent: '#00f2fe', accent2: '#2563eb', soft: '#38bdf8', alt: '#a855f7', btn: ['#00f2fe', '#3b82f6'], ink: '#04101a', nav: ['#050a14', '#0d1830', '#122241'] } },
-        bg_electric_blue: { name: 'Electric Blue', img: 'images/Designer (5).png', palette: { accent: '#4cc9ff', accent2: '#1d4ed8', soft: '#60a5fa', alt: '#818cf8', btn: ['#7dd3fc', '#60a5fa'], ink: '#03102a', nav: ['#01061c', '#04175a', '#072383'] } },
-        bg_robot_painting: { name: 'Robot Painting', img: 'images/Untitled Design (2).png', palette: { accent: '#8fd3ff', accent2: '#2f7fb8', soft: '#5eb1e0', alt: '#2dd4bf', btn: ['#e0f2fe', '#7cc4ee'], ink: '#082f49', nav: ['#0b1c28', '#143247', '#1d4764'] } },
-        bg_true_gold: { name: 'True Gold', img: 'images/generate_image_02.png', palette: { accent: '#ffd700', accent2: '#b8860b', soft: '#f2c94c', alt: '#ff9f1c', btn: ['#ffe566', '#e0a812'], ink: '#1c1300', nav: ['#0d0a02', '#1f1806', '#33270a'] } },
-        bg_deep_space: { name: 'Deep Space', img: 'images/generate_a_flat_front-facing_full-bleed_deep_space_cosmic_ba.jpg', palette: { accent: '#e08bff', accent2: '#7c3aed', soft: '#c084fc', alt: '#f472b6', btn: ['#f0abfc', '#a78bfa'], ink: '#180426', nav: ['#07020f', '#180a2e', '#2a1050'] } },
+        bg_electric_blue: { name: 'Electric Blue', img: 'images/Designer (5).png', skin: 'electric', palette: { accent: '#4cc9ff', accent2: '#1d4ed8', soft: '#60a5fa', alt: '#818cf8', btn: ['#7dd3fc', '#60a5fa'], ink: '#03102a', nav: ['#01061c', '#04175a', '#072383'] } },
+        // Paper themes: the whole site turns into a cream notebook page with ink text and hand-drawn borders (see style.css)
+        bg_robot_painting: { name: 'Robot Painting', img: 'images/Untitled Design (2).png', paper: 'grid', palette: { accent: '#1d4ed8', accent2: '#b91c1c', soft: '#334155', alt: '#dc2626', btn: ['#fde047', '#facc15'], ink: '#1f2937', nav: ['#fdf8ec', '#fffdf7', '#fffdf7'] } },
+        bg_true_gold: { name: 'True Gold', img: 'images/generate_image_02.png', skin: 'gold', palette: { accent: '#ffd700', accent2: '#b8860b', soft: '#f2c94c', alt: '#ff9f1c', btn: ['#ffe566', '#e0a812'], ink: '#1c1300', nav: ['#0d0a02', '#1f1806', '#33270a'] } },
+        bg_deep_space: { name: 'Deep Space', img: 'images/generate_a_flat_front-facing_full-bleed_deep_space_cosmic_ba.jpg', skin: 'cosmic', palette: { accent: '#e08bff', accent2: '#7c3aed', soft: '#c084fc', alt: '#f472b6', btn: ['#f0abfc', '#a78bfa'], ink: '#180426', nav: ['#07020f', '#180a2e', '#2a1050'] } },
         bg_manga: { name: 'Manga Panels', img: 'images/bg_manga.svg', shade: [.66, .78], palette: { accent: '#f5f5f5', accent2: '#3f3f46', soft: '#d4d4d8', alt: '#ff3b5c', btn: ['#ffffff', '#d4d4d8'], ink: '#0a0a0a', nav: ['#000000', '#141414', '#232323'] } },
         bg_fuji: { name: 'Mount Fuji Twilight', img: 'images/bg_fuji.svg', shade: [.42, .62], palette: { accent: '#ffb7d0', accent2: '#be123c', soft: '#fda4c4', alt: '#fbbf24', btn: ['#ffc8dc', '#f472b6'], ink: '#2a0614', nav: ['#0a0b1f', '#1d1640', '#3a1d4f'] } },
-        bg_scrappy_console: { name: 'Scrappy on Console', img: 'images/b649ac97-d785-4643-951c-191279da5b6b.jpg', palette: { accent: '#b4cde6', accent2: '#4f6d8a', soft: '#8aa9c4', alt: '#a5b4fc', btn: ['#e2e8f0', '#93b4d1'], ink: '#0f172a', nav: ['#0d1117', '#1b2430', '#273445'] } },
+        bg_lofi: { name: 'Lofi Scrappy', img: 'images/bg_lofi.svg', shade: [.4, .6], palette: { accent: '#c4b5fd', accent2: '#7c3aed', soft: '#f9a8d4', alt: '#fdba74', btn: ['#e9d5ff', '#f9a8d4'], ink: '#24123d', nav: ['#120d26', '#1e1638', '#2b1f4d'] } },
+        bg_scrappy_console: { name: 'Scrappy on Console', img: 'images/b649ac97-d785-4643-951c-191279da5b6b.jpg', paper: 'lined', palette: { accent: '#1d4ed8', accent2: '#b91c1c', soft: '#334155', alt: '#dc2626', btn: ['#fde047', '#facc15'], ink: '#1f2937', nav: ['#fdf8ec', '#fffdf7', '#fffdf7'] } },
         bg_neon_grid: { name: 'Neon Horizon Grid', palette: { accent: '#22e4ff', accent2: '#7c3aed', soft: '#67e8f9', alt: '#c026d3', btn: ['#22e4ff', '#a78bfa'], ink: '#0b0320', nav: ['#070316', '#160a36', '#241053'] } },
         bg_aurora: { name: 'Quantum Aurora', palette: { accent: '#5eead4', accent2: '#0e7490', soft: '#34d399', alt: '#818cf8', btn: ['#6ee7b7', '#38bdf8'], ink: '#022018', nav: ['#020d16', '#07283a', '#0b3d4d'] } },
         bg_circuit: { name: 'Living Circuit', palette: { accent: '#4ade80', accent2: '#15803d', soft: '#34d399', alt: '#22d3ee', btn: ['#86efac', '#22c55e'], ink: '#03170a', nav: ['#020f0a', '#06261a', '#0a3d29'] } },
@@ -185,9 +187,15 @@ const PortalTheme = (() => {
         }
         if (layer.dataset.bg === k) return;
         layer.dataset.bg = k;
-        const { img, shade = [.78, .88] } = BACKGROUNDS[k];
+        const { img, shade = [.78, .88], paper, skin } = BACKGROUNDS[k];
+        // Skins restyle the whole site to match the background (see the SKINS section in style.css)
+        root.dataset.skin = skin || '';
+        // Paper themes draw the paper in CSS; the picture only shows faintly under it
+        root.classList.toggle('paper-theme', !!paper);
+        root.dataset.paper = paper || '';
+        layer.style.setProperty('--paper-img', paper && img ? `url("${img}")` : 'none');
         // The dark shade keeps text readable on top of bright pictures (darker scenes can use a lighter shade)
-        layer.style.backgroundImage = img ? `linear-gradient(rgba(8,8,18,${shade[0]}), rgba(8,8,18,${shade[1]})), url("${img}")` : '';
+        layer.style.backgroundImage = img && !paper ? `linear-gradient(rgba(8,8,18,${shade[0]}), rgba(8,8,18,${shade[1]})), url("${img}")` : '';
         root.classList.toggle('has-global-bg', k !== 'bg_default');
         if (BACKGROUNDS[k].matrix) startMatrix(layer); else stopMatrix();
     }

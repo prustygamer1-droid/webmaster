@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" preserveAspectRatio="xMidYMid slice">
+  <title>Lofi Scrappy (animated)</title>
+  <style>
+    .rain { animation: rain 1.1s linear infinite; }
+    .rain2 { animation: rain 1.5s linear infinite; animation-delay: -.6s; }
+    .bulb { animation: twinkle 3.4s ease-in-out infinite; }
+    .b2 { animation-delay: -1.1s; } .b3 { animation-delay: -2.2s; }
+    .citylight { animation: flick 7s steps(1) infinite; }
+    .cl2 { animation-delay: -2.5s; } .cl3 { animation-delay: -4.8s; }
+    .lamp-glow { transform-box: fill-box; transform-origin: center; animation: breathe 6s ease-in-out infinite; }
+    .bob { transform-box: view-box; transform-origin: 1400px 700px; animation: bob 1.6s ease-in-out infinite; }
+    .record { transform-box: fill-box; transform-origin: center; animation: spin 3.2s linear infinite; }
+    .steam { animation: steam 4.5s ease-in-out infinite; }
+    .s2 { animation-delay: -1.5s; } .s3 { animation-delay: -3s; }
+    .note { animation: float 7s ease-in infinite; opacity: 0; }
+    .n2 { animation-delay: -1.8s; } .n3 { animation-delay: -3.6s; } .n4 { animation-delay: -5.2s; }
+    .leaf { transform-box: fill-box; transform-origin: bottom center; animation: sway 5s ease-in-out infinite; }
+    .lf2 { animation-delay: -1.7s; } .lf3 { animation-delay: -3.1s; }
+    .code { animation: scroll 9s linear infinite; }
+    .moon-halo { transform-box: fill-box; transform-origin: center; animation: breathe 9s ease-in-out infinite; }
+    @keyframes rain { from { transform: translate(0, -520px); } to { transform: translate(-60px, 0); } }
+    @keyframes twinkle { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+    @keyframes flick { 0% { opacity: 1; } 40% { opacity: .2; } 55% { opacity: 1; } 80% { opacity: .5; } }
+    @keyframes breathe { 0%, 100% { opacity: .75; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
+    @keyframes bob { 0%, 100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(6px) rotate(-1.2deg); } 50% { transform: translateY(0) rotate(0deg); } 75% { transform: translateY(6px) rotate(1.2deg); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes steam { 0% { opacity: 0; transform: translateY(0); } 25% { opacity: .55; } 100% { opacity: 0; transform: translateY(-110px); } }
+    @keyframes float { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg); } 15% { opacity: .9; } 100% { opacity: 0; transform: translate(-90px, -300px) rotate(-18deg); } }
+    @keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+    @keyframes scroll { from { transform: translateY(0); } to { transform: translateY(-120px); } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } .note { opacity: .7; } }
+  </style>
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b1638"/><stop offset="1" stop-color="#2d2150"/>
+    </linearGradient>
+    <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0c0d2b"/><stop offset=".65" stop-color="#2b2163"/><stop offset="1" stop-color="#6b3f84"/>
+    </linearGradient>
+    <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b3a55"/><stop offset=".08" stop-color="#3d2742"/><stop offset="1" stop-color="#1d1326"/>
+    </linearGradient>
+    <radialGradient id="lampLight" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ffcf8a" stop-opacity=".55"/><stop offset=".5" stop-color="#ff9e64" stop-opacity=".18"/><stop offset="1" stop-color="#ff9e64" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="moonGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#fde7ff" stop-opacity=".5"/><stop offset="1" stop-color="#fde7ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="screenGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#7dd3fc" stop-opacity=".35"/><stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="head" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9d4ec"/>
+    </linearGradient>
+    <radialGradient id="vignette" cx=".5" cy=".5" r=".75">
+      <stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#05030f" stop-opacity=".75"/>
+    </radialGradient>
+    <clipPath id="pane"><rect x="200" y="150" width="660" height="480" rx="8"/></clipPath>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <symbol id="noteA" viewBox="0 0 40 60"><path d="M30 4v38a10 8 0 1 1-6-7V12L12 16v32a10 8 0 1 1-6-7V10z" fill="#f0abfc"/></symbol>
+    <symbol id="noteB" viewBox="0 0 30 60"><path d="M22 4v40a10 8 0 1 1-6-7V4z" fill="#a5f3fc"/><path d="M22 4c6 6 10 10 4 20" stroke="#a5f3fc" stroke-width="4" fill="none"/></symbol>
+  </defs>
+
+  <!-- Room -->
+  <rect width="1920" height="1080" fill="url(#wall)"/>
+  <g opacity=".07" fill="#c4b5fd">
+    <rect x="40" width="8" height="760"/><rect x="200" width="8" height="760"/><rect x="960" width="8" height="760"/><rect x="1120" width="8" height="760"/><rect x="1280" width="8" height="760"/><rect x="1440" width="8" height="760"/><rect x="1600" width="8" height="760"/><rect x="1760" width="8" height="760"/>
+  </g>
+
+  <!-- Window: rainy city night -->
+  <rect x="180" y="130" width="700" height="520" rx="16" fill="#120c22"/>
+  <g clip-path="url(#pane)">
+    <rect x="200" y="150" width="660" height="480" fill="url(#night)"/>
+    <circle class="moon-halo" cx="720" cy="270" r="120" fill="url(#moonGlow)"/>
+    <circle cx="720" cy="270" r="46" fill="#fbe8ff"/>
+    <circle cx="704" cy="258" r="9" fill="#e9d5ff" opacity=".7"/><circle cx="734" cy="286" r="6" fill="#e9d5ff" opacity=".7"/>
+    <g fill="#ffffff"><circle cx="300" cy="210" r="2"/><circle cx="420" cy="180" r="1.6"/><circle cx="560" cy="230" r="2.2"/><circle cx="820" cy="200" r="1.5"/><circle cx="380" cy="300" r="1.4"/></g>
+    <!-- skyline -->
+    <path d="M200 630V470h50v-40h40v60h36V420h60v80h30v-50h44v-90h56v120h40v-60h50v100h36v-140h58v170h40v-90h50v70h30v130z" fill="#140d2a"/>
+    <g fill="#fbbf24">
+      <rect class="citylight" x="266" y="450" width="10" height="12"/><rect class="citylight cl2" x="340" y="440" width="10" height="12"/><rect class="citylight" x="362" y="480" width="10" height="12"/>
+      <rect class="citylight cl3" x="470" y="380" width="10" height="12"/><rect class="citylight" x="492" y="420" width="10" height="12"/><rect class="citylight cl2" x="470" y="460" width="10" height="12"/>
+      <rect class="citylight cl3" x="640" y="420" width="10" height="12"/><rect class="citylight" x="662" y="460" width="10" height="12"/><rect class="citylight cl2" x="720" y="470" width="10" height="12"/>
+      <rect class="citylight" x="790" y="520" width="10" height="12"/><rect class="citylight cl3" x="604" y="500" width="10" height="12"/>
+    </g>
+    <!-- rain (two layers that loop downward) -->
+    <g class="rain" stroke="#c7d2fe" stroke-opacity=".38" stroke-width="2" stroke-linecap="round">
+      <path d="M230 160l-10 34M300 230l-10 34M370 180l-10 34M440 260l-10 34M510 170l-10 34M580 240l-10 34M650 190l-10 34M720 250l-10 34M790 175l-10 34M860 230l-10 34M260 360l-10 34M340 420l-10 34M410 340l-10 34M490 400l-10 34M560 350l-10 34M630 430l-10 34M700 370l-10 34M770 440l-10 34M850 380l-10 34"/>
+      <path d="M230 680l-10 34M300 750l-10 34M370 700l-10 34M440 780l-10 34M510 690l-10 34M580 760l-10 34M650 710l-10 34M720 770l-10 34M790 695l-10 34M860 750l-10 34"/>
+    </g>
+    <g class="rain2" stroke="#e0e7ff" stroke-opacity=".22" stroke-width="1.5" stroke-linecap="round">
+      <path d="M250 200l-8 26M330 300l-8 26M400 210l-8 26M470 320l-8 26M540 220l-8 26M610 310l-8 26M680 205l-8 26M750 330l-8 26M830 260l-8 26M290 460l-8 26M380 520l-8 26M460 470l-8 26M540 540l-8 26M620 480l-8 26M700 560l-8 26M790 500l-8 26"/>
+    </g>
+    <!-- droplets on the glass -->
+    <g fill="#e0e7ff" opacity=".35"><circle cx="260" cy="300" r="4"/><circle cx="330" cy="520" r="3"/><circle cx="600" cy="330" r="5"/><circle cx="780" cy="560" r="3.5"/><circle cx="520" cy="200" r="3"/></g>
+  </g>
+  <!-- window frame and sill -->
+  <rect x="180" y="130" width="700" height="520" rx="16" fill="none" stroke="#3b2a4f" stroke-width="20"/>
+  <path d="M530 140v500M190 390h680" stroke="#3b2a4f" stroke-width="14"/>
+  <rect x="150" y="640" width="760" height="26" rx="8" fill="#4a3460"/>
+  <!-- little cactus on the sill -->
+  <rect x="790" y="604" width="44" height="38" rx="6" fill="#c2410c"/>
+  <path d="M812 604v-48a10 10 0 0 1 20 0v48z" fill="#4ade80"/><path d="M806 586h-10v-18a7 7 0 0 1 14 0" fill="#4ade80"/>
+
+  <!-- Fairy lights across the top -->
+  <path d="M0 70 Q240 150 480 82 T960 86 T1440 84 T1920 74" stroke="#2a2040" stroke-width="4" fill="none"/>
+  <g filter="url(#glow)">
+    <circle class="bulb" cx="90" cy="96" r="9" fill="#fbbf24"/><circle class="bulb b2" cx="210" cy="118" r="9" fill="#f472b6"/><circle class="bulb b3" cx="330" cy="114" r="9" fill="#a5f3fc"/>
+    <circle class="bulb" cx="450" cy="88" r="9" fill="#fbbf24"/><circle class="bulb b2" cx="580" cy="62" r="9" fill="#f472b6"/><circle class="bulb b3" cx="710" cy="76" r="9" fill="#a5f3fc"/>
+    <circle class="bulb" cx="840" cy="98" r="9" fill="#fbbf24"/><circle class="bulb b2" cx="1060" cy="104" r="9" fill="#f472b6"/><circle class="bulb b3" cx="1190" cy="72" r="9" fill="#a5f3fc"/>
+    <circle class="bulb" cx="1320" cy="70" r="9" fill="#fbbf24"/><circle class="bulb b2" cx="1560" cy="100" r="9" fill="#f472b6"/><circle class="bulb b3" cx="1700" cy="92" r="9" fill="#a5f3fc"/>
+    <circle class="bulb" cx="1840" cy="78" r="9" fill="#fbbf24"/>
+  </g>
+
+  <!-- Wall poster: a little equalizer -->
+  <rect x="1580" y="210" width="220" height="280" rx="14" fill="#241a3d" stroke="#4c3a6e" stroke-width="6"/>
+  <g fill="#c084fc" opacity=".8"><rect x="1612" y="380" width="22" height="80" rx="4"/><rect x="1646" y="330" width="22" height="130" rx="4"/><rect x="1680" y="300" width="22" height="160" rx="4"/><rect x="1714" y="350" width="22" height="110" rx="4"/><rect x="1748" y="390" width="22" height="70" rx="4"/></g>
+  <circle cx="1690" cy="260" r="26" fill="#f9a8d4" opacity=".75"/>
+
+  <!-- Lamp light pool -->
+  <ellipse class="lamp-glow" cx="400" cy="720" rx="420" ry="300" fill="url(#lampLight)"/>
+
+  <!-- Scrappy (behind the desk), bobbing to the beat -->
+  <g class="bob">
+    <!-- body -->
+    <rect x="1270" y="700" width="260" height="200" rx="70" fill="url(#head)" stroke="#2a1f45" stroke-width="6"/>
+    <rect x="1370" y="760" width="60" height="20" rx="10" fill="#a78bfa" filter="url(#glow)"/>
+    <!-- headphone band -->
+    <path d="M1220 560 Q1222 380 1400 372 Q1578 380 1580 560" fill="none" stroke="#2a1f45" stroke-width="30" stroke-linecap="round"/>
+    <path d="M1220 560 Q1222 380 1400 372 Q1578 380 1580 560" fill="none" stroke="#7c3aed" stroke-width="14" stroke-linecap="round"/>
+    <!-- antennae -->
+    <ellipse cx="1350" cy="410" rx="13" ry="30" transform="rotate(-18 1350 410)" fill="#60a5fa" stroke="#2a1f45" stroke-width="5"/>
+    <ellipse cx="1450" cy="410" rx="13" ry="30" transform="rotate(18 1450 410)" fill="#60a5fa" stroke="#2a1f45" stroke-width="5"/>
+    <!-- head -->
+    <rect x="1250" y="430" width="300" height="250" rx="78" fill="url(#head)" stroke="#2a1f45" stroke-width="7"/>
+    <rect x="1290" y="470" width="220" height="168" rx="52" fill="#0e0a1f"/>
+    <rect x="1440" y="486" width="34" height="10" rx="5" fill="#ffffff" opacity=".2"/>
+    <!-- closed happy eyes and a small smile -->
+    <g fill="none" stroke="#a5f3fc" stroke-width="10" stroke-linecap="round" filter="url(#glow)">
+      <path d="M1335 556 Q1360 528 1385 556"/><path d="M1415 556 Q1440 528 1465 556"/>
+      <path d="M1380 596 Q1400 612 1420 596" stroke-width="8"/>
+    </g>
+    <!-- headphone cups -->
+    <rect x="1196" y="500" width="70" height="120" rx="32" fill="#2a1f45"/>
+    <rect x="1208" y="512" width="50" height="96" rx="24" fill="#7c3aed"/>
+    <rect x="1534" y="500" width="70" height="120" rx="32" fill="#2a1f45"/>
+    <rect x="1542" y="512" width="50" height="96" rx="24" fill="#7c3aed"/>
+    <g fill="#f0abfc" filter="url(#glow)"><rect x="1222" y="548" width="6" height="22" rx="3"/><rect x="1232" y="540" width="6" height="38" rx="3"/><rect x="1242" y="552" width="6" height="16" rx="3"/>
+      <rect x="1556" y="548" width="6" height="22" rx="3"/><rect x="1566" y="540" width="6" height="38" rx="3"/><rect x="1576" y="552" width="6" height="16" rx="3"/></g>
+  </g>
+
+  <!-- Music notes drifting up -->
+  <use class="note" href="#noteA" x="1620" y="470" width="44" height="66"/>
+  <use class="note n2" href="#noteB" x="1180" y="440" width="34" height="66"/>
+  <use class="note n3" href="#noteA" x="1660" y="560" width="34" height="50"/>
+  <use class="note n4" href="#noteB" x="1140" y="540" width="28" height="56"/>
+
+  <!-- Desk -->
+  <rect x="0" y="790" width="1920" height="290" fill="url(#desk)"/>
+  <rect x="0" y="786" width="1920" height="12" fill="#7a4f6e" opacity=".8"/>
+  <!-- Scrappy's arms resting on the desk -->
+  <rect x="1250" y="770" width="90" height="40" rx="20" fill="#e5e0f2" stroke="#2a1f45" stroke-width="5"/>
+  <rect x="1460" y="770" width="90" height="40" rx="20" fill="#e5e0f2" stroke="#2a1f45" stroke-width="5"/>
+
+  <!-- Desk lamp -->
+  <rect x="300" y="770" width="150" height="24" rx="12" fill="#2a1f45"/>
+  <path d="M370 772 L330 600 L420 500" stroke="#2a1f45" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M380 470 L500 520 L470 580 L350 530 Z" fill="#f59e0b" stroke="#2a1f45" stroke-width="8" stroke-linejoin="round"/>
+  <ellipse cx="420" cy="560" rx="40" ry="14" transform="rotate(22 420 560)" fill="#fde68a" filter="url(#glow)"/>
+
+  <!-- Stack of books -->
+  <rect x="560" y="740" width="200" height="22" rx="4" fill="#be185d"/><rect x="575" y="718" width="180" height="22" rx="4" fill="#0e7490"/><rect x="566" y="762" width="210" height="26" rx="4" fill="#6d28d9"/>
+  <rect x="590" y="724" width="60" height="6" rx="3" fill="#a5f3fc" opacity=".6"/>
+
+  <!-- Laptop with scrolling code -->
+  <ellipse cx="960" cy="650" rx="240" ry="160" fill="url(#screenGlow)"/>
+  <path d="M820 790 L860 640 H1080 L1110 790 Z" fill="#2a1f45"/>
+  <clipPath id="laptopScreen"><rect x="872" y="652" width="196" height="120" rx="6"/></clipPath>
+  <rect x="872" y="652" width="196" height="120" rx="6" fill="#0b1226"/>
+  <g clip-path="url(#laptopScreen)">
+    <g class="code" stroke-linecap="round" stroke-width="6">
+      <path d="M890 670h70M900 690h110M900 710h60M890 730h90M900 750h120M890 770h50M900 790h100M890 810h80M900 830h60M890 850h110M900 870h70M890 890h90" stroke="#7dd3fc" opacity=".8"/>
+      <path d="M970 670h40M1020 710h30M990 730h50M960 770h40M1000 810h40M980 850h40" stroke="#f0abfc" opacity=".8"/>
+    </g>
+  </g>
+  <rect x="800" y="786" width="330" height="16" rx="6" fill="#3d2d57"/>
+
+  <!-- Mug with steam -->
+  <g fill="none" stroke="#f5f3ff" stroke-width="7" stroke-linecap="round">
+    <path class="steam" d="M1160 700 q-14 -24 0 -46 q14 -22 0 -44" opacity=".5"/>
+    <path class="steam s2" d="M1186 700 q-14 -24 0 -46 q14 -22 0 -44" opacity=".5"/>
+    <path class="steam s3" d="M1212 700 q-14 -24 0 -46 q14 -22 0 -44" opacity=".5"/>
+  </g>
+  <path d="M1140 712 h96 v62 a20 20 0 0 1 -20 20 h-56 a20 20 0 0 1 -20 -20 z" fill="#fca5a5" stroke="#2a1f45" stroke-width="6"/>
+  <path d="M1236 728 a22 22 0 0 1 0 44" fill="none" stroke="#2a1f45" stroke-width="8"/>
+  <path d="M1170 742 q18 18 36 0" stroke="#2a1f45" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- Turntable with a spinning record -->
+  <rect x="1600" y="760" width="250" height="40" rx="10" fill="#2a1f45"/>
+  <g class="record">
+    <ellipse cx="1715" cy="760" rx="92" ry="26" fill="#0b0716"/>
+    <ellipse cx="1715" cy="760" rx="70" ry="19" fill="none" stroke="#3b2a4f" stroke-width="2"/>
+    <ellipse cx="1715" cy="760" rx="48" ry="13" fill="none" stroke="#3b2a4f" stroke-width="2"/>
+    <ellipse cx="1715" cy="760" rx="24" ry="7" fill="#f472b6"/>
+    <rect x="1760" y="756" width="22" height="5" rx="2" fill="#f9a8d4" opacity=".7"/>
+  </g>
+  <path d="M1828 730 L1800 762" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Plant -->
+  <g>
+    <path class="leaf" d="M110 760 q-60 -60 -30 -160 q40 70 30 160z" fill="#22c55e"/>
+    <path class="leaf lf2" d="M120 760 q20 -110 90 -150 q-10 100 -90 150z" fill="#16a34a"/>
+    <path class="leaf lf3" d="M115 760 q-90 -20 -120 -100 q80 10 120 100z" fill="#4ade80"/>
+    <path d="M70 760 h100 l-14 70 h-72 z" fill="#c2410c" stroke="#2a1f45" stroke-width="5"/>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#vignette)"/>
+</svg>

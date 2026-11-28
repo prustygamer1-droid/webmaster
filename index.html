@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="An interactive AI learning portal for high school students: lessons, simulators, arcade quizzes, badges, and an AI study chatbot.">
     <title>AI Learning Portal - TSA Webmaster Competition</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
-    <link rel="stylesheet" href="style.css?v=7">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@700;800&family=Fredoka:wght@500;700&family=Bangers&family=Shippori+Mincho:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="stylesheet" href="style.css?v=20">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@700;800&family=Fredoka:wght@500;700&family=Bangers&family=Shippori+Mincho:wght@700;800&family=Boldonse&family=Patrick+Hand&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <!-- Firebase App + Firestore (Compat SDK) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <!-- Must stay first: applies the equipped background before the page is drawn -->
-    <script src="theme.js?v=7"></script>
+    <script src="theme.js?v=20"></script>
     <div id="read-progress" aria-hidden="true"></div>
 
     <!-- Fixed Navbar -->
@@ -27,6 +27,7 @@
             <li><a href="#dashboard" data-page="dashboard">Dashboard</a></li>
             <li><a href="#chatbot" data-page="chatbot">Chatbot</a></li>
             <li><a href="#final-exam" data-page="final">Final Exam</a></li>
+            <li><a href="#arcade" data-page="arcade">Arcade</a></li>
             <li><a href="references.html">References</a></li>
             <li>
                 <button class="nav-profile-btn" id="nav-profile-btn" data-page="profile" type="button">
@@ -50,6 +51,75 @@
                     <a href="#modules" class="btn-explore">Explore Modules →</a>
                 </div>
             </div>
+
+            <!-- Reviews carousel (built by reviews.js) -->
+            <section class="home-reviews" aria-labelledby="reviews-heading">
+                <div class="home-section-head">
+                    <span class="home-kicker">Student Reviews</span>
+                    <h2 id="reviews-heading">What Cadets Are Saying</h2>
+                    <div class="review-summary" id="review-summary"></div>
+                </div>
+                <div class="review-carousel" id="review-carousel" aria-roledescription="carousel" aria-label="Student reviews">
+                    <button type="button" class="rc-arrow rc-prev" aria-label="Previous reviews">‹</button>
+                    <div class="rc-viewport"><div class="rc-track" id="review-track" aria-live="polite"></div></div>
+                    <button type="button" class="rc-arrow rc-next" aria-label="Next reviews">›</button>
+                </div>
+                <div class="rc-dots" id="review-dots" role="group" aria-label="Choose a page of reviews"></div>
+                <div class="review-cta"><a class="btn-cyan-secondary" href="#profile" data-ptab-target="review">✍️ Write your own review</a></div>
+            </section>
+
+            <!-- Mobile app showcase (decorative) -->
+            <section class="home-app" aria-labelledby="app-heading">
+                <div class="app-copy">
+                    <span class="home-kicker">Mobile App</span>
+                    <h2 id="app-heading">Take Scrappy Everywhere</h2>
+                    <p>Daily five-minute lessons, streak reminders, and arcade quizzes in your pocket. Your XP, badges and progress follow you from the website to your phone.</p>
+                    <ul class="app-perks">
+                        <li>🔥 Daily streaks and quiz reminders</li>
+                        <li>🎮 All eight arcade games, built for touch</li>
+                        <li>☁️ Progress syncs with your web profile</li>
+                    </ul>
+                    <div class="store-buttons">
+                        <button type="button" class="store-btn" data-store="App Store">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="18" r="1.2" fill="currentColor"/></svg>
+                            <span><small>Coming soon to the</small>App Store</span>
+                        </button>
+                        <button type="button" class="store-btn" data-store="Google Play">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span><small>Coming soon to</small>Google Play</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="phone-stage" aria-hidden="true">
+                    <div class="phone">
+                        <div class="phone-island"></div>
+                        <div class="phone-screen">
+                            <div class="ph-status"><span>9:41</span><span class="ph-icons"><i></i><i></i><i></i></span></div>
+                            <div class="ph-header">
+                                <img src="images/ScrappyV2.png" alt="">
+                                <div><small>Good evening,</small><strong>Cadet</strong></div>
+                                <span class="ph-streak">🔥 7</span>
+                            </div>
+                            <div class="ph-xp"><div class="ph-xp-row"><span>Level 4</span><span>740 / 1000 XP</span></div><div class="ph-bar"><i></i></div></div>
+                            <div class="ph-card ph-continue">
+                                <small>Continue learning</small>
+                                <strong>2.2 Chain-of-Thought</strong>
+                                <div class="ph-bar thin"><i style="--w:62%"></i></div>
+                                <span class="ph-play">▶</span>
+                            </div>
+                            <div class="ph-label">Arcade</div>
+                            <div class="ph-games">
+                                <span style="--c:#22d3ee">🚀</span><span style="--c:#a78bfa">🧱</span><span style="--c:#f59e0b">🏴‍☠️</span><span style="--c:#4ade80">⛰️</span>
+                            </div>
+                            <div class="ph-card ph-daily"><span>📝</span><div><strong>Daily Quiz</strong><small>5 questions · +50 XP</small></div></div>
+                            <div class="ph-card ph-daily"><span>🏆</span><div><strong>Leaderboard</strong><small>You are #3 this week · 2 badges to go</small></div></div>
+                            <div class="ph-tabbar"><span class="on">🏠</span><span>📚</span><span>🎮</span><span>👤</span></div>
+                            <div class="ph-toast"><img src="images/ScrappyV2.png" alt=""><div><strong>Scrappy</strong><small>Your daily quiz is ready! 🔥</small></div></div>
+                        </div>
+                    </div>
+                    <div class="phone-glow"></div>
+                </div>
+            </section>
 
             <footer class="site-footer">
                 <div class="footer-grid">
@@ -143,7 +213,7 @@
                 <div id="reward-summary-meter"></div>
                 <h4 class="next-heading">Next Rewards Within Reach</h4>
                 <div class="next-reward-grid" id="next-rewards"></div>
-                <button type="button" class="btn-cyan-secondary" id="dash-view-rewards" data-go="profile"></button>
+                <button type="button" class="btn-cyan-secondary" id="dash-view-rewards" data-go="profile" data-ptab-target="inventory"></button>
             </div>
 
             <div class="panel">
@@ -165,6 +235,13 @@
             <h2 class="page-title">COURSE FINAL EXAM</h2>
             <p class="page-sub">Bring together everything from all six modules to earn your Certificate of Completion.</p>
             <div class="module-view-inner" id="final-exam-root"></div>
+        </section>
+
+        <!-- ARCADE: unlimited replays after the Final Exam (filled by app.js) -->
+        <section id="arcade-view" class="view view-pad">
+            <h2 class="page-title">AI ARCADE</h2>
+            <p class="page-sub">Passed the Final Exam? Replay every minigame you have finished as many times as you like and chase the top of the leaderboards.</p>
+            <div class="module-view-inner" id="arcade-root"></div>
         </section>
 
         <!-- 5. CHATBOT -->
@@ -269,69 +346,84 @@
                             <p id="dash-bio" class="profile-bio-text">Ready to conquer the AI modules.</p>
                             <span class="profile-joined-date" id="dash-joined">Profile active</span>
                         </div>
-                        <button type="button" class="btn-cyan-secondary" id="btn-switch-profile">Log Out / Switch</button>
+                        <div class="profile-actions">
+                            <button type="button" class="btn-cyan-secondary" id="btn-edit-profile" aria-expanded="false" aria-controls="profile-edit">Edit Profile</button>
+                            <button type="button" class="btn-cyan-secondary" id="btn-switch-profile">Log Out / Switch</button>
+                        </div>
+                    </div>
+                    <div class="profile-edit" id="profile-edit" hidden>
+                        <div class="edit-controls-row">
+                            <input type="text" id="edit-username-input" placeholder="New callsign..." maxlength="18" aria-label="New callsign">
+                            <input type="text" id="edit-bio-input" placeholder="New bio..." maxlength="60" aria-label="New bio" style="flex:2 1 220px;">
+                            <button type="button" id="btn-save-profile-edits" class="btn-cyan-secondary">Save</button>
+                        </div>
+                        <p class="form-hint">Change your avatar from the Inventory.</p>
                     </div>
                     <div class="profile-stats-row" id="profile-stats-row"></div>
                 </div>
 
-                <!-- Ultimate reward toggles (built by app.js) -->
-                <div class="profile-card-container ultimate-panel" id="ultimate-panel" style="margin-top:24px;"></div>
+                <!-- Fast-track buttons: one panel shows at a time -->
+                <div class="profile-tabs" role="tablist" aria-label="Profile sections">
+                    <button type="button" class="profile-tab" role="tab" id="ptab-shop" data-ptab="shop" aria-controls="ppanel-shop">🛒 Unlockable Shop</button>
+                    <button type="button" class="profile-tab" role="tab" id="ptab-inventory" data-ptab="inventory" aria-controls="ppanel-inventory">🎒 Inventory</button>
+                    <button type="button" class="profile-tab" role="tab" id="ptab-leaderboard" data-ptab="leaderboard" aria-controls="ppanel-leaderboard">🏆 Leaderboard</button>
+                    <button type="button" class="profile-tab" role="tab" id="ptab-review" data-ptab="review" aria-controls="ppanel-review">⭐ Write a Review</button>
+                </div>
 
-                <!-- Badge rewards (cards are built by app.js) -->
-                <div class="profile-card-container" style="margin-top:24px;">
+                <!-- Write a Review: star rating + short review, shown on the Home page (built by reviews.js) -->
+                <section class="profile-card-container profile-panel" id="ppanel-review" role="tabpanel" aria-labelledby="ptab-review" hidden>
                     <div class="locker-header">
-                        <h2 class="vault-heading">🎁 Badge Reward Locker</h2>
-                        <span class="locker-count" id="locker-count"></span>
+                        <h2 class="vault-heading">⭐ Write a Review</h2>
+                        <span class="locker-count" id="review-status"></span>
                     </div>
-                    <p class="profile-subtext">Earn badges to unlock these perks for free. Equip one title, avatar border, theme accent, chat badge, and background at a time. Backgrounds apply to every page.</p>
-                    <div id="reward-locker"></div>
-                </div>
+                    <p class="profile-subtext">Tell other students what you think of the AI Learning Portal. Your review appears in the carousel on the Home page with your callsign and avatar. One review per profile, and you can edit or remove it any time.</p>
+                    <div id="review-editor"></div>
+                </section>
 
-                <!-- XP shop (cards are built by app.js) -->
-                <div class="profile-card-container" style="margin-top:24px;">
-                    <h2 class="vault-heading">🛒 Cadet Customization Vault</h2>
-                    <p class="profile-subtext">Spend your hard-earned XP to unlock site-wide backgrounds and rare avatars!</p>
-                    <div class="vault-grid" id="shop-grid"></div>
-                </div>
-
-                <!-- Inventory -->
-                <div class="profile-card-container" style="margin-top:24px;">
-                    <h3 class="sub-heading">🎒 Your Unlocked Inventory</h3>
-                    <div id="user-inventory-list"></div>
-                </div>
-
-                <!-- Customize -->
-                <div class="profile-card-container" style="margin-top:24px;">
-                    <h3 class="sub-heading">Customize Profile</h3>
-                    <div class="edit-controls-row">
-                        <input type="text" id="edit-username-input" placeholder="New Callsign..." maxlength="18" aria-label="New callsign">
-                        <input type="text" id="edit-bio-input" placeholder="Update Bio..." maxlength="60" aria-label="New bio" style="flex:2 1 220px;">
-                        <button type="button" id="btn-save-profile-edits" class="btn-cyan-secondary">Update Info</button>
+                <!-- Unlockable Shop: every unlockable item, by category (built by app.js) -->
+                <section class="profile-card-container profile-panel" id="ppanel-shop" role="tabpanel" aria-labelledby="ptab-shop">
+                    <div class="locker-header">
+                        <h2 class="vault-heading">🛒 Unlockable Shop</h2>
+                        <span class="locker-count" id="shop-xp"></span>
                     </div>
-                    <label style="display:block;margin-bottom:10px;font-size:.9rem;">Select Active Avatar:</label>
-                    <div id="edit-avatar-picker" class="avatar-picker-grid"></div>
-                </div>
+                    <p class="profile-subtext">Everything you can unlock in one place. Buy items with XP, or earn them free with badges and the Final Exam. Equip what you own from your Inventory.</p>
+                    <div class="shop-filters" id="shop-filters" role="group" aria-label="Shop category"></div>
+                    <div id="unlock-shop"></div>
+                </section>
 
-                <!-- Directory -->
-                <div class="profile-card-container" style="margin-top:24px;">
+                <!-- Inventory: everything owned, ready to equip (built by app.js) -->
+                <section class="profile-card-container profile-panel" id="ppanel-inventory" role="tabpanel" aria-labelledby="ptab-inventory" hidden>
+                    <div class="locker-header">
+                        <h2 class="vault-heading">🎒 Inventory</h2>
+                        <span class="locker-count" id="inventory-count"></span>
+                    </div>
+                    <p class="profile-subtext">Your XP purchases and badge rewards together. Equip one of each type at a time. Backgrounds apply to every page.</p>
+                    <div class="loadout" id="loadout"></div>
+                    <div id="inventory-grid"></div>
+                </section>
+
+                <!-- Leaderboard -->
+                <section class="profile-card-container profile-panel" id="ppanel-leaderboard" role="tabpanel" aria-labelledby="ptab-leaderboard" hidden>
                     <div class="directory-header">
                         <div>
-                            <h2 class="directory-title">🌐 Global Cadet Directory &amp; Leaderboard</h2>
-                            <p class="profile-subtext">Search cadets or compare the top arcade scores.</p>
+                            <h2 class="directory-title">🏆 Global Cadet Leaderboard</h2>
+                            <p class="profile-subtext">Search cadets or compare the top arcade scores. Click a player to inspect their profile.</p>
                         </div>
-                        <input type="text" id="global-profile-search" class="directory-search-input" placeholder="🔍 Search callsign..." aria-label="Search cadets">
+                        <input type="text" id="global-profile-search" class="directory-search-input" placeholder="Search callsign..." aria-label="Search cadets">
                     </div>
                     <div class="leaderboard-tabs" role="group" aria-label="Leaderboard category" data-board="directory"></div>
                     <div id="global-directory-list" class="directory-list"></div>
-                </div>
+                </section>
             </div>
         </section>
     </main>
 
     <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
-    <script src="app.js?v=7"></script>
-    <script src="games.js?v=7"></script>
-    <script src="layouts.js?v=7"></script>
-    <script src="exams.js?v=7"></script>
+    <script src="icons.js?v=20"></script>
+    <script src="app.js?v=20"></script>
+    <script src="games.js?v=20"></script>
+    <script src="layouts.js?v=20"></script>
+    <script src="exams.js?v=20"></script>
+    <script src="reviews.js?v=20"></script>
 </body>
 </html>
